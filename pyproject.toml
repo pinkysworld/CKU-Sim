@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cku-sim"
+version = "0.1.0"
+description = "Toolkit for quantifying Structural Opacity and Computational Knightian Uncertainty in software systems"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [
+    { name = "Michél H. T. D. Nguyen", email = "michel@minh.systems" },
+]
+keywords = [
+    "computational-knightian-uncertainty",
+    "cyber-risk",
+    "kolmogorov-complexity",
+    "software-metrics",
+    "structural-opacity",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "gitpython>=3.1.40",
+    "matplotlib>=3.8",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "pingouin>=0.5.4",
+    "pyarrow>=14.0",
+    "pyyaml>=6.0",
+    "radon>=6.0",
+    "requests>=2.31",
+    "scikit-learn>=1.3",
+    "scipy>=1.11",
+    "seaborn>=0.13",
+    "statsmodels>=0.14",
+    "tqdm>=4.66",
+    "tree-sitter>=0.21",
+    "zstandard>=0.22",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/pinkysworld/CKU-Sim"
+Repository = "https://github.com/pinkysworld/CKU-Sim"
+Issues = "https://github.com/pinkysworld/CKU-Sim/issues"
+
+[tool.setuptools.packages.find]
+include = ["cku_sim*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

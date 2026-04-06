@@ -1,0 +1,138 @@
+# CKU-Sim experiment configuration
+# Copy to config.yaml and edit as needed.
+
+# Where to store data
+data_dir: "data"
+
+# NVD API key (optional, get one free at https://nvd.nist.gov/developers/request-an-api-key)
+# Without a key: ~5 requests per 30 seconds
+# With a key: ~50 requests per 30 seconds
+nvd_api_key: null
+nvd_rate_limit: 6.0  # seconds between NVD requests (0.6 with API key)
+
+# Compression algorithms to test
+compression_algorithms:
+  - gzip
+  - lzma
+  - zstd
+
+# Default composite opacity weights
+composite_weights:
+  compressibility: 0.35
+  entropy: 0.25
+  cyclomatic_density: 0.25
+  halstead_volume: 0.15
+
+# Monte Carlo simulation
+monte_carlo_runs: 10000
+random_seed: 42
+portfolio_size: 100
+
+# Corpus definition
+# Categories: high_opacity, low_opacity, mixed
+# cpe_id: used to match against NVD CVE records
+# subdirectory: optional, restricts analysis to a subfolder
+corpus:
+  # --- High opacity (expected) ---
+  - name: openssl
+    git_url: https://github.com/openssl/openssl.git
+    cpe_id: "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: ffmpeg
+    git_url: https://github.com/FFmpeg/FFmpeg.git
+    cpe_id: "cpe:2.3:a:ffmpeg:ffmpeg:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: php-src
+    git_url: https://github.com/php/php-src.git
+    cpe_id: "cpe:2.3:a:php:php:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: imagemagick
+    git_url: https://github.com/ImageMagick/ImageMagick.git
+    cpe_id: "cpe:2.3:a:imagemagick:imagemagick:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: libxml2
+    git_url: https://github.com/GNOME/libxml2.git
+    cpe_id: "cpe:2.3:a:xmlsoft:libxml2:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: linux-net
+    git_url: https://github.com/torvalds/linux.git
+    cpe_id: "cpe:2.3:o:linux:linux_kernel:*:*:*:*:*:*:*:*"
+    category: high_opacity
+    subdirectory: "net/"
+
+  - name: samba
+    git_url: https://github.com/samba-team/samba.git
+    cpe_id: "cpe:2.3:a:samba:samba:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  - name: wireshark
+    git_url: https://gitlab.com/wireshark/wireshark.git
+    cpe_id: "cpe:2.3:a:wireshark:wireshark:*:*:*:*:*:*:*:*"
+    category: high_opacity
+
+  # --- Low opacity (expected) ---
+  - name: redis
+    git_url: https://github.com/redis/redis.git
+    cpe_id: "cpe:2.3:a:redis:redis:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: sqlite
+    git_url: https://github.com/sqlite/sqlite.git
+    cpe_id: "cpe:2.3:a:sqlite:sqlite:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: curl
+    git_url: https://github.com/curl/curl.git
+    cpe_id: "cpe:2.3:a:haxx:curl:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: zlib
+    git_url: https://github.com/madler/zlib.git
+    cpe_id: "cpe:2.3:a:zlib:zlib:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: jq
+    git_url: https://github.com/jqlang/jq.git
+    cpe_id: "cpe:2.3:a:jqlang:jq:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: libsodium
+    git_url: https://github.com/jedisct1/libsodium.git
+    cpe_id: "cpe:2.3:a:jedisct1:libsodium:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: busybox
+    git_url: https://github.com/mirror/busybox.git
+    cpe_id: "cpe:2.3:a:busybox:busybox:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  # --- Mixed / control ---
+  - name: cpython
+    git_url: https://github.com/python/cpython.git
+    cpe_id: "cpe:2.3:a:python:python:*:*:*:*:*:*:*:*"
+    category: mixed
+
+  - name: nginx
+    git_url: https://github.com/nginx/nginx.git
+    cpe_id: "cpe:2.3:a:f5:nginx:*:*:*:*:*:*:*:*"
+    category: mixed
+
+  - name: postgres
+    git_url: https://github.com/postgres/postgres.git
+    cpe_id: "cpe:2.3:a:postgresql:postgresql:*:*:*:*:*:*:*:*"
+    category: mixed
+
+  - name: git
+    git_url: https://github.com/git/git.git
+    cpe_id: "cpe:2.3:a:git-scm:git:*:*:*:*:*:*:*:*"
+    category: mixed
+
+  - name: openssh
+    git_url: https://github.com/openssh/openssh-portable.git
+    cpe_id: "cpe:2.3:a:openbsd:openssh:*:*:*:*:*:*:*:*"
+    category: mixed
