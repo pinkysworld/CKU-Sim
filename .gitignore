@@ -1,4 +1,5 @@
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *.egg-info/
 dist/
@@ -9,15 +10,15 @@ build/
 venv/
 env/
 
-# Data directories (large, not tracked)
+# Large local-only inputs and caches
 data/raw/
-data/processed/
-data/results/
+data/processed/*
 
-# Keep directory structure
+# Keep directory structure and allow publication outputs
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-!data/results/.gitkeep
+!data/results/
+!data/results/**
 
 # IDE
 .vscode/
@@ -29,8 +30,5 @@ data/results/
 .DS_Store
 Thumbs.db
 
-# Experiment outputs
-experiments/*.png
-experiments/*.pdf
-experiments/*.tex
+# Local config
 experiments/config.yaml

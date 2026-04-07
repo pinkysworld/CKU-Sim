@@ -1,0 +1,14 @@
+{
+  "ci_gzip_vs_ci_lzma": {
+    "spearman_rho": 0.9428571428571427,
+    "p_value": 1.4247676947645738e-07
+  },
+  "ci_gzip_vs_ci_zstd": {
+    "spearman_rho": 0.9428571428571427,
+    "p_value": 1.4247676947645738e-07
+  },
+  "ci_lzma_vs_ci_zstd": {
+    "spearman_rho": 1.0,
+    "p_value": 0.0
+  }
+}

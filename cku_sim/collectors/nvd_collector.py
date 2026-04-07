@@ -7,6 +7,7 @@ import logging
 import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 import requests
 
@@ -72,23 +73,31 @@ def fetch_cves_for_cpe(
     all_items = []
     start_index = 0
     results_per_page = 2000
+    query_param, query_value = _build_nvd_query(cpe_id)
+    request_count = 0
 
     while True:
         params = {
-            "cpeName": cpe_id,
+            query_param: query_value,
             "startIndex": start_index,
             "resultsPerPage": results_per_page,
         }
 
         logger.info(
-            f"Fetching CVEs for {cpe_id} (offset={start_index})..."
+            f"Fetching CVEs for {cpe_id} via {query_param}={query_value} "
+            f"(offset={start_index})..."
         )
 
+        if request_count > 0:
+            time.sleep(rate_limit)
+
         try:
-            resp = requests.get(
-                NVD_API_BASE, params=params, headers=headers, timeout=30
+            resp = _request_with_backoff(
+                params=params,
+                headers=headers,
+                rate_limit=rate_limit,
             )
-            resp.raise_for_status()
+            request_count += 1
         except requests.RequestException as e:
             logger.error(f"NVD API request failed: {e}")
             break
@@ -107,8 +116,6 @@ def fetch_cves_for_cpe(
 
         if start_index >= total_results or not vulnerabilities:
             break
-
-        time.sleep(rate_limit)
 
     # Cache raw response
     if cache_dir and all_items:
@@ -174,3 +181,74 @@ def _parse_cve(vuln_item: dict) -> CVERecord:
 def _safe_filename(cpe_id: str) -> str:
     """Convert CPE ID to a filesystem-safe filename."""
     return cpe_id.replace(":", "_").replace("*", "ALL").replace("/", "_")
+
+
+def _request_with_backoff(
+    params: dict[str, object],
+    headers: dict[str, str],
+    rate_limit: float,
+    max_retries: int = 4,
+) -> requests.Response:
+    """Issue an NVD request with basic retry/backoff for transient failures."""
+    backoff = max(rate_limit, 6.0)
+    last_error: requests.RequestException | None = None
+
+    for attempt in range(max_retries):
+        try:
+            resp = requests.get(
+                NVD_API_BASE, params=params, headers=headers, timeout=30
+            )
+            if resp.status_code == 429:
+                retry_after = resp.headers.get("Retry-After")
+                wait_seconds = float(retry_after) if retry_after else backoff
+                wait_seconds = max(wait_seconds, backoff)
+                last_error = requests.HTTPError(
+                    f"NVD API rate limited request: HTTP 429 for params={params}"
+                )
+                logger.warning(
+                    "NVD rate limited request; waiting %.1fs before retry %d/%d",
+                    wait_seconds,
+                    attempt + 1,
+                    max_retries,
+                )
+                time.sleep(wait_seconds)
+                backoff *= 2
+                continue
+
+            resp.raise_for_status()
+            return resp
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt == max_retries - 1:
+                break
+            logger.warning(
+                "NVD request failed (%s); retrying in %.1fs (%d/%d)",
+                exc,
+                backoff,
+                attempt + 1,
+                max_retries,
+            )
+            time.sleep(backoff)
+            backoff *= 2
+
+    assert last_error is not None
+    raise last_error
+
+
+def _build_nvd_query(cpe_id: str) -> tuple[Literal["cpeName", "virtualMatchString"], str]:
+    """Choose the NVD query mode that best matches the supplied CPE identifier."""
+    parts = cpe_id.split(":")
+
+    # CPE match strings with wildcards are better served by virtualMatchString.
+    if len(parts) >= 5 and parts[0] == "cpe" and parts[1] == "2.3":
+        part = parts[2]
+        vendor = parts[3]
+        product = parts[4]
+        version = parts[5] if len(parts) > 5 else ""
+
+        if version in {"", "*", "-"}:
+            return "virtualMatchString", f"cpe:2.3:{part}:{vendor}:{product}"
+
+        return "cpeName", ":".join(parts[:6])
+
+    return "virtualMatchString", cpe_id

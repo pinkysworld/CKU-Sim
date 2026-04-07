@@ -220,6 +220,9 @@ def plot_weight_sensitivity(
     """Distribution of Spearman ρ under random weight perturbation."""
     if sensitivity_df.empty:
         return
+    sensitivity_df = sensitivity_df.dropna(subset=["spearman_rho"])
+    if sensitivity_df.empty:
+        return
 
     fig, ax = plt.subplots(figsize=(7, 4))
 

@@ -123,7 +123,7 @@ def plot_temporal(
     for name, df in temporal_data.items():
         if df.empty:
             continue
-        dates = pd.to_datetime(df["date"])
+        dates = pd.to_datetime(df["date"], utc=True)
         ax.plot(dates, df["ci_gzip"], "-o", markersize=3, label=name, alpha=0.8)
 
     ax.set_xlabel("Date")

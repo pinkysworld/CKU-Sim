@@ -1,0 +1,11 @@
+{
+  "high_opacity_mean_ci": 0.15350017268415614,
+  "high_opacity_std_ci": 0.030421623982430483,
+  "low_opacity_mean_ci": 0.21984306408317567,
+  "low_opacity_std_ci": 0.045748112661675486,
+  "mann_whitney_U": 5.0,
+  "mann_whitney_p": 0.9848484848484849,
+  "rank_biserial_r": 0.7142857142857143,
+  "n_high": 5,
+  "n_low": 7
+}

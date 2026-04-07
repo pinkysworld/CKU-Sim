@@ -117,6 +117,14 @@ def weight_sensitivity_analysis(
         })
 
     result = pd.DataFrame(rows)
+    result = result.dropna(subset=["spearman_rho", "p_value"]).reset_index(drop=True)
+    if result.empty:
+        logger.warning(
+            "Weight sensitivity analysis produced no finite correlations; "
+            "the outcome may be constant or insufficiently variable."
+        )
+        return result
+
     logger.info(
         f"Weight sensitivity: mean ρ={result['spearman_rho'].mean():.4f}, "
         f"std={result['spearman_rho'].std():.4f}, "
