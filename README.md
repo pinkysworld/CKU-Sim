@@ -1,8 +1,8 @@
-# CKU-Sim
+# CKU Simulation Toolkit
 
-CKU-Sim is the companion codebase for the paper:
+CKU Simulation Toolkit (`CKU-Sim`) is the companion codebase for the paper:
 
-> Nguyen, M. H. T. D. (2026). Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms. *International Journal of Research in Computing*, 5(I), 41-56.
+> Nguyen, M. (2026). Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms. *International Journal of Research in Computing*, 5(I), 41-56. Retrieved from https://www.ijrcom.org/index.php/ijrc/article/view/192
 
 The repository implements a measurement and simulation workflow for structural opacity as a proxy for computational Knightian uncertainty in software-intensive systems.
 
@@ -85,19 +85,22 @@ Additional procedural details are documented in `REPRODUCIBILITY.md`.
 python -m pytest -q
 ```
 
-## Citation
+## How to Cite
 
 If you use this repository in academic work, please cite the associated paper. Citation metadata is also provided in `CITATION.cff`.
+
+Nguyen, M. (2026). Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms. *International Journal of Research in Computing*, 5(I), 41-56. Retrieved from https://www.ijrcom.org/index.php/ijrc/article/view/192
 
 ```bibtex
 @article{nguyen2026cku,
   title={Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms},
-  author={Nguyen, Mich{\\'e}l H. T. D.},
+  author={Nguyen, Mich{\\'e}l},
   journal={International Journal of Research in Computing},
   volume={5},
   number={I},
   pages={41--56},
-  year={2026}
+  year={2026},
+  url={https://www.ijrcom.org/index.php/ijrc/article/view/192}
 }
 ```
 

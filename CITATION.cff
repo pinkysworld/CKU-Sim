@@ -1,17 +1,17 @@
 cff-version: 1.2.0
-title: CKU-Sim
+title: CKU Simulation Toolkit
 message: "If you use this software, please cite the associated paper."
 type: software
 authors:
   - family-names: Nguyen
-    given-names: "Michél H. T. D."
+    given-names: "Michél"
 repository-code: "https://github.com/pinkysworld/CKU-Sim"
 license: MIT
 preferred-citation:
   type: article
   authors:
     - family-names: Nguyen
-      given-names: "Michél H. T. D."
+      given-names: "Michél"
   title: "Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms"
   journal: "International Journal of Research in Computing"
   year: 2026
@@ -19,3 +19,4 @@ preferred-citation:
   issue: I
   start: 41
   end: 56
+  url: "https://www.ijrcom.org/index.php/ijrc/article/view/192"
