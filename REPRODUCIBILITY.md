@@ -54,6 +54,7 @@ python -m experiments.e02_real_codebase_survey --config experiments/config.yaml
 python -m experiments.e03_cve_correlation --config experiments/config.yaml
 python -m experiments.e04_temporal_evolution --config experiments/config.yaml
 python -m experiments.e05_insurance_simulation --config experiments/config.yaml
+python -m experiments.e06_file_level_case_control --config experiments/config.yaml
 ```
 
 Notes:
@@ -61,6 +62,7 @@ Notes:
 - `e03` depends on `e02`.
 - `e05` uses `e02` outputs when available.
 - `e04` requires full Git histories for the selected temporal projects.
+- `e06` requires NVD cache entries with usable GitHub commit references and local repository histories that contain those commits.
 
 ## External Dependencies And Stability
 

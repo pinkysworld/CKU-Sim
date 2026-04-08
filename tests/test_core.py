@@ -13,6 +13,11 @@ from cku_sim.core.opacity import StructuralOpacity
 from cku_sim.metrics.compressibility import compressibility_index
 from cku_sim.metrics.entropy import shannon_entropy_from_frequencies
 from cku_sim.metrics.cyclomatic import cyclomatic_complexity_file
+from cku_sim.analysis.file_level_case_control import (
+    compute_file_opacity_from_text,
+    extract_commit_refs_from_nvd_items,
+    should_include_source_path,
+)
 from cku_sim.simulation.scenario_generator import (
     generate_regular_source,
     generate_irregular_source,
@@ -136,6 +141,60 @@ class TestStructuralOpacity:
         d = o.to_dict()
         assert d["name"] == "x"
         assert "ci_gzip" in d
+
+
+class TestFileLevelCaseControlHelpers:
+    def test_extract_commit_refs_filters_to_expected_slug(self):
+        items = [
+            {
+                "cve": {
+                    "id": "CVE-2026-0001",
+                    "references": [
+                        {"url": "https://github.com/example/repo/commit/abcdef1234567890"},
+                        {"url": "https://github.com/other/repo/commit/1234567890abcdef"},
+                    ],
+                }
+            },
+            {
+                "cve": {
+                    "id": "CVE-2026-0002",
+                    "references": [
+                        {"url": "https://github.com/example/repo/commit/abcdef1234567890"},
+                    ],
+                }
+            },
+        ]
+
+        refs = extract_commit_refs_from_nvd_items(items, "example/repo")
+
+        assert sorted(refs) == ["abcdef1234567890"]
+        assert refs["abcdef1234567890"] == {"CVE-2026-0001", "CVE-2026-0002"}
+
+    def test_compute_file_opacity_distinguishes_irregular_source(self):
+        regular = "int x = 0;\n" * 300
+        irregular = "\n".join(
+            f"int value_{i}(int x) {{ if (x > {i}) return x + {i}; return x - {i}; }}"
+            for i in range(300)
+        )
+
+        regular_metrics = compute_file_opacity_from_text(regular, name="regular.c", snapshot_id="A")
+        irregular_metrics = compute_file_opacity_from_text(
+            irregular,
+            name="irregular.c",
+            snapshot_id="B",
+        )
+
+        assert irregular_metrics.ci_gzip > regular_metrics.ci_gzip
+        assert irregular_metrics.cyclomatic_density > regular_metrics.cyclomatic_density
+        assert irregular_metrics.halstead_volume >= regular_metrics.halstead_volume
+
+    def test_should_include_source_path_excludes_tests_and_docs(self):
+        extensions = [".c", ".h"]
+
+        assert should_include_source_path("src/server.c", extensions)
+        assert not should_include_source_path("tests/server_test.c", extensions)
+        assert not should_include_source_path("docs/example.c", extensions)
+        assert not should_include_source_path("src/server.py", extensions)
 
 
 class TestMonteCarloSimulation:

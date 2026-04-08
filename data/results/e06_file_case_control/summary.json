@@ -1,0 +1,32 @@
+{
+  "pair_level": {
+    "n_pairs": 101,
+    "n_commits": 56,
+    "n_repos": 5,
+    "mean_delta_composite": 0.0039755845418434944,
+    "median_delta_composite": 0.0021796587036048143,
+    "positive_share": 0.5346534653465347,
+    "mean_case_loc": 1529.5346534653465,
+    "mean_control_loc": 1444.6534653465346,
+    "median_loc_ratio": 1.03125,
+    "sign_test_positive_count": 54,
+    "sign_test_negative_count": 47,
+    "sign_test_pvalue_greater": 0.27535445679913567,
+    "rank_biserial_effect": 0.06930693069306931,
+    "wilcoxon_statistic": 2978.0,
+    "wilcoxon_pvalue_greater": 0.08635874890919659
+  },
+  "commit_level": {
+    "n_commits": 56,
+    "n_repos": 5,
+    "mean_delta_composite": 0.004009648721466764,
+    "median_delta_composite": 0.0027437025139454285,
+    "positive_share": 0.5892857142857143,
+    "sign_test_positive_count": 33,
+    "sign_test_negative_count": 23,
+    "sign_test_pvalue_greater": 0.11440277061717805,
+    "rank_biserial_effect": 0.17857142857142858,
+    "wilcoxon_statistic": 991.0,
+    "wilcoxon_pvalue_greater": 0.057707056559826005
+  }
+}
