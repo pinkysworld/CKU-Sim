@@ -1,32 +1,113 @@
 {
   "pair_level": {
-    "n_pairs": 101,
-    "n_commits": 56,
-    "n_repos": 5,
-    "mean_delta_composite": 0.0039755845418434944,
-    "median_delta_composite": 0.0021796587036048143,
-    "positive_share": 0.5346534653465347,
-    "mean_case_loc": 1529.5346534653465,
-    "mean_control_loc": 1444.6534653465346,
-    "median_loc_ratio": 1.03125,
-    "sign_test_positive_count": 54,
-    "sign_test_negative_count": 47,
-    "sign_test_pvalue_greater": 0.27535445679913567,
-    "rank_biserial_effect": 0.06930693069306931,
-    "wilcoxon_statistic": 2978.0,
-    "wilcoxon_pvalue_greater": 0.08635874890919659
+    "n_pairs": 348,
+    "n_commits": 227,
+    "n_repos": 11,
+    "mean_delta_composite": 0.005745204310823839,
+    "median_delta_composite": 0.002258603639983009,
+    "positive_share": 0.5344827586206896,
+    "mean_case_loc": 1654.8649425287356,
+    "mean_control_loc": 1571.0057471264367,
+    "median_loc_ratio": 1.0196293649172963,
+    "n_events": 176,
+    "ground_truth_policy": "nvd_commit_refs",
+    "label": "NVD commit-reference observations",
+    "description": "Each locally accessible NVD-linked fixing commit is treated as one observation.",
+    "sign_test_positive_count": 186,
+    "sign_test_negative_count": 162,
+    "sign_test_pvalue_greater": 0.10877255559123253,
+    "rank_biserial_effect": 0.06896551724137931,
+    "wilcoxon_statistic": 35620.0,
+    "wilcoxon_pvalue_greater": 0.0025619214708719473,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 176,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0016928252631690326,
+        0.009853607193314216
+      ],
+      "median_delta_composite_ci": [
+        -0.0017380875520858958,
+        0.006071376795680594
+      ],
+      "positive_share_ci": [
+        0.4738255763375381,
+        0.6012579332137213
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.002957351864998743,
+        0.009079645933578495
+      ],
+      "median_delta_composite_ci": [
+        0.0003138541239693926,
+        0.008480655589739539
+      ],
+      "positive_share_ci": [
+        0.5099601593625498,
+        0.5921071008526904
+      ]
+    }
   },
   "commit_level": {
-    "n_commits": 56,
-    "n_repos": 5,
-    "mean_delta_composite": 0.004009648721466764,
-    "median_delta_composite": 0.0027437025139454285,
-    "positive_share": 0.5892857142857143,
-    "sign_test_positive_count": 33,
-    "sign_test_negative_count": 23,
-    "sign_test_pvalue_greater": 0.11440277061717805,
-    "rank_biserial_effect": 0.17857142857142858,
-    "wilcoxon_statistic": 991.0,
-    "wilcoxon_pvalue_greater": 0.057707056559826005
+    "n_commit_events": 227,
+    "n_unique_commits": 227,
+    "n_repos": 11,
+    "mean_delta_composite": 0.0064170181470904935,
+    "median_delta_composite": 0.0038863367847585817,
+    "positive_share": 0.5550660792951542,
+    "n_events": 176,
+    "ground_truth_policy": "nvd_commit_refs",
+    "label": "NVD commit-reference observations",
+    "description": "Each locally accessible NVD-linked fixing commit is treated as one observation.",
+    "sign_test_positive_count": 126,
+    "sign_test_negative_count": 101,
+    "sign_test_pvalue_greater": 0.055486414360089144,
+    "rank_biserial_effect": 0.11013215859030837,
+    "wilcoxon_statistic": 15737.0,
+    "wilcoxon_pvalue_greater": 0.002366474376953845,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 176,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0019373951897659857,
+        0.011003946105523214
+      ],
+      "median_delta_composite_ci": [
+        -0.0015555076641529109,
+        0.008579344339767703
+      ],
+      "positive_share_ci": [
+        0.47450050709939146,
+        0.6347154447645363
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0034653108430381025,
+        0.00846991009149215
+      ],
+      "median_delta_composite_ci": [
+        0.001867100389627785,
+        0.008579344339767703
+      ],
+      "positive_share_ci": [
+        0.5236708957172702,
+        0.6241356382978722
+      ]
+    }
   }
 }

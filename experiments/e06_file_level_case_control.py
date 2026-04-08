@@ -1,8 +1,8 @@
 """Experiment 6: file-level case-control analysis of vulnerability-fixing commits.
 
-This experiment uses NVD-linked fixing commits as a weak but concrete ground truth.
-For each fixing commit available locally, it compares the pre-fix opacity of touched
-source files against matched untouched files from the same parent snapshot.
+For each security-fix event available locally, this experiment compares the pre-fix
+opacity of touched source files against matched untouched files from the same parent
+snapshot. The `--ground-truth-policy` flag selects the event-definition policy.
 """
 
 from __future__ import annotations
@@ -16,8 +16,11 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 from cku_sim.analysis.file_level_case_control import (
+    GROUND_TRUTH_POLICIES,
+    describe_ground_truth_policy,
     match_case_control_pairs,
     normalise_github_slug,
+    results_subdir_for_ground_truth_policy,
     summarise_case_control_pairs,
     summarise_commit_level_deltas,
 )
@@ -86,6 +89,19 @@ def main() -> None:
         default=20,
         help="Minimum LOC for case/control source files",
     )
+    parser.add_argument(
+        "--ground-truth-policy",
+        type=str,
+        default="nvd_commit_refs",
+        choices=sorted(GROUND_TRUTH_POLICIES),
+        help="Ground-truth event policy",
+    )
+    parser.add_argument(
+        "--results-subdir",
+        type=str,
+        default=None,
+        help="Optional results subdirectory name under data/results/",
+    )
     args = parser.parse_args()
 
     config = Config.from_yaml(args.config) if args.config else Config()
@@ -94,13 +110,18 @@ def main() -> None:
         selected = {name.strip() for name in args.repos.split(",") if name.strip()}
         corpus = [entry for entry in corpus if entry.name in selected]
 
-    results_dir = config.results_dir / "e06_file_case_control"
+    results_subdir = args.results_subdir or results_subdir_for_ground_truth_policy(
+        args.ground_truth_policy
+    )
+    results_dir = config.results_dir / results_subdir
     results_dir.mkdir(parents=True, exist_ok=True)
     cache_dir = config.processed_dir / "nvd_cache"
+    policy_meta = describe_ground_truth_policy(args.ground_truth_policy)
 
     logger.info("=" * 60)
     logger.info("Experiment 6: File-level vulnerability case-control analysis")
     logger.info("=" * 60)
+    logger.info("Ground-truth policy: %s", policy_meta["label"])
 
     pair_frames: list[pd.DataFrame] = []
     repo_summaries: list[dict[str, object]] = []
@@ -110,7 +131,10 @@ def main() -> None:
         if not repo_path.exists():
             logger.info("Skipping %s: repository checkout not available", entry.name)
             continue
-        if normalise_github_slug(entry.git_url) is None:
+        if (
+            args.ground_truth_policy in {"nvd_commit_refs", "strict_nvd_event"}
+            and normalise_github_slug(entry.git_url) is None
+        ):
             logger.info("Skipping %s: non-GitHub repository", entry.name)
             continue
 
@@ -120,6 +144,7 @@ def main() -> None:
             entry,
             cache_dir,
             min_loc=args.min_loc,
+            ground_truth_policy=args.ground_truth_policy,
         )
         if pairs.empty:
             logger.info("  %s: no usable matched pairs", entry.name)
@@ -153,6 +178,8 @@ def main() -> None:
         pairs_df.groupby(["repo", "commit", "cve_ids"], as_index=False)
         .agg(
             n_pairs=("delta_composite", "size"),
+            event_id=("event_id", "first"),
+            ground_truth_policy=("ground_truth_policy", "first"),
             mean_delta_composite=("delta_composite", "mean"),
             median_delta_composite=("delta_composite", "median"),
             positive_share=("delta_composite", lambda s: float((s > 0).mean())),
@@ -191,6 +218,16 @@ def main() -> None:
         overall_summary["pair_level"]["median_delta_composite"],
         overall_summary["pair_level"]["positive_share"],
     )
+    pair_bootstrap = overall_summary["pair_level"].get("bootstrap_primary_cluster", {})
+    if pair_bootstrap:
+        median_ci = pair_bootstrap.get("median_delta_composite_ci")
+        if isinstance(median_ci, list) and len(median_ci) == 2:
+            logger.info(
+                "Pair-level clustered 95%% CI for median delta (%s): [%.4f, %.4f]",
+                pair_bootstrap.get("cluster_col"),
+                median_ci[0],
+                median_ci[1],
+            )
     if "wilcoxon_pvalue_greater" in overall_summary["pair_level"]:
         logger.info(
             "Pair-level Wilcoxon one-sided p=%.4g, sign-test p=%.4g, rank-biserial=%.4f",
@@ -199,13 +236,24 @@ def main() -> None:
             overall_summary["pair_level"].get("rank_biserial_effect", float("nan")),
         )
     logger.info(
-        "Commit level: %d commits in %d repos, mean delta %.4f median %.4f positive_share %.3f",
-        overall_summary["commit_level"]["n_commits"],
+        "Commit-event level: %d event rows across %d unique commits in %d repos, mean delta %.4f median %.4f positive_share %.3f",
+        overall_summary["commit_level"]["n_commit_events"],
+        overall_summary["commit_level"]["n_unique_commits"],
         overall_summary["commit_level"]["n_repos"],
         overall_summary["commit_level"]["mean_delta_composite"],
         overall_summary["commit_level"]["median_delta_composite"],
         overall_summary["commit_level"]["positive_share"],
     )
+    commit_bootstrap = overall_summary["commit_level"].get("bootstrap_primary_cluster", {})
+    if commit_bootstrap:
+        median_ci = commit_bootstrap.get("median_delta_composite_ci")
+        if isinstance(median_ci, list) and len(median_ci) == 2:
+            logger.info(
+                "Commit-event clustered 95%% CI for median delta (%s): [%.4f, %.4f]",
+                commit_bootstrap.get("cluster_col"),
+                median_ci[0],
+                median_ci[1],
+            )
     if "wilcoxon_pvalue_greater" in overall_summary["commit_level"]:
         logger.info(
             "Commit-level Wilcoxon one-sided p=%.4g, sign-test p=%.4g, rank-biserial=%.4f",

@@ -9,11 +9,13 @@ import os
 import re
 import subprocess
 from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 
 import pandas as pd
 from scipy import stats
 
+from cku_sim.analysis.bootstrap import clustered_delta_bootstrap
 from cku_sim.core.config import CorpusEntry
 from cku_sim.core.opacity import StructuralOpacity
 from cku_sim.metrics.compressibility import compressibility_index
@@ -92,6 +94,59 @@ C_KEYWORDS = {
     "unsigned",
     "inline",
 }
+SECURITY_ID_RE = re.compile(
+    r"\b(?:CVE-\d{4}-\d+|GHSA-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4})\b",
+    re.IGNORECASE,
+)
+GROUND_TRUTH_POLICY_METADATA = {
+    "nvd_commit_refs": {
+        "label": "NVD commit-reference observations",
+        "description": (
+            "Each locally accessible NVD-linked fixing commit is treated as one observation."
+        ),
+    },
+    "strict_nvd_event": {
+        "label": "NVD event-collapsed observations",
+        "description": (
+            "Each NVD-linked vulnerability is mapped to one primary single-parent "
+            "source-touching fixing commit."
+        ),
+    },
+    "balanced_explicit_id_event": {
+        "label": "Expanded explicit-ID observations",
+        "description": (
+            "The event-collapsed NVD set is augmented with locally explicit CVE/GHSA-tagged "
+            "security-fix commits, with one primary fixing commit retained per event."
+        ),
+    },
+}
+GROUND_TRUTH_POLICIES = set(GROUND_TRUTH_POLICY_METADATA)
+
+
+def describe_ground_truth_policy(policy: str) -> dict[str, str]:
+    """Return metadata for a supported ground-truth policy."""
+    if policy not in GROUND_TRUTH_POLICY_METADATA:
+        raise ValueError(f"Unknown ground-truth policy: {policy}")
+    return dict(GROUND_TRUTH_POLICY_METADATA[policy])
+
+
+def results_subdir_for_ground_truth_policy(policy: str) -> str:
+    """Return the default results subdirectory for a policy-specific e06 run."""
+    if policy not in GROUND_TRUTH_POLICIES:
+        raise ValueError(f"Unknown ground-truth policy: {policy}")
+    if policy == "nvd_commit_refs":
+        return "e06_file_case_control"
+    return f"e06_file_case_control__{policy}"
+
+
+@dataclass(frozen=True)
+class GroundTruthEvent:
+    """A labeled vulnerability-fix event tied to a single commit."""
+
+    event_id: str
+    commit: str
+    vulnerability_ids: tuple[str, ...]
+    source: str
 
 
 def cache_file_for_cpe(cpe_id: str, cache_dir: Path) -> Path:
@@ -140,6 +195,11 @@ def extract_commit_refs_from_nvd_items(
             commit_to_cves.setdefault(commit, set()).add(cve_id)
 
     return commit_to_cves
+
+
+def extract_security_ids(text: str) -> set[str]:
+    """Extract explicit vulnerability identifiers from commit text."""
+    return {match.group(0).upper() for match in SECURITY_ID_RE.finditer(text or "")}
 
 
 def should_include_source_path(path_str: str, extensions: list[str]) -> bool:
@@ -248,6 +308,8 @@ def _run_git(repo_path: Path, args: list[str]) -> subprocess.CompletedProcess[st
         ["git", "-C", str(repo_path), *args],
         capture_output=True,
         text=True,
+        encoding="utf-8",
+        errors="replace",
         env=env,
     )
 
@@ -258,6 +320,24 @@ def _get_first_parent(repo_path: Path, commit: str) -> str | None:
         return None
     words = proc.stdout.strip().split()
     return words[1] if len(words) > 1 else None
+
+
+def _get_commit_parents(repo_path: Path, commit: str) -> list[str]:
+    proc = _run_git(repo_path, ["rev-list", "--parents", "-n", "1", commit])
+    if proc.returncode != 0:
+        return []
+    words = proc.stdout.strip().split()
+    return words[1:]
+
+
+def _get_commit_epoch(repo_path: Path, commit: str) -> int:
+    proc = _run_git(repo_path, ["show", "-s", "--format=%ct", commit])
+    if proc.returncode != 0:
+        return 2**63 - 1
+    try:
+        return int(proc.stdout.strip())
+    except ValueError:
+        return 2**63 - 1
 
 
 def _list_source_files_at_commit(
@@ -374,35 +454,209 @@ def _select_control_file(
     return None
 
 
+def _extract_nvd_event_candidates(
+    vuln_items: list[dict],
+    expected_slug: str | None,
+) -> dict[str, set[str]]:
+    """Collect NVD-linked commit candidates keyed by vulnerability identifier."""
+    if expected_slug is None:
+        return {}
+
+    commit_to_cves = extract_commit_refs_from_nvd_items(vuln_items, expected_slug)
+    cve_to_commits: dict[str, set[str]] = {}
+    for commit, cve_ids in commit_to_cves.items():
+        for cve_id in cve_ids:
+            cve_to_commits.setdefault(cve_id, set()).add(commit)
+    return cve_to_commits
+
+
+def _extract_explicit_id_event_candidates(repo_path: Path) -> dict[str, set[str]]:
+    """Collect commits whose subject or body explicitly names a vulnerability identifier."""
+    proc = _run_git(
+        repo_path,
+        [
+            "log",
+            "--all",
+            "--regexp-ignore-case",
+            "--grep",
+            "CVE-",
+            "--grep",
+            "GHSA-",
+            "--format=%H%x1f%B%x1e",
+        ],
+    )
+    if proc.returncode != 0:
+        return {}
+
+    event_to_commits: dict[str, set[str]] = {}
+    for block in proc.stdout.split("\x1e"):
+        block = block.strip()
+        if not block or "\x1f" not in block:
+            continue
+        commit, message = block.split("\x1f", 1)
+        security_ids = extract_security_ids(message)
+        for security_id in security_ids:
+            event_to_commits.setdefault(security_id, set()).add(commit.strip())
+
+    return event_to_commits
+
+
+def _select_primary_event_commit(
+    repo_path: Path,
+    entry: CorpusEntry,
+    commits: set[str],
+    metadata_cache: dict[str, tuple[str, tuple[str, ...], int] | None],
+) -> str | None:
+    """Choose the earliest single-parent source-touching commit for an event."""
+    candidates: list[tuple[int, str]] = []
+
+    for commit in commits:
+        if commit not in metadata_cache:
+            parents = _get_commit_parents(repo_path, commit)
+            if len(parents) != 1:
+                metadata_cache[commit] = None
+            else:
+                changed_files = tuple(
+                    _list_changed_source_files(repo_path, commit, entry.source_extensions)
+                )
+                if not changed_files:
+                    metadata_cache[commit] = None
+                else:
+                    metadata_cache[commit] = (
+                        parents[0],
+                        changed_files,
+                        _get_commit_epoch(repo_path, commit),
+                    )
+
+        meta = metadata_cache[commit]
+        if meta is None:
+            continue
+        _, _, epoch = meta
+        candidates.append((epoch, commit))
+
+    if not candidates:
+        return None
+
+    candidates.sort(key=lambda item: (item[0], item[1]))
+    return candidates[0][1]
+
+
+def collect_ground_truth_events(
+    repo_path: Path,
+    entry: CorpusEntry,
+    cache_dir: Path,
+    *,
+    ground_truth_policy: str = "nvd_commit_refs",
+) -> list[GroundTruthEvent]:
+    """Collect event-labeled fixing commits under an explicit precision/recall policy."""
+    if ground_truth_policy not in GROUND_TRUTH_POLICIES:
+        raise ValueError(f"Unknown ground_truth_policy: {ground_truth_policy}")
+
+    expected_slug = normalise_github_slug(entry.git_url)
+    vuln_items: list[dict] = []
+    cache_file = cache_file_for_cpe(entry.cpe_id, cache_dir)
+    if cache_file.exists():
+        vuln_items = json.loads(cache_file.read_text())
+
+    nvd_commit_to_cves = (
+        extract_commit_refs_from_nvd_items(vuln_items, expected_slug) if expected_slug else {}
+    )
+    if ground_truth_policy == "nvd_commit_refs":
+        return [
+            GroundTruthEvent(
+                event_id=";".join(sorted(cve_ids)),
+                commit=commit,
+                vulnerability_ids=tuple(sorted(cve_ids)),
+                source="nvd_ref",
+            )
+            for commit, cve_ids in sorted(nvd_commit_to_cves.items())
+        ]
+
+    nvd_event_candidates = _extract_nvd_event_candidates(vuln_items, expected_slug)
+    explicit_event_candidates = (
+        _extract_explicit_id_event_candidates(repo_path)
+        if ground_truth_policy == "balanced_explicit_id_event"
+        else {}
+    )
+
+    all_event_ids = set(nvd_event_candidates)
+    if ground_truth_policy == "balanced_explicit_id_event":
+        all_event_ids |= set(explicit_event_candidates)
+
+    metadata_cache: dict[str, tuple[str, tuple[str, ...], int] | None] = {}
+    events: list[GroundTruthEvent] = []
+
+    for event_id in sorted(all_event_ids):
+        candidate_commits = set(nvd_event_candidates.get(event_id, set()))
+        sources: set[str] = set()
+        if candidate_commits:
+            sources.add("nvd_ref")
+
+        if ground_truth_policy == "balanced_explicit_id_event":
+            explicit_commits = explicit_event_candidates.get(event_id, set())
+            if explicit_commits:
+                candidate_commits |= explicit_commits
+                sources.add("explicit_id")
+
+        selected_commit = _select_primary_event_commit(
+            repo_path,
+            entry,
+            candidate_commits,
+            metadata_cache,
+        )
+        if selected_commit is None:
+            continue
+
+        events.append(
+            GroundTruthEvent(
+                event_id=event_id,
+                commit=selected_commit,
+                vulnerability_ids=(event_id,),
+                source="+".join(sorted(sources)),
+            )
+        )
+
+    return events
+
+
 def match_case_control_pairs(
     repo_path: Path,
     entry: CorpusEntry,
     cache_dir: Path,
     *,
     min_loc: int = 20,
+    ground_truth_policy: str = "nvd_commit_refs",
 ) -> pd.DataFrame:
     """Build matched file-level pairs for one repository."""
-    expected_slug = normalise_github_slug(entry.git_url)
-    if expected_slug is None:
+    if (
+        ground_truth_policy in {"nvd_commit_refs", "strict_nvd_event"}
+        and normalise_github_slug(entry.git_url) is None
+    ):
         logger.info("Skipping %s: non-GitHub remote", entry.name)
         return pd.DataFrame()
 
-    cache_file = cache_file_for_cpe(entry.cpe_id, cache_dir)
-    if not cache_file.exists():
-        logger.info("Skipping %s: no local NVD cache", entry.name)
-        return pd.DataFrame()
+    if ground_truth_policy in {"nvd_commit_refs", "strict_nvd_event"}:
+        cache_file = cache_file_for_cpe(entry.cpe_id, cache_dir)
+        if not cache_file.exists():
+            logger.info("Skipping %s: no local NVD cache", entry.name)
+            return pd.DataFrame()
 
-    vuln_items = json.loads(cache_file.read_text())
-    commit_to_cves = extract_commit_refs_from_nvd_items(vuln_items, expected_slug)
-    if not commit_to_cves:
-        logger.info("Skipping %s: no matching commit references", entry.name)
+    events = collect_ground_truth_events(
+        repo_path,
+        entry,
+        cache_dir,
+        ground_truth_policy=ground_truth_policy,
+    )
+    if not events:
+        logger.info("Skipping %s: no usable ground-truth events under %s", entry.name, ground_truth_policy)
         return pd.DataFrame()
 
     snapshot_file_cache: dict[str, dict[str, dict[str, object]]] = {}
     metrics_cache: dict[tuple[str, str], StructuralOpacity | None] = {}
     rows: list[dict[str, object]] = []
 
-    for commit, cve_ids in sorted(commit_to_cves.items()):
+    for event in events:
+        commit = event.commit
         parent = _get_first_parent(repo_path, commit)
         if parent is None:
             continue
@@ -467,7 +721,10 @@ def match_case_control_pairs(
                     "repo": entry.name,
                     "commit": commit,
                     "parent": parent,
-                    "cve_ids": ";".join(sorted(cve_ids)),
+                    "event_id": event.event_id,
+                    "ground_truth_source": event.source,
+                    "ground_truth_policy": ground_truth_policy,
+                    "cve_ids": ";".join(event.vulnerability_ids),
                     "case_file": case_path,
                     "control_file": control_path,
                     "case_size_bytes": case_metrics.total_bytes,
@@ -527,6 +784,12 @@ def summarise_case_control_pairs(pairs: pd.DataFrame) -> dict[str, object]:
         "mean_control_loc": float(pairs["control_loc"].mean()),
         "median_loc_ratio": float(pairs["loc_ratio"].median()),
     }
+    if "event_id" in pairs.columns:
+        summary["n_events"] = int(pairs["event_id"].nunique())
+    if "ground_truth_policy" in pairs.columns:
+        policy = str(pairs["ground_truth_policy"].iloc[0])
+        summary["ground_truth_policy"] = policy
+        summary.update(describe_ground_truth_policy(policy))
 
     if len(nonzero) >= 1:
         sign_test = stats.binomtest(positive, positive + negative, p=0.5, alternative="greater")
@@ -543,14 +806,25 @@ def summarise_case_control_pairs(pairs: pd.DataFrame) -> dict[str, object]:
         except ValueError:
             pass
 
+    primary_cluster_col = "event_id" if "event_id" in pairs.columns else "commit"
+    summary["bootstrap_primary_cluster"] = clustered_delta_bootstrap(
+        pairs,
+        cluster_col=primary_cluster_col,
+    )
+    summary["bootstrap_repo_cluster"] = clustered_delta_bootstrap(
+        pairs,
+        cluster_col="repo",
+    )
+
     return summary
 
 
 def summarise_commit_level_deltas(commit_summary: pd.DataFrame) -> dict[str, object]:
-    """Summarise commit-level mean deltas as a higher-level observation set."""
+    """Summarise commit-event mean deltas as a higher-level observation set."""
     if commit_summary.empty:
         return {
-            "n_commits": 0,
+            "n_commit_events": 0,
+            "n_unique_commits": 0,
             "n_repos": 0,
         }
 
@@ -560,12 +834,19 @@ def summarise_commit_level_deltas(commit_summary: pd.DataFrame) -> dict[str, obj
     negative = int((nonzero < 0).sum())
 
     summary: dict[str, object] = {
-        "n_commits": int(len(commit_summary)),
+        "n_commit_events": int(len(commit_summary)),
+        "n_unique_commits": int(commit_summary["commit"].nunique()),
         "n_repos": int(commit_summary["repo"].nunique()),
         "mean_delta_composite": float(delta.mean()),
         "median_delta_composite": float(delta.median()),
         "positive_share": float((delta > 0).mean()),
     }
+    if "event_id" in commit_summary.columns:
+        summary["n_events"] = int(commit_summary["event_id"].nunique())
+    if "ground_truth_policy" in commit_summary.columns:
+        policy = str(commit_summary["ground_truth_policy"].iloc[0])
+        summary["ground_truth_policy"] = policy
+        summary.update(describe_ground_truth_policy(policy))
 
     if len(nonzero) >= 1:
         sign_test = stats.binomtest(positive, positive + negative, p=0.5, alternative="greater")
@@ -581,5 +862,17 @@ def summarise_commit_level_deltas(commit_summary: pd.DataFrame) -> dict[str, obj
             summary["wilcoxon_pvalue_greater"] = float(wilcoxon.pvalue)
         except ValueError:
             pass
+
+    primary_cluster_col = "event_id" if "event_id" in commit_summary.columns else "commit"
+    summary["bootstrap_primary_cluster"] = clustered_delta_bootstrap(
+        commit_summary,
+        cluster_col=primary_cluster_col,
+        delta_col="mean_delta_composite",
+    )
+    summary["bootstrap_repo_cluster"] = clustered_delta_bootstrap(
+        commit_summary,
+        cluster_col="repo",
+        delta_col="mean_delta_composite",
+    )
 
     return summary

@@ -1,0 +1,113 @@
+{
+  "pair_level": {
+    "n_pairs": 293,
+    "n_commits": 176,
+    "n_repos": 11,
+    "mean_delta_composite": 0.005306774479085803,
+    "median_delta_composite": 0.002189924321213732,
+    "positive_share": 0.5324232081911263,
+    "mean_case_loc": 1803.9283276450512,
+    "mean_control_loc": 1705.5529010238909,
+    "median_loc_ratio": 1.0215633423180592,
+    "n_events": 181,
+    "ground_truth_policy": "strict_nvd_event",
+    "label": "NVD event-collapsed observations",
+    "description": "Each NVD-linked vulnerability is mapped to one primary single-parent source-touching fixing commit.",
+    "sign_test_positive_count": 156,
+    "sign_test_negative_count": 137,
+    "sign_test_pvalue_greater": 0.14649118728474142,
+    "rank_biserial_effect": 0.06484641638225255,
+    "wilcoxon_statistic": 25226.0,
+    "wilcoxon_pvalue_greater": 0.005502801696382783,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0016202905612778468,
+        0.009261606994408825
+      ],
+      "median_delta_composite_ci": [
+        -0.0017052263613191454,
+        0.006373310978788238
+      ],
+      "positive_share_ci": [
+        0.47498686186186184,
+        0.59375
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0018105108058523312,
+        0.00902303285629541
+      ],
+      "median_delta_composite_ci": [
+        -0.00041768209849396554,
+        0.007407271400490911
+      ],
+      "positive_share_ci": [
+        0.48988555770470665,
+        0.5915631949592289
+      ]
+    }
+  },
+  "commit_level": {
+    "n_commit_events": 181,
+    "n_unique_commits": 176,
+    "n_repos": 11,
+    "mean_delta_composite": 0.006439293626402956,
+    "median_delta_composite": 0.005279723275613546,
+    "positive_share": 0.569060773480663,
+    "n_events": 181,
+    "ground_truth_policy": "strict_nvd_event",
+    "label": "NVD event-collapsed observations",
+    "description": "Each NVD-linked vulnerability is mapped to one primary single-parent source-touching fixing commit.",
+    "sign_test_positive_count": 103,
+    "sign_test_negative_count": 78,
+    "sign_test_pvalue_greater": 0.03707351979542013,
+    "rank_biserial_effect": 0.13812154696132597,
+    "wilcoxon_statistic": 10225.0,
+    "wilcoxon_pvalue_greater": 0.002412259690189633,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 181,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.002258407195624131,
+        0.01073055254567653
+      ],
+      "median_delta_composite_ci": [
+        -0.00012370736573902308,
+        0.011507185816299503
+      ],
+      "positive_share_ci": [
+        0.4972375690607735,
+        0.6408839779005525
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.002694727655182456,
+        0.009590084164236868
+      ],
+      "median_delta_composite_ci": [
+        0.0017921392126066804,
+        0.009507313578415116
+      ],
+      "positive_share_ci": [
+        0.5203091991549837,
+        0.6300394736842103
+      ]
+    }
+  }
+}

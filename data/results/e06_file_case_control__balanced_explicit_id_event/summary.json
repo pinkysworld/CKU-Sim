@@ -1,0 +1,113 @@
+{
+  "pair_level": {
+    "n_pairs": 1082,
+    "n_commits": 571,
+    "n_repos": 11,
+    "mean_delta_composite": 0.007486818608700875,
+    "median_delta_composite": 0.0036407201686723123,
+    "positive_share": 0.5526802218114603,
+    "mean_case_loc": 2677.0988909426987,
+    "mean_control_loc": 2342.1534195933455,
+    "median_loc_ratio": 1.0158743137625437,
+    "n_events": 606,
+    "ground_truth_policy": "balanced_explicit_id_event",
+    "label": "Expanded explicit-ID observations",
+    "description": "The event-collapsed NVD set is augmented with locally explicit CVE/GHSA-tagged security-fix commits, with one primary fixing commit retained per event.",
+    "sign_test_positive_count": 598,
+    "sign_test_negative_count": 484,
+    "sign_test_pvalue_greater": 0.00029282975162556624,
+    "rank_biserial_effect": 0.10536044362292052,
+    "wilcoxon_statistic": 348778.0,
+    "wilcoxon_pvalue_greater": 2.8197872364871308e-08,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 606,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.004836832674103549,
+        0.010390840655181583
+      ],
+      "median_delta_composite_ci": [
+        0.0017921392126066804,
+        0.005757038872478526
+      ],
+      "positive_share_ci": [
+        0.5180635789426362,
+        0.5865050707355567
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0032261999569347245,
+        0.01023901879542574
+      ],
+      "median_delta_composite_ci": [
+        0.0012621199964091296,
+        0.0048922050217887255
+      ],
+      "positive_share_ci": [
+        0.5093555716320395,
+        0.607984033058843
+      ]
+    }
+  },
+  "commit_level": {
+    "n_commit_events": 608,
+    "n_unique_commits": 571,
+    "n_repos": 11,
+    "mean_delta_composite": 0.008283733262637889,
+    "median_delta_composite": 0.0049044685892289715,
+    "positive_share": 0.5970394736842105,
+    "n_events": 606,
+    "ground_truth_policy": "balanced_explicit_id_event",
+    "label": "Expanded explicit-ID observations",
+    "description": "The event-collapsed NVD set is augmented with locally explicit CVE/GHSA-tagged security-fix commits, with one primary fixing commit retained per event.",
+    "sign_test_positive_count": 363,
+    "sign_test_negative_count": 245,
+    "sign_test_pvalue_greater": 9.72003539472658e-07,
+    "rank_biserial_effect": 0.19407894736842105,
+    "wilcoxon_statistic": 118658.0,
+    "wilcoxon_pvalue_greater": 8.663114668790038e-10,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_id",
+      "n_clusters": 606,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.00568421731871208,
+        0.010879399182510378
+      ],
+      "median_delta_composite_ci": [
+        0.0033757367348064005,
+        0.0079783333090694
+      ],
+      "positive_share_ci": [
+        0.5592105263157895,
+        0.6353323324135691
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 11,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0034108141942459317,
+        0.012553191845719874
+      ],
+      "median_delta_composite_ci": [
+        0.003010050710041181,
+        0.00878625677678424
+      ],
+      "positive_share_ci": [
+        0.5559761039462259,
+        0.633955300127714
+      ]
+    }
+  }
+}
