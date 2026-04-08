@@ -12,5 +12,6 @@ Current contents:
 - `data/results/e03_cve/`: opacity/CVE merged outputs and figures
 - `data/results/e04_temporal/`: temporal opacity series and aggregate figure
 - `data/results/e05_insurance/`: Monte Carlo insurance outputs
+- `data/results/e06_file_case_control/`: matched file-level case-control outputs and figures
 
 Readers who wish to regenerate the results should consult `REPRODUCIBILITY.md`.

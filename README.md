@@ -8,13 +8,14 @@ The repository implements a measurement and simulation workflow for structural o
 
 ## Scope
 
-The codebase supports five experiment families:
+The codebase supports six experiment families:
 
 1. Synthetic opacity separation.
 2. Structural opacity measurement across a curated software corpus.
 3. Correlation analysis between opacity metrics and NVD CVE data.
 4. Temporal evolution of opacity over repository history.
 5. Monte Carlo cyber insurance simulation under opacity-aware and opacity-blind assumptions.
+6. File-level matched case-control analysis for vulnerability-fixing commits.
 
 ## Repository Contents
 
@@ -57,6 +58,7 @@ python -m experiments.e02_real_codebase_survey --config experiments/config.yaml
 python -m experiments.e03_cve_correlation --config experiments/config.yaml
 python -m experiments.e04_temporal_evolution --config experiments/config.yaml
 python -m experiments.e05_insurance_simulation --config experiments/config.yaml
+python -m experiments.e06_file_level_case_control --config experiments/config.yaml
 ```
 
 ## Results Included In This Repository
@@ -68,6 +70,7 @@ The repository ships with generated outputs under `data/results/`:
 - `e03_cve`: merged opacity/CVE dataset, correlation outputs, regression outputs, and figures.
 - `e04_temporal`: sampled historical opacity series and aggregate figure.
 - `e05_insurance`: simulation summaries, convergence check, quartile analysis, and figures.
+- `e06_file_case_control`: matched pre-fix file-level case-control outputs, commit summaries, and figures.
 
 ## Reproducibility Notes
 
@@ -75,6 +78,7 @@ The repository ships with generated outputs under `data/results/`:
 - NVD responses are not committed because they are transient external data pulls.
 - The temporal analysis requires full repository history for the selected projects.
 - CVE results depend on NVD availability and may change as NVD records evolve.
+- The file-level case-control study depends on which NVD entries expose usable fixing-commit references for locally available repository histories.
 
 Additional procedural details are documented in `REPRODUCIBILITY.md`.
 
