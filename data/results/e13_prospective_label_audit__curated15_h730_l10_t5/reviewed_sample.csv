@@ -1,0 +1,489 @@
+repo,snapshot_tag,snapshot_date,event_id,event_observation_id,event_published,event_date_source,ground_truth_source,ground_truth_aliases,fixed_commit,commit_subject,case_file,control_file,changed_source_files_count,changed_source_files_sample,review_decision,review_notes,changed_source_files_full,changed_source_files_review_count,case_file_in_changed_files,multi_file_fix,commit_message_full,commit_mentions_event_id,message_has_security_signal,source_has_explicit_id,source_has_nvd_ref,source_has_osv_ref,source_has_osv_range,event_commit_review,file_review,overall_review
+curl,curl-7_37_0,2014-05-20T21:42:47+00:00,CVE-2015-3148,curl:curl-7_37_0:CVE-2015-3148,2015-04-21T21:20:37+00:00,fixed_commit_epoch,explicit_id,CVE-2015-3148,79b9d5f1a42578f807a6c94914bc65cbaa304b6d,http_done: close Negotiate connections when done,lib/http.c,lib/ssh.c,1,lib/http.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/http.c,1,1,0,"http_done: close Negotiate connections when done
+
+When doing HTTP requests Negotiate authenticated, the entire connnection
+may become authenticated and not just the specific HTTP request which is
+otherwise how HTTP works, as Negotiate can basically use NTLM under the
+hood. curl was not adhering to this fact but would assume that such
+requests would also be authenticated per request.
+
+CVE-2015-3148
+
+Bug: http://curl.haxx.se/docs/adv_20150422B.html
+Reported-by: Isaac Boukris",1,1,1,0,0,0,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2016-8617,curl:curl-7_50_0:CVE-2016-8617,2016-11-02T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2016-8617;CVE-2016-8617,efd24d57426bd77c9b5860e6b297904703750412,base64: check for integer overflow on large input,lib/base64.c,src/tool_cb_dbg.c,1,lib/base64.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/base64.c,1,1,0,"base64: check for integer overflow on large input
+
+CVE-2016-8617
+
+Bug: https://curl.haxx.se/docs/adv_20161102C.html
+Reported-by: Cure53",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2016-8619,curl:curl-7_50_0:CVE-2016-8619,2016-11-02T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2016-8619;CVE-2016-8619,3d6460edeee21d7d790ec570d0887bed1f4366dd,krb5: avoid realloc(0),lib/security.c,lib/select.c,1,lib/security.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/security.c,1,1,0,"krb5: avoid realloc(0)
+
+If the requested size is zero, bail out with error instead of doing a
+realloc() that would cause a double-free: realloc(0) acts as a free()
+and then there's a second free in the cleanup path.
+
+CVE-2016-8619
+
+Bug: https://curl.haxx.se/docs/adv_20161102E.html
+Reported-by: Cure53",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2016-8621,curl:curl-7_50_0:CVE-2016-8621,2016-11-02T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2016-8621;CVE-2016-8621,96a80b5a262fb6dd2ddcea7987296f3b9a405618,parsedate: handle cut off numbers better,lib/parsedate.c,src/tool_help.c,1,lib/parsedate.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/parsedate.c,1,1,0,"parsedate: handle cut off numbers better
+
+... and don't read outside of the given buffer!
+
+CVE-2016-8621
+
+bug: https://curl.haxx.se/docs/adv_20161102G.html
+Reported-by: Luật Nguyễn",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2016-8625,curl:curl-7_50_0:CVE-2016-8625,2016-11-02T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2016-8625;CVE-2016-8625,9c91ec778104ae3b744b39444d544e82d5ee9ece,idn: switch to libidn2 use and IDNA2008 support,lib/curl_setup.h,lib/config-tpf.h,6,lib/curl_setup.h;lib/easy.c;lib/strerror.c;lib/strerror.h;lib/url.c;lib/version.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/curl_setup.h;lib/easy.c;lib/strerror.c;lib/strerror.h;lib/url.c;lib/version.c,6,1,1,"idn: switch to libidn2 use and IDNA2008 support
+
+CVE-2016-8625
+
+Bug: https://curl.haxx.se/docs/adv_20161102K.html
+Reported-by: Christian Heimes",1,1,1,0,0,1,accept,ambiguous,ambiguous
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2017-1000257,curl:curl-7_50_0:CVE-2017-1000257,2017-10-12T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2017-1000257;CVE-2017-1000257,13c9a9ded3ae744a1e11cbc14e9146d9fa427040,"imap: if a FETCH response has no size, don't call write callback",lib/imap.c,lib/formdata.c,1,lib/imap.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/imap.c,1,1,0,"imap: if a FETCH response has no size, don't call write callback
+
+CVE-2017-1000257
+
+Reported-by: Brian Carpenter and 0xd34db347
+Also detected by OSS-Fuzz: https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=3586",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2017-7407,curl:curl-7_50_0:CVE-2017-7407,2017-04-03T08:00:00+00:00,nvd_published+osv_published,nvd_ref+osv_range+osv_ref,CURL-CVE-2017-7407;CVE-2017-7407,1890d59905414ab84a35892b2e45833654aa5c13,tool_writeout: fixed a buffer read overrun on --write-out,src/tool_writeout.c,lib/getinfo.c,1,src/tool_writeout.c,,Advisory record resolves to an explicit fixing commit reference.,src/tool_writeout.c,1,1,0,"tool_writeout: fixed a buffer read overrun on --write-out
+
+If a % ended the statement, the string's trailing NUL would be skipped
+and memory past the end of the buffer would be accessed and potentially
+displayed as part of the --write-out output. Added tests 1440 and 1441
+to check for this kind of condition.
+
+Reported-by: Brian Carpenter",0,1,0,1,1,1,accept,accept,accept
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2017-7468,curl:curl-7_50_0:CVE-2017-7468,2017-04-19T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2017-7468;CVE-2017-7468,33cfcfd9f0378625d3bddbd2c8ac5aad4b646f26,TLS: Fix switching off SSL session id when client cert is used,lib/vtls/axtls.c,lib/vauth/digest.c,12,lib/url.c;lib/urldata.h;lib/vtls/axtls.c;lib/vtls/cyassl.c;lib/vtls/darwinssl.c;lib/vtls/gtls.c;lib/vtls/mbedtls.c;lib/vtls/nss.c;lib/vtls/openssl.c;lib/vtls/polarssl.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/url.c;lib/urldata.h;lib/vtls/axtls.c;lib/vtls/cyassl.c;lib/vtls/darwinssl.c;lib/vtls/gtls.c;lib/vtls/mbedtls.c;lib/vtls/nss.c;lib/vtls/openssl.c;lib/vtls/polarssl.c;lib/vtls/schannel.c;lib/vtls/vtls.c,12,1,1,"TLS: Fix switching off SSL session id when client cert is used
+
+Move the sessionid flag to ssl_primary_config so that ssl and proxy_ssl
+will each have their own sessionid flag.
+
+Regression since HTTPS-Proxy support was added in cb4e2be. Prior to that
+this issue had been fixed in 247d890, CVE-2016-5419.
+
+Bug: https://github.com/curl/curl/issues/1341
+Reported-by: lijian996@users.noreply.github.com
+
+The new incarnation of this bug is called CVE-2017-7468 and is documented
+here: https://curl.haxx.se/docs/adv_20170419.html",1,1,1,0,0,1,accept,ambiguous,ambiguous
+curl,curl-7_50_0,2016-07-21T08:53:38+00:00,CVE-2018-0500,curl:curl-7_50_0:CVE-2018-0500,2018-07-11T08:00:00+00:00,nvd_published+osv_published,explicit_id+nvd_ref+osv_range+osv_ref,CURL-CVE-2018-0500;CVE-2018-0500,ba1dbd78e5f1ed67c1b8d37ac89d90e5e330b628,smtp: use the upload buffer size for scratch buffer malloc,lib/smtp.c,lib/x509asn1.c,1,lib/smtp.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/smtp.c,1,1,0,"smtp: use the upload buffer size for scratch buffer malloc
+
+... not the read buffer size, as that can be set smaller and thus cause
+a buffer overflow! CVE-2018-0500
+
+Reported-by: Peter Wu
+Bug: https://curl.haxx.se/docs/adv_2018-70a2.html",1,1,1,1,1,1,accept,accept,accept
+curl,curl-7_61_1,2018-09-04T21:49:50+00:00,CVE-2018-16839,curl:curl-7_61_1:CVE-2018-16839,2018-10-31T08:00:00+00:00,nvd_published+osv_published,explicit_id+nvd_ref+osv_range+osv_ref,CURL-CVE-2018-16839;CVE-2018-16839,f3a24d7916b9173c69a3e0ee790102993833d6c5,Curl_auth_create_plain_message: fix too-large-input-check,lib/vauth/cleartext.c,lib/vauth/cram.c,1,lib/vauth/cleartext.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/vauth/cleartext.c,1,1,0,"Curl_auth_create_plain_message: fix too-large-input-check
+
+CVE-2018-16839
+Reported-by: Harry Sintonen
+Bug: https://curl.haxx.se/docs/CVE-2018-16839.html",1,1,1,1,1,1,accept,accept,accept
+curl,curl-7_61_1,2018-09-04T21:49:50+00:00,CVE-2018-16840,curl:curl-7_61_1:CVE-2018-16840,2018-10-31T08:00:00+00:00,nvd_published+osv_published,explicit_id+nvd_ref+osv_range+osv_ref,CURL-CVE-2018-16840;CVE-2018-16840,81d135d67155c5295b1033679c606165d4e28f3f,Curl_close: clear data->multi_easy on free to avoid use-after-free,lib/url.c,lib/ftp.c,1,lib/url.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/url.c,1,1,0,"Curl_close: clear data->multi_easy on free to avoid use-after-free
+
+Regression from b46cfbc068 (7.59.0)
+CVE-2018-16840
+Reported-by: Brian Carpenter (Geeknik Labs)
+
+Bug: https://curl.haxx.se/docs/CVE-2018-16840.html",1,1,1,1,1,1,accept,accept,accept
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2020-8284,curl:curl-7_73_0:CVE-2020-8284,2020-12-09T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2020-8284;CVE-2020-8284,ec9cc725d598ac77de7b6df8afeec292b3c8ad46,ftp: CURLOPT_FTP_SKIP_PASV_IP by default,lib/url.c,lib/http2.c,2,lib/url.c;src/tool_cfgable.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/url.c;src/tool_cfgable.c,2,1,1,"ftp: CURLOPT_FTP_SKIP_PASV_IP by default
+
+The command line tool also independently sets --ftp-skip-pasv-ip by
+default.
+
+Ten test cases updated to adapt the modified --libcurl output.
+
+Bug: https://curl.se/docs/CVE-2020-8284.html
+CVE-2020-8284
+
+Reported-by: Varnavas Papaioannou",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2021-22876,curl:curl-7_73_0:CVE-2021-22876,2021-03-31T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2021-22876;CVE-2021-22876,7214288898f5625a6cc196e22a74232eada7861c,transfer: strip credentials from the auto-referer header field,lib/transfer.c,lib/mime.c,1,lib/transfer.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/transfer.c,1,1,0,"transfer: strip credentials from the auto-referer header field
+
+Added test 2081 to verify.
+
+CVE-2021-22876
+
+Bug: https://curl.se/docs/CVE-2021-22876.html",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2021-22922,curl:curl-7_73_0:CVE-2021-22922,2021-07-21T08:00:00+00:00,osv_published,osv_range,CURL-CVE-2021-22922;CVE-2021-22922,265b14d6b37c4298bd5556fabcbc37d36f911693,metalink: remove,src/tool_cfgable.h,lib/curl_sspi.h,8,src/tool_cfgable.h;src/tool_getparam.c;src/tool_help.c;src/tool_main.c;src/tool_operate.c;src/tool_operate.h;src/tool_operhlp.c;src/tool_sdecls.h,,Advisory record resolves the event to a fixing commit via an affected range.,src/tool_cfgable.h;src/tool_getparam.c;src/tool_help.c;src/tool_main.c;src/tool_operate.c;src/tool_operate.h;src/tool_operhlp.c;src/tool_sdecls.h,8,1,1,"metalink: remove
+
+Warning: this will make existing curl command lines that use metalink to
+stop working.
+
+Reasons for removal:
+
+1. We've found several security problems and issues involving the
+   metalink support in curl. The issues are not detailed here. When
+   working on those, it become apparent to the team that several of the
+   problems are due to the system design, metalink library API and what
+   the metalink RFC says. They are very hard to fix on the curl side
+   only.
+
+2. The metalink usage with curl was only very briefly documented and was
+   not following the ""normal"" curl usage pattern in several ways, making
+   it surprising and non-intuitive which could lead to further security
+   issues.
+
+3. The metalink library was last updated 6 years ago and wasn't so
+   active the years before that either. An unmaintained library means
+   there's a security problem waiting to happen. This is probably reason
+   enough.
+
+4. Metalink requires an XML parsing library, which is complex code (even
+   the smaller alternatives) and to this day often gets security
+   updates.
+
+5. Metalink is not a widely used curl feature. In the 2020 curl user
+   survey, only 1.4% of the responders said that they'd are using it. In
+   2021 that number was 1.2%. Searching the web also show very few
+   traces of it being used, even with other tools.
+
+6. The torrent format and associated technology clearly won for
+   downloading large files from multiple sources in parallel.
+
+Cloes #7176",0,1,0,0,0,1,ambiguous,ambiguous,ambiguous
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2022-27775,curl:curl-7_73_0:CVE-2022-27775,2022-04-27T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2022-27775;CVE-2022-27775,058f98dc3fe595f21dc26a5b9b1699e519ba5705,"conncache: include the zone id in the ""bundle"" hashkey",lib/conncache.c,lib/getinfo.c,1,lib/conncache.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/conncache.c,1,1,0,"conncache: include the zone id in the ""bundle"" hashkey
+
+Make connections to two separate IPv6 zone ids create separate
+connections.
+
+Reported-by: Harry Sintonen
+Bug: https://curl.se/docs/CVE-2022-27775.html
+Closes #8747",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2022-27776,curl:curl-7_73_0:CVE-2022-27776,2022-04-27T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2022-27776;CVE-2022-27776,6e659993952aa5f90f48864be84a1bbb047fc258,http: avoid auth/cookie on redirects same host diff port,lib/http.c,lib/formdata.c,2,lib/http.c;lib/urldata.h,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/http.c;lib/urldata.h,2,1,1,"http: avoid auth/cookie on redirects same host diff port
+
+CVE-2022-27776
+
+Reported-by: Harry Sintonen
+Bug: https://curl.se/docs/CVE-2022-27776.html
+Closes #8749",1,1,1,0,0,1,accept,accept,accept
+curl,curl-7_73_0,2020-10-14T05:50:16+00:00,CVE-2022-27782,curl:curl-7_73_0:CVE-2022-27782,2022-05-11T08:00:00+00:00,osv_published,explicit_id+osv_range,CURL-CVE-2022-27782;CVE-2022-27782,1645e9b44505abd5cbaf65da5282c3f33b5924a5,url: check SSH config match on connection reuse,lib/vssh/ssh.h,packages/vms/curlmsg.h,2,lib/url.c;lib/vssh/ssh.h,,Commit message or body links the fix explicitly to a vulnerability identifier.,lib/url.c;lib/vssh/ssh.h,2,1,1,"url: check SSH config match on connection reuse
+
+CVE-2022-27782
+
+Reported-by: Harry Sintonen
+Bug: https://curl.se/docs/CVE-2022-27782.html
+Closes #8825",1,1,1,0,0,1,accept,accept,accept
+curl,curl-8_6_0,2024-01-31T07:03:52+00:00,CVE-2024-2379,curl:curl-8_6_0:CVE-2024-2379,2024-03-27T08:00:00+00:00,osv_published,osv_range,CURL-CVE-2024-2379;CVE-2024-2379,aedbbdf18e689a5eee8dc39600914f5eda6c409c,vquic-tls: return appropirate errors on wolfSSL errors,lib/vquic/vquic-tls.c,lib/vquic/vquic.c,1,lib/vquic/vquic-tls.c,,OSV-range-only mapping; commit message fixes error handling but does not itself name the vulnerability.,lib/vquic/vquic-tls.c,1,1,0,"vquic-tls: return appropirate errors on wolfSSL errors
+
+Reported-by: Dexter Gerig
+Closes #13107",0,1,0,0,0,1,ambiguous,accept,ambiguous
+curl,curl-8_6_0,2024-01-31T07:03:52+00:00,CVE-2024-6197,curl:curl-8_6_0:CVE-2024-6197,2024-07-24T08:00:00+00:00,osv_published,osv_range,CURL-CVE-2024-6197;CVE-2024-6197,3a537a4db9e65e545ec45b1b5d5575ee09a2569d,x509asn1: remove superfluous free(),lib/vtls/x509asn1.c,lib/vssh/wolfssh.c,1,lib/vtls/x509asn1.c,,Advisory record resolves the event to a fixing commit via an affected range.,lib/vtls/x509asn1.c,1,1,0,x509asn1: remove superfluous free(),0,0,0,0,0,1,ambiguous,accept,ambiguous
+curl,curl-8_6_0,2024-01-31T07:03:52+00:00,CVE-2025-0725,curl:curl-8_6_0:CVE-2025-0725,2025-02-05T08:00:00+00:00,nvd_published+osv_published,nvd_ref+osv_range+osv_ref,CURL-CVE-2025-0725;CVE-2025-0725,76f83f0db23846e254d940ec7,content_encoding: drop support for zlib before 1.2.0.4,lib/content_encoding.c,lib/asyn-ares.c,1,lib/content_encoding.c,,Advisory record resolves to an explicit fixing commit reference.,lib/content_encoding.c,1,1,0,"content_encoding: drop support for zlib before 1.2.0.4
+
+zlib 1.2.0.4 was released on 10 August 2003
+
+Closes #16079",0,0,0,1,1,1,accept,accept,accept
+curl,curl-8_6_0,2024-01-31T07:03:52+00:00,CVE-2025-14819,curl:curl-8_6_0:CVE-2025-14819,2026-01-07T08:00:00+00:00,osv_published,osv_range,CURL-CVE-2025-14819;CVE-2025-14819,cd046f6c93b39d673a58c18648d8906e954c4f5d,openssl: toggling CURLSSLOPT_NO_PARTIALCHAIN makes a different CA cache,lib/vtls/openssl.c,lib/vquic/curl_ngtcp2.c,1,lib/vtls/openssl.c,,Advisory record resolves the event to a fixing commit via an affected range.,lib/vtls/openssl.c,1,1,0,"openssl: toggling CURLSSLOPT_NO_PARTIALCHAIN makes a different CA cache
+
+Reported-by: Stanislav Fort
+
+Closes #20009",0,0,0,0,0,1,ambiguous,accept,ambiguous
+curl,curl-8_6_0,2024-01-31T07:03:52+00:00,OSV-2025-657,curl:curl-8_6_0:OSV-2025-657,2025-08-20T00:12:09+00:00,osv_published,osv_range,OSV-2025-657,c294d0abc5b62b8068af391576be87b821d2ff8b,libssh2: fix sftp_statemachine busyloop when *block=true,lib/vssh/libssh2.c,lib/vtls/sectransp.c,1,lib/vssh/libssh2.c,,"OSV-only event with a plausible denial-of-service style fix, but the commit message does not explicitly indicate a security context.",lib/vssh/libssh2.c,1,1,0,"libssh2: fix sftp_statemachine busyloop when *block=true
+
+Closes #18311",0,0,0,0,0,1,ambiguous,accept,ambiguous
+django-django,4.2.4,2023-08-01T16:59:48+00:00,CVE-2024-11168,django-django:4.2.4:CVE-2024-11168,2024-12-03T08:50:11+00:00,fixed_commit_epoch,explicit_id,CVE-2024-11168,f663277a4c22ef96cbdebfd0ed76155b9d37b4f8,[4.2.x] Refs CVE-2024-11168 -- Updated vendored _urlsplit() to properly validate IPv6 and IPvFuture addresses.,django/utils/http.py,django/utils/functional.py,1,django/utils/http.py,,Commit message or body links the fix explicitly to a vulnerability identifier.,django/utils/http.py,1,1,0,"[4.2.x] Refs CVE-2024-11168 -- Updated vendored _urlsplit() to properly validate IPv6 and IPvFuture addresses.
+
+Refs Python CVE-2024-11168. Django should not affected, but others who
+incorrectly use internal function _urlsplit() with unsanitized input
+could be at risk.
+
+https://github.com/python/cpython/pull/103849",1,1,1,0,0,0,accept,accept,accept
+git,v2.13.7,2018-05-22T04:50:36+00:00,CVE-2019-1348,git:v2.13.7:CVE-2019-1348,2020-01-24T22:15:19+00:00,osv_published,explicit_id+osv_range,CVE-2019-1348,68061e3470210703cb15594194718d35094afdc0,"fast-import: disallow ""feature export-marks"" by default",fast-import.c,revision.c,2,fast-import.c;transport-helper.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,fast-import.c;transport-helper.c,2,1,1,"fast-import: disallow ""feature export-marks"" by default
+
+The fast-import stream command ""feature export-marks=<path>"" lets the
+stream write marks to an arbitrary path. This may be surprising if you
+are running fast-import against an untrusted input (which otherwise
+cannot do anything except update Git objects and refs).
+
+Let's disallow the use of this feature by default, and provide a
+command-line option to re-enable it (you can always just use the
+command-line --export-marks as well, but the in-stream version provides
+an easy way for exporters to control the process).
+
+This is a backwards-incompatible change, since the default is flipping
+to the new, safer behavior. However, since the main users of the
+in-stream versions would be import/export-based remote helpers, and
+since we trust remote helpers already (which are already running
+arbitrary code), we'll pass the new option by default when reading a
+remote helper's stream. This should minimize the impact.
+
+Note that the implementation isn't totally simple, as we have to work
+around the fact that fast-import doesn't parse its command-line options
+until after it has read any ""feature"" lines from the stream. This is how
+it lets command-line options override in-stream. But in our case, it's
+important to parse the new --allow-unsafe-features first.
+
+There are three options for resolving this:
+
+  1. Do a separate ""early"" pass over the options. This is easy for us to
+     do because there are no command-line options that allow the
+     ""unstuck"" form (so there's no chance of us mistaking an argument
+     for an option), though it does introduce a risk of incorrect
+     parsing later (e.g,. if we convert to parse-options).
+
+  2. Move the option parsing phase back to the start of the program, but
+     teach the stream-reading code never to override an existing value.
+     This is tricky, because stream ""feature"" lines override each other
+     (meaning we'd have to start tracking the source for every option).
+
+  3. Accept that we might parse a ""feature export-marks"" line that is
+     forbidden, as long we don't _act_ on it until after we've parsed
+     the command line options.
+
+     This would, in fact, work with the current code, but only because
+     the previous patch fixed the export-marks parser to avoid touching
+     the filesystem.
+
+     So while it works, it does carry risk of somebody getting it wrong
+     in the future in a rather subtle and unsafe way.
+
+I've gone with option (1) here as simple, safe, and unlikely to cause
+regressions.
+
+This fixes CVE-2019-1348.
+
+Signed-off-by: Jeff King <peff@peff.net>",1,1,1,0,0,1,accept,accept,accept
+git,v2.13.7,2018-05-22T04:50:36+00:00,CVE-2019-1352,git:v2.13.7:CVE-2019-1352,2019-12-05T14:36:50+00:00,fixed_commit_epoch,explicit_id,CVE-2019-1352,7c3745fc6185495d5765628b4dfe1bd2c25a2981,path: safeguard `.git` against NTFS Alternate Streams Accesses,path.c,daemon.c,1,path.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,path.c,1,1,0,"path: safeguard `.git` against NTFS Alternate Streams Accesses
+
+Probably inspired by HFS' resource streams, NTFS supports ""Alternate
+Data Streams"": by appending `:<stream-name>` to the file name,
+information in addition to the file contents can be written and read,
+information that is copied together with the file (unless copied to a
+non-NTFS location).
+
+These Alternate Data Streams are typically used for things like marking
+an executable as having just been downloaded from the internet (and
+hence not necessarily being trustworthy).
+
+In addition to a stream name, a stream type can be appended, like so:
+`:<stream-name>:<stream-type>`. Unless specified, the default stream
+type is `$DATA` for files and `$INDEX_ALLOCATION` for directories. In
+other words, `.git::$INDEX_ALLOCATION` is a valid way to reference the
+`.git` directory!
+
+In our work in Git v2.2.1 to protect Git on NTFS drives under
+`core.protectNTFS`, we focused exclusively on NTFS short names, unaware
+of the fact that NTFS Alternate Data Streams offer a similar attack
+vector.
+
+Let's fix this.
+
+Seeing as it is better to be safe than sorry, we simply disallow paths
+referring to *any* NTFS Alternate Data Stream of `.git`, not just
+`::$INDEX_ALLOCATION`. This also simplifies the implementation.
+
+This closes CVE-2019-1352.
+
+Further reading about NTFS Alternate Data Streams:
+https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/c54dec26-1551-4d3a-a0ea-4fa40f848eb3
+
+Reported-by: Nicolas Joly <Nicolas.Joly@microsoft.com>
+Signed-off-by: Johannes Schindelin <johannes.schindelin@gmx.de>",1,1,1,0,0,0,accept,accept,accept
+git,v2.27.0,2020-06-01T06:03:57+00:00,CVE-2022-24765,git:v2.27.0:CVE-2022-24765,2022-04-12T00:00:00+00:00,osv_published,explicit_id+osv_range,CVE-2022-24765;GHSA-VW2C-22J4-2FH2,3b0bf2704980b1ed6018622bdf5377ec22289688,setup: tighten ownership checks post CVE-2022-24765,setup.c,pack-bitmap.c,1,setup.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,setup.c,1,1,0,"setup: tighten ownership checks post CVE-2022-24765
+
+8959555cee7 (setup_git_directory(): add an owner check for the top-level
+directory, 2022-03-02), adds a function to check for ownership of
+repositories using a directory that is representative of it, and ways to
+add exempt a specific repository from said check if needed, but that
+check didn't account for owership of the gitdir, or (when used) the
+gitfile that points to that gitdir.
+
+An attacker could create a git repository in a directory that they can
+write into but that is owned by the victim to work around the fix that
+was introduced with CVE-2022-24765 to potentially run code as the
+victim.
+
+An example that could result in privilege escalation to root in *NIX would
+be to set a repository in a shared tmp directory by doing (for example):
+
+  $ git -C /tmp init
+
+To avoid that, extend the ensure_valid_ownership function to be able to
+check for all three paths.
+
+This will have the side effect of tripling the number of stat() calls
+when a repository is detected, but the effect is expected to be likely
+minimal, as it is done only once during the directory walk in which Git
+looks for a repository.
+
+Additionally make sure to resolve the gitfile (if one was used) to find
+the relevant gitdir for checking.
+
+While at it change the message printed on failure so it is clear we are
+referring to the repository by its worktree (or gitdir if it is bare) and
+not to a specific directory.
+
+Helped-by: Junio C Hamano <junio@pobox.com>
+Helped-by: Johannes Schindelin <Johannes.Schindelin@gmx.de>
+Signed-off-by: Carlo Marcelo Arenas Belón <carenas@gmail.com>",1,1,1,0,0,1,accept,accept,accept
+openssh,V_8_7_P1,2021-08-20T04:03:49+00:00,CVE-2021-41617,openssh:V_8_7_P1:CVE-2021-41617,2021-09-26T19:15:07+00:00,osv_published,osv_range,CVE-2021-41617,bf944e3794eff5413f2df1ef37cddf96918c6bde,initgroups needs grp.h,misc.c,sftp.c,1,misc.c,,OSV-range-only mapping; the selected commit is terse and does not by itself make the security relevance explicit.,misc.c,1,1,0,initgroups needs grp.h,0,0,0,0,0,1,ambiguous,accept,ambiguous
+openssh,V_9_5_P1,2023-10-04T04:34:10+00:00,CVE-2025-32728,openssh:V_9_5_P1:CVE-2025-32728,2025-04-10T02:15:30+00:00,nvd_published+osv_published,nvd_ref+osv_range+osv_ref,CVE-2025-32728,fc86875e6acb36401dfc1dfb6b628a9d1460f367,upstream: Fix logic error in DisableForwarding option. This option,session.c,sshd.c,1,session.c,,Advisory record resolves to an explicit fixing commit reference.,session.c,1,1,0,"upstream: Fix logic error in DisableForwarding option. This option
+
+was documented as disabling X11 and agent forwarding but it failed to do so.
+Spotted by Tim Rice.
+
+OpenBSD-Commit-ID: fffc89195968f7eedd2fc57f0b1f1ef3193f5ed1",0,0,0,1,1,1,accept,accept,accept
+openssl,OpenSSL_1_1_1,2018-09-11T12:48:18+00:00,CVE-2019-1547,openssl:OpenSSL_1_1_1:CVE-2019-1547,2019-09-05T09:21:04+00:00,fixed_commit_epoch,explicit_id,CVE-2019-1547,b783beeadf6b80bc431e6f3230b5d5585c87ef87,"[crypto/ec] for ECC parameters with NULL or zero cofactor, compute it",crypto/ec/ec_lib.c,crypto/evp/e_aes_cbc_hmac_sha256.c,1,crypto/ec/ec_lib.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/ec/ec_lib.c,1,1,0,"[crypto/ec] for ECC parameters with NULL or zero cofactor, compute it
+
+The cofactor argument to EC_GROUP_set_generator is optional, and SCA mitigations for ECC currently use it. So the library currently falls back to very old SCA-vulnerable code if the cofactor is not present.
+
+This PR allows EC_GROUP_set_generator to compute the cofactor for all curves of cryptographic interest. Steering scalar multiplication to more SCA-robust code.
+
+This issue affects persisted private keys in explicit parameter form, where the (optional) cofactor field is zero or absent.
+
+It also affects curves not built-in to the library, but constructed programatically with explicit parameters, then calling EC_GROUP_set_generator with a nonsensical value (NULL, zero).
+
+The very old scalar multiplication code is known to be vulnerable to local uarch attacks, outside of the OpenSSL threat model. New results suggest the code path is also vulnerable to traditional wall clock timing attacks.
+
+CVE-2019-1547
+
+Reviewed-by: Nicola Tuveri <nic.tuv@gmail.com>
+Reviewed-by: Matt Caswell <matt@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/9827)",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2021-23839,openssl:openssl-3.0.0-alpha10:CVE-2021-23839,2021-02-16T11:36:18+00:00,fixed_commit_epoch,explicit_id,CVE-2021-23839,d9461cbe87b91fec98c4ab99a6f47621390e4aa2,Fix the RSA_SSLV23_PADDING padding type,crypto/rsa/rsa_ssl.c,crypto/ec/ecx_s390x.c,1,crypto/rsa/rsa_ssl.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/rsa/rsa_ssl.c,1,1,0,"Fix the RSA_SSLV23_PADDING padding type
+
+This also fixes the public function RSA_padding_check_SSLv23.
+
+Commit 6555a89 changed the padding check logic in RSA_padding_check_SSLv23
+so that padding is rejected if the nul delimiter byte is not immediately
+preceded by at least 8 bytes containing 0x03. Prior to that commit the
+padding is rejected if it *is* preceded by at least 8 bytes containing 0x03.
+
+Presumably this change was made to be consistent with what it says in
+appendix E.3 of RFC 5246. Unfortunately that RFC is in error, and the
+original behaviour was correct. This is fixed in later errata issued for
+that RFC.
+
+This has no impact on libssl for modern versions of OpenSSL because
+there is no protocol support for SSLv2 in these versions. However
+applications that call RSA_paddin_check_SSLv23 directly, or use the
+RSA_SSLV23_PADDING mode may still be impacted. The effect of the original
+error is that an RSA message encrypted by an SSLv2 only client will fail to
+be decrypted properly by a TLS capable server, or a message encrypted by a
+TLS capable client will fail to decrypt on an SSLv2 only server. Most
+significantly an RSA message encrypted by a TLS capable client will be
+successfully decrypted by a TLS capable server. This last case should fail
+due to a rollback being detected.
+
+Thanks to D. Katz and Joel Luellwitz (both from Trustwave) for reporting
+this issue.
+
+CVE-2021-23839
+
+Reviewed-by: Paul Dale <pauli@openssl.org>",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2021-23841,openssl:openssl-3.0.0-alpha10:CVE-2021-23841,2021-02-16T11:32:32+00:00,fixed_commit_epoch,explicit_id,CVE-2021-23841,8130d654d1de922ea224fa18ee3bc7262edc39c0,Fix Null pointer deref in X509_issuer_and_serial_hash(),crypto/x509/x509_cmp.c,crypto/x509/x_pubkey.c,1,crypto/x509/x509_cmp.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/x509/x509_cmp.c,1,1,0,"Fix Null pointer deref in X509_issuer_and_serial_hash()
+
+The OpenSSL public API function X509_issuer_and_serial_hash() attempts
+to create a unique hash value based on the issuer and serial number data
+contained within an X509 certificate. However it fails to correctly
+handle any errors that may occur while parsing the issuer field (which
+might occur if the issuer field is maliciously constructed). This may
+subsequently result in a NULL pointer deref and a crash leading to a
+potential denial of service attack.
+
+The function X509_issuer_and_serial_hash() is never directly called by
+OpenSSL itself so applications are only vulnerable if they use this
+function directly and they use it on certificates that may have been
+obtained from untrusted sources.
+
+CVE-2021-23841
+
+Reviewed-by: Richard Levitte <levitte@openssl.org>
+Reviewed-by: Paul Dale <pauli@openssl.org>",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2021-4044,openssl:openssl-3.0.0-alpha10:CVE-2021-4044,2021-12-14T13:48:34+00:00,fixed_commit_epoch,explicit_id,CVE-2021-4044,6894e20b50c1204bfc990093b4e7ccd10f92865d,Fix infinite verification loops due to has_san_id,crypto/x509/x509_vfy.c,crypto/evp/e_aes.c,1,crypto/x509/x509_vfy.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/x509/x509_vfy.c,1,1,0,"Fix infinite verification loops due to has_san_id
+
+Where name constraints apply, X509_verify() would incorrectly report an
+internal error in the event that a certificate has no SAN extension.
+
+CVE-2021-4044
+
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+Reviewed-by: Matt Caswell <matt@openssl.org>",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2022-0778,openssl:openssl-3.0.0-alpha10:CVE-2022-0778,2022-03-15T13:15:12+00:00,fixed_commit_epoch,explicit_id,CVE-2022-0778,9eafb53614bf65797db25f467946e735e1b43dc9,Fix possible infinite loop in BN_mod_sqrt(),crypto/bn/bn_sqrt.c,crypto/rand/randfile.c,1,crypto/bn/bn_sqrt.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/bn/bn_sqrt.c,1,1,0,"Fix possible infinite loop in BN_mod_sqrt()
+
+The calculation in some cases does not finish for non-prime p.
+
+This fixes CVE-2022-0778.
+
+Based on patch by David Benjamin <davidben@google.com>.
+
+Reviewed-by: Paul Dale <pauli@openssl.org>
+Reviewed-by: Matt Caswell <matt@openssl.org>",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2022-29242,openssl:openssl-3.0.0-alpha10:CVE-2022-29242,2022-05-24T10:06:11+00:00,fixed_commit_epoch,explicit_id,CVE-2022-29242,2b5e89992e3ada1131beebb2a22722168b9389c2,Use safe pattern for buffer size determining in case of GOST key exchange,ssl/statem/statem_clnt.c,ssl/statem/statem_srvr.c,1,ssl/statem/statem_clnt.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,ssl/statem/statem_clnt.c,1,1,0,"Use safe pattern for buffer size determining in case of GOST key exchange
+
+Related: CVE-2022-29242
+
+Reviewed-by: Matt Caswell <matt@openssl.org>
+Reviewed-by: Paul Dale <pauli@openssl.org>
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/18381)",1,1,1,0,0,0,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2022-3358,openssl:openssl-3.0.0-alpha10:CVE-2022-3358,2022-10-11T15:15:10+00:00,osv_published,explicit_id+osv_range,CVE-2022-3358;GHSA-4F63-89W9-3JJV;RUSTSEC-2022-0059,25d47cccf203c3b71171e78865e48ea061a039a8,Fix usage of custom EVP_CIPHER objects,crypto/evp/digest.c,crypto/pem/pem_lib.c,2,crypto/evp/digest.c;crypto/evp/evp_enc.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/evp/digest.c;crypto/evp/evp_enc.c,2,1,1,"Fix usage of custom EVP_CIPHER objects
+
+If a custom EVP_CIPHER object has been passed to EVP_CipherInit() then it
+should be used in preference to a fetched cipher.
+
+We also fix a possible NULL pointer deref in the same code for digests.
+
+If the custom cipher passed to EVP_CipherInit() happens to use NID_undef
+(which should be a discouraged practice), then in the previous
+implementation this could result in the NULL cipher being fetched and
+hence NULL encryption being unexpectedly used.
+
+CVE-2022-3358
+
+Fixes #18970
+
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+Reviewed-by: Paul Dale <pauli@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/19300)",1,1,1,0,0,1,accept,accept,accept
+openssl,openssl-3.0.0-alpha10,2021-01-07T13:48:10+00:00,CVE-2022-3996,openssl:openssl-3.0.0-alpha10:CVE-2022-3996,2022-12-13T16:15:22+00:00,nvd_published+osv_published,explicit_id+nvd_ref+osv_range+osv_ref,CVE-2022-3996;GHSA-VR8J-HGMM-JH9R,4d0340a6d2f327700a059f0b8f954d6160f8eef5,x509: fix double locking problem,crypto/x509/pcy_map.c,crypto/rsa/rsa_x931.c,1,crypto/x509/pcy_map.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,crypto/x509/pcy_map.c,1,1,0,"x509: fix double locking problem
+
+This reverts commit 9aa4be691f5c73eb3c68606d824c104550c053f7 and removed the
+redundant flag setting.
+
+Fixes #19643
+
+Fixes LOW CVE-2022-3996
+
+Reviewed-by: Dmitry Belyavskiy <beldmit@gmail.com>
+Reviewed-by: Tomas Mraz <tomas@openssl.org>
+(Merged from https://github.com/openssl/openssl/pull/19652)",1,1,1,1,1,1,accept,accept,accept
+sqlite,version-3.25.0,2018-09-15T04:01:47+00:00,CVE-2019-19924,sqlite:version-3.25.0:CVE-2019-19924,2019-12-24T16:15:11+00:00,nvd_published,nvd_ref,CVE-2019-19924,8654186b0236d556aa85528c2573ee0b6ab71be3,"When an error occurs while rewriting the parser tree for window functions in the sqlite3WindowRewrite() routine, make sure that pParse->nErr is set, and make sure that this shuts down any subsequent code generation that might depend on the transformations that were implemented.  This fixes a problem discovered by the Yongheng and Rui fuzzer.",src/vdbeaux.c,src/main.c,3,src/expr.c;src/vdbeaux.c;src/window.c,,Advisory record resolves to an explicit fixing commit reference.,src/expr.c;src/vdbeaux.c;src/window.c,3,1,1,"When an error occurs while rewriting the parser tree for window functions
+in the sqlite3WindowRewrite() routine, make sure that pParse->nErr is set,
+and make sure that this shuts down any subsequent code generation that might
+depend on the transformations that were implemented.  This fixes a problem
+discovered by the Yongheng and Rui fuzzer.
+
+FossilOrigin-Name: e2bddcd4c55ba3cbe0130332679ff4b048630d0ced9a8899982edb5a3569ba7f",0,0,0,1,0,0,accept,accept,accept
+traefik-traefik,v2.0.2,2019-10-09T17:12:05+00:00,CVE-2020-15129,traefik-traefik:v2.0.2:CVE-2020-15129,2020-07-30T16:15:11+00:00,osv_published,osv_range,CVE-2020-15129;GHSA-6QQ8-5WQ3-86RP,e63db782c11c7b8bfce30be4c902e7ef8f9f33d2,fix: clean X-Forwarded-Prefix header for the dashboard.,pkg/api/dashboard.go,pkg/log/log_test.go,2,pkg/api/dashboard.go;pkg/api/dashboard_test.go,,Advisory record resolves the event to a fixing commit via an affected range.,pkg/api/dashboard.go;pkg/api/dashboard_test.go,2,1,1,fix: clean X-Forwarded-Prefix header for the dashboard.,0,1,0,0,0,1,ambiguous,accept,ambiguous
+zlib,v1.2.12,2022-03-27T23:05:02+00:00,CVE-2022-37434,zlib:v1.2.12:CVE-2022-37434,2022-08-05T07:15:07+00:00,nvd_published+osv_published,nvd_ref+osv_range+osv_ref,CVE-2022-37434,eff308af425b67093bab25f80f1ae950166bece1,Fix a bug when getting a gzip header extra field with inflate().,inflate.c,crc32.c,1,inflate.c,,Advisory record resolves to an explicit fixing commit reference.,inflate.c,1,1,0,"Fix a bug when getting a gzip header extra field with inflate().
+
+If the extra field was larger than the space the user provided with
+inflateGetHeader(), and if multiple calls of inflate() delivered
+the extra header data, then there could be a buffer overflow of the
+provided space. This commit assures that provided space is not
+exceeded.",0,1,0,1,1,1,accept,accept,accept
+zlib,v1.3,2023-08-18T08:45:36+00:00,CVE-2014-9485,zlib:v1.3:CVE-2014-9485,2024-01-17T23:08:08+00:00,fixed_commit_epoch,explicit_id,CVE-2014-9485,14a5f8f266c16c87ab6c086fc52b770b27701e01,Neutralize zip file traversal attacks in miniunz.,contrib/minizip/miniunz.c,contrib/blast/blast.c,1,contrib/minizip/miniunz.c,,Commit message or body links the fix explicitly to a vulnerability identifier.,contrib/minizip/miniunz.c,1,1,0,"Neutralize zip file traversal attacks in miniunz.
+
+Archive formats such as .zip files are generally susceptible to
+so-called ""traversal attacks"". This allows an attacker to craft
+an archive that writes to unexpected locations of the file system
+(e.g., /etc/shadow) if an unspecting root user were to unpack a
+malicious archive.
+
+This patch neutralizes absolute paths such as /tmp/moo and deeply
+relative paths such as dummy/../../../../../../../../../../tmp/moo
+
+The Debian project requested CVE-2014-9485 be allocated for the
+first identified weakness. The fix was incomplete, resulting in a
+revised patch applied here. Since there wasn't an updated version
+released by Debian with the incomplete fix, I suggest we use this
+CVE to identify both issues.
+
+Link: https://security.snyk.io/research/zip-slip-vulnerability
+Link: https://bugs.debian.org/774321
+Link: https://bugs.debian.org/776831
+Link: https://nvd.nist.gov/vuln/detail/CVE-2014-9485
+Reported-by: Jakub Wilk <jwilk@debian.org>
+Fixed-by: Michael Gilbert <mgilbert@debian.org>",1,1,1,0,0,0,accept,accept,accept

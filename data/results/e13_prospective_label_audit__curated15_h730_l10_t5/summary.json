@@ -1,0 +1,65 @@
+{
+  "n_reviewed": 40,
+  "overall_review": {
+    "accept": 31,
+    "ambiguous": 9,
+    "reject": 0
+  },
+  "event_commit_review": {
+    "accept": 33,
+    "ambiguous": 7,
+    "reject": 0
+  },
+  "file_review": {
+    "accept": 37,
+    "ambiguous": 3,
+    "reject": 0
+  },
+  "overall_accept_rate": 0.775,
+  "overall_non_reject_rate": 1.0,
+  "event_commit_accept_rate": 0.825,
+  "event_commit_non_reject_rate": 1.0,
+  "file_accept_rate": 0.925,
+  "file_non_reject_rate": 1.0,
+  "case_file_touch_confirmed_rate": 1.0,
+  "source_breakdown": {
+    "explicit_id+osv_range": 14,
+    "explicit_id": 10,
+    "osv_range": 7,
+    "explicit_id+nvd_ref+osv_range+osv_ref": 4,
+    "nvd_ref+osv_range+osv_ref": 4,
+    "nvd_ref": 1
+  },
+  "overall_by_source": [
+    {
+      "ground_truth_source": "explicit_id",
+      "accept": 10,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "explicit_id+nvd_ref+osv_range+osv_ref",
+      "accept": 4,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "explicit_id+osv_range",
+      "accept": 12,
+      "ambiguous": 2
+    },
+    {
+      "ground_truth_source": "nvd_ref",
+      "accept": 1,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "nvd_ref+osv_range+osv_ref",
+      "accept": 4,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "osv_range",
+      "accept": 0,
+      "ambiguous": 7
+    }
+  ]
+}

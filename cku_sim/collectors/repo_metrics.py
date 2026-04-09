@@ -129,6 +129,9 @@ def compute_corpus_opacity(
             row = opacity.to_dict()
             row["category"] = entry.category
             row["cpe_id"] = entry.cpe_id
+            row["primary_language"] = entry.primary_language
+            row["stars"] = entry.stars
+            row["full_name"] = entry.full_name
             results.append(row)
 
     return pd.DataFrame(results)

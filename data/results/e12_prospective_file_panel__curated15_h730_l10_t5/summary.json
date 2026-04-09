@@ -1,0 +1,152 @@
+{
+  "pair_level": {
+    "n_pairs": 264,
+    "n_events": 160,
+    "n_repos": 12,
+    "n_snapshots": 27,
+    "mean_delta_composite": 0.009387597623605958,
+    "median_delta_composite": 0.0025328539546772,
+    "positive_share": 0.5454545454545454,
+    "mean_case_loc": 1115.3484848484848,
+    "mean_control_loc": 980.4772727272727,
+    "ground_truth_policy": "expanded_advisory_plus_explicit",
+    "label": "Expanded advisory plus explicit-ID future events",
+    "description": "Future security events combine NVD-linked fixing commits, OSV-linked advisories, and locally explicit CVE/GHSA-tagged fixes; external publication timestamps are used when available and otherwise the fixing-commit date is used.",
+    "wilcoxon_pvalue_greater": 0.0023881947879034115,
+    "wilcoxon_statistic": 20994.0,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_observation_id",
+      "n_clusters": 160,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.003098253060136245,
+        0.01574798639327655
+      ],
+      "median_delta_composite_ci": [
+        -0.002264232146312222,
+        0.006809423264499126
+      ],
+      "positive_share_ci": [
+        0.4734205998033432,
+        0.611738017682643
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 12,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        0.0018787385039213216,
+        0.02234788313048428
+      ],
+      "median_delta_composite_ci": [
+        -0.0009831158343268983,
+        0.011435652715957563
+      ],
+      "positive_share_ci": [
+        0.489010989010989,
+        0.6397343620546808
+      ]
+    }
+  },
+  "prediction": {
+    "n_files": 528,
+    "n_pairs": 264,
+    "n_events": 160,
+    "n_repos": 12,
+    "models": {
+      "baseline_size": {
+        "roc_auc": 0.558511248852158,
+        "average_precision": 0.5399995088445955,
+        "brier_score": 0.2479109418518422,
+        "log_loss": 0.6890208153238447,
+        "pairwise_accuracy": 0.5946969696969697,
+        "macro_roc_auc": 0.622685377487115,
+        "macro_average_precision": 0.6592579984176233,
+        "macro_brier_score": 0.2504083444163235,
+        "macro_pairwise_accuracy": 0.6178008658620079
+      },
+      "baseline_history": {
+        "roc_auc": 0.576891069788797,
+        "average_precision": 0.5841110270675106,
+        "brier_score": 0.24865597307504012,
+        "log_loss": 0.6966200768882245,
+        "pairwise_accuracy": 0.6060606060606061,
+        "macro_roc_auc": 0.4644428710751218,
+        "macro_average_precision": 0.5953943097476123,
+        "macro_brier_score": 0.2655729582579522,
+        "macro_pairwise_accuracy": 0.45249037797761454
+      },
+      "baseline_history_plus_structure": {
+        "roc_auc": 0.566962235996327,
+        "average_precision": 0.577665741662714,
+        "brier_score": 0.25119689070166845,
+        "log_loss": 0.7018383420532456,
+        "pairwise_accuracy": 0.5946969696969697,
+        "macro_roc_auc": 0.4356828270775031,
+        "macro_average_precision": 0.5893747665978634,
+        "macro_brier_score": 0.2681577971216135,
+        "macro_pairwise_accuracy": 0.42965087180477507
+      },
+      "baseline_plus_composite": {
+        "roc_auc": 0.5871212121212122,
+        "average_precision": 0.5928627005974552,
+        "brier_score": 0.24616810252731078,
+        "log_loss": 0.6884518515226768,
+        "pairwise_accuracy": 0.6136363636363636,
+        "macro_roc_auc": 0.4923780598029272,
+        "macro_average_precision": 0.6101021655316452,
+        "macro_brier_score": 0.2695769270879716,
+        "macro_pairwise_accuracy": 0.4853208738425882
+      }
+    }
+  },
+  "repo_fixed_effects": {
+    "baseline_repo_fixed_effects": {
+      "log_likelihood": -350.02530925701444,
+      "aic": 734.0506185140289
+    },
+    "baseline_plus_composite_repo_fixed_effects": {
+      "log_likelihood": -346.8449856394901,
+      "aic": 729.6899712789802,
+      "composite_coef": 8.342650578425372,
+      "composite_pvalue": 0.03016277931368538,
+      "composite_ci_lo": 0.8003533636125217,
+      "composite_ci_hi": 15.884947793238222,
+      "lr_statistic_vs_baseline": 6.360647235048646,
+      "lr_pvalue_vs_baseline": 0.011667897338396994
+    }
+  },
+  "event_catalog": {
+    "n_rows": 218,
+    "n_event_observations": 215,
+    "n_snapshot_keys": 33,
+    "source_breakdown": {
+      "explicit_id+osv_range": 75,
+      "osv_range": 49,
+      "explicit_id": 44,
+      "nvd_ref+osv_range+osv_ref": 22,
+      "explicit_id+nvd_ref+osv_range+osv_ref": 15,
+      "osv_range+osv_ref": 5,
+      "nvd_ref": 4,
+      "explicit_id+osv_range+osv_ref": 3,
+      "explicit_id+nvd_ref": 1
+    }
+  },
+  "audit": {
+    "n_rows_full": 264,
+    "n_rows_sampled": 40
+  },
+  "parameters": {
+    "max_tags": 5,
+    "min_tag_gap_days": 365,
+    "horizon_days": 730,
+    "lookback_years": 10,
+    "min_loc": 20,
+    "ground_truth_policy": "expanded_advisory_plus_explicit",
+    "ground_truth_label": "Expanded advisory plus explicit-ID future events",
+    "results_subdir": "e12_prospective_file_panel__curated15_h730_l10_t5"
+  }
+}

@@ -1,0 +1,3741 @@
+[
+  {
+    "full_name": "torvalds/linux",
+    "name": "torvalds-linux",
+    "git_url": "https://github.com/torvalds/linux.git",
+    "html_url": "https://github.com/torvalds/linux",
+    "description": "Linux kernel source tree",
+    "primary_language": "C",
+    "stars": 227671,
+    "topics": [],
+    "size_kb": 6098065,
+    "updated_at": "2026-04-09T13:19:29Z",
+    "pushed_at": "2026-04-08T20:54:04Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "ultraworkers/claw-code",
+    "name": "ultraworkers-claw-code",
+    "git_url": "https://github.com/ultraworkers/claw-code.git",
+    "html_url": "https://github.com/ultraworkers/claw-code",
+    "description": "The repo is finally unlocked. enjoy the party! The fastest repo in history to surpass 100K stars \u2b50. Join Discord: https://discord.gg/5TUQKqFWd Built in Rust using a Rust workflow.",
+    "primary_language": "Rust",
+    "stars": 179256,
+    "topics": [],
+    "size_kb": 8117,
+    "updated_at": "2026-04-09T13:21:29Z",
+    "pushed_at": "2026-04-09T13:06:26Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "yt-dlp/yt-dlp",
+    "name": "yt-dlp-yt-dlp",
+    "git_url": "https://github.com/yt-dlp/yt-dlp.git",
+    "html_url": "https://github.com/yt-dlp/yt-dlp",
+    "description": "A feature-rich command-line audio/video downloader",
+    "primary_language": "Python",
+    "stars": 155651,
+    "topics": [
+      "cli",
+      "downloader",
+      "python",
+      "sponsorblock",
+      "youtube-dl",
+      "youtube-downloader",
+      "yt-dlp"
+    ],
+    "size_kb": 60460,
+    "updated_at": "2026-04-09T13:19:03Z",
+    "pushed_at": "2026-04-07T23:37:18Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "ytdl-org/youtube-dl",
+    "name": "ytdl-org-youtube-dl",
+    "git_url": "https://github.com/ytdl-org/youtube-dl.git",
+    "html_url": "https://github.com/ytdl-org/youtube-dl",
+    "description": "Command-line program to download videos from YouTube.com and other video sites",
+    "primary_language": "Python",
+    "stars": 140004,
+    "topics": [],
+    "size_kb": 65510,
+    "updated_at": "2026-04-09T10:45:23Z",
+    "pushed_at": "2026-02-19T16:45:25Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "Genymobile/scrcpy",
+    "name": "genymobile-scrcpy",
+    "git_url": "https://github.com/Genymobile/scrcpy.git",
+    "html_url": "https://github.com/Genymobile/scrcpy",
+    "description": "Display and control your Android device",
+    "primary_language": "C",
+    "stars": 138211,
+    "topics": [
+      "android",
+      "c",
+      "ffmpeg",
+      "libav",
+      "mirroring",
+      "recording",
+      "screen",
+      "sdl2"
+    ],
+    "size_kb": 8170,
+    "updated_at": "2026-04-09T13:16:33Z",
+    "pushed_at": "2026-04-07T17:54:55Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "golang/go",
+    "name": "golang-go",
+    "git_url": "https://github.com/golang/go.git",
+    "html_url": "https://github.com/golang/go",
+    "description": "The Go programming language",
+    "primary_language": "Go",
+    "stars": 133346,
+    "topics": [
+      "go",
+      "golang",
+      "language",
+      "programming-language"
+    ],
+    "size_kb": 431466,
+    "updated_at": "2026-04-09T13:20:45Z",
+    "pushed_at": "2026-04-09T12:10:54Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "facebook/react-native",
+    "name": "facebook-react-native",
+    "git_url": "https://github.com/facebook/react-native.git",
+    "html_url": "https://github.com/facebook/react-native",
+    "description": "A framework for building native applications using React",
+    "primary_language": "C++",
+    "stars": 125666,
+    "topics": [
+      "android",
+      "app-framework",
+      "cross-platform",
+      "ios",
+      "mobile",
+      "mobile-development",
+      "react",
+      "react-native"
+    ],
+    "size_kb": 964211,
+    "updated_at": "2026-04-09T13:13:43Z",
+    "pushed_at": "2026-04-09T13:11:33Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "kubernetes/kubernetes",
+    "name": "kubernetes-kubernetes",
+    "git_url": "https://github.com/kubernetes/kubernetes.git",
+    "html_url": "https://github.com/kubernetes/kubernetes",
+    "description": "Production-Grade Container Scheduling and Management",
+    "primary_language": "Go",
+    "stars": 121616,
+    "topics": [
+      "cncf",
+      "containers",
+      "go",
+      "kubernetes"
+    ],
+    "size_kb": 1461249,
+    "updated_at": "2026-04-09T11:33:51Z",
+    "pushed_at": "2026-04-09T12:20:21Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "electron/electron",
+    "name": "electron-electron",
+    "git_url": "https://github.com/electron/electron.git",
+    "html_url": "https://github.com/electron/electron",
+    "description": ":electron: Build cross-platform desktop apps with JavaScript, HTML, and CSS",
+    "primary_language": "C++",
+    "stars": 120807,
+    "topics": [
+      "c-plus-plus",
+      "chrome",
+      "css",
+      "electron",
+      "html",
+      "javascript",
+      "nodejs",
+      "v8",
+      "works-with-codespaces"
+    ],
+    "size_kb": 195012,
+    "updated_at": "2026-04-09T12:24:16Z",
+    "pushed_at": "2026-04-09T13:19:23Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "anthropics/skills",
+    "name": "anthropics-skills",
+    "git_url": "https://github.com/anthropics/skills.git",
+    "html_url": "https://github.com/anthropics/skills",
+    "description": "Public repository for Agent Skills",
+    "primary_language": "Python",
+    "stars": 113706,
+    "topics": [
+      "agent-skills"
+    ],
+    "size_kb": 3470,
+    "updated_at": "2026-04-09T13:20:51Z",
+    "pushed_at": "2026-04-08T17:01:04Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "rust-lang/rust",
+    "name": "rust-lang-rust",
+    "git_url": "https://github.com/rust-lang/rust.git",
+    "html_url": "https://github.com/rust-lang/rust",
+    "description": "Empowering everyone to build reliable and efficient software.",
+    "primary_language": "Rust",
+    "stars": 111840,
+    "topics": [
+      "compiler",
+      "language",
+      "rust"
+    ],
+    "size_kb": 870163,
+    "updated_at": "2026-04-09T12:20:53Z",
+    "pushed_at": "2026-04-09T10:30:07Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "rustdesk/rustdesk",
+    "name": "rustdesk-rustdesk",
+    "git_url": "https://github.com/rustdesk/rustdesk.git",
+    "html_url": "https://github.com/rustdesk/rustdesk",
+    "description": "An open-source remote desktop application designed for self-hosting, as an alternative to TeamViewer.",
+    "primary_language": "Rust",
+    "stars": 110899,
+    "topics": [
+      "android",
+      "anydesk",
+      "dart",
+      "flatpak",
+      "flutter",
+      "flutter-apps",
+      "ios",
+      "linux",
+      "macos",
+      "p2p",
+      "rdp",
+      "remote-control",
+      "remote-desktop",
+      "rust",
+      "rust-lang",
+      "teamviewer",
+      "vnc",
+      "wayland",
+      "windows"
+    ],
+    "size_kb": 69476,
+    "updated_at": "2026-04-09T13:20:07Z",
+    "pushed_at": "2026-04-09T09:14:21Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "godotengine/godot",
+    "name": "godotengine-godot",
+    "git_url": "https://github.com/godotengine/godot.git",
+    "html_url": "https://github.com/godotengine/godot",
+    "description": "Godot Engine \u2013 Multi-platform 2D and 3D game engine",
+    "primary_language": "C++",
+    "stars": 109187,
+    "topics": [
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "godot",
+      "godotengine",
+      "multi-platform",
+      "open-source"
+    ],
+    "size_kb": 1797161,
+    "updated_at": "2026-04-09T13:19:22Z",
+    "pushed_at": "2026-04-08T22:02:52Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "denoland/deno",
+    "name": "denoland-deno",
+    "git_url": "https://github.com/denoland/deno.git",
+    "html_url": "https://github.com/denoland/deno",
+    "description": "A modern runtime for JavaScript and TypeScript.",
+    "primary_language": "Rust",
+    "stars": 106443,
+    "topics": [
+      "deno",
+      "javascript",
+      "rust",
+      "typescript"
+    ],
+    "size_kb": 214555,
+    "updated_at": "2026-04-09T13:20:45Z",
+    "pushed_at": "2026-04-09T13:18:50Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "fatedier/frp",
+    "name": "fatedier-frp",
+    "git_url": "https://github.com/fatedier/frp.git",
+    "html_url": "https://github.com/fatedier/frp",
+    "description": "A fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet.",
+    "primary_language": "Go",
+    "stars": 105819,
+    "topics": [
+      "expose",
+      "firewall",
+      "frp",
+      "go",
+      "http-proxy",
+      "nat",
+      "p2p",
+      "proxy",
+      "reverse-proxy",
+      "tunnel"
+    ],
+    "size_kb": 31797,
+    "updated_at": "2026-04-09T13:04:21Z",
+    "pushed_at": "2026-03-29T19:22:35Z",
+    "default_branch": "dev",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "tauri-apps/tauri",
+    "name": "tauri-apps-tauri",
+    "git_url": "https://github.com/tauri-apps/tauri.git",
+    "html_url": "https://github.com/tauri-apps/tauri",
+    "description": "Build smaller, faster, and more secure desktop and mobile applications with a web frontend.",
+    "primary_language": "Rust",
+    "stars": 105184,
+    "topics": [
+      "desktop-app",
+      "high-performance",
+      "mobile-app",
+      "native-app",
+      "rust",
+      "web-frontend",
+      "webview"
+    ],
+    "size_kb": 103061,
+    "updated_at": "2026-04-09T12:59:29Z",
+    "pushed_at": "2026-04-09T09:23:55Z",
+    "default_branch": "dev",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "microsoft/terminal",
+    "name": "microsoft-terminal",
+    "git_url": "https://github.com/microsoft/terminal.git",
+    "html_url": "https://github.com/microsoft/terminal",
+    "description": "The new Windows Terminal and the original Windows console host, all in the same place!",
+    "primary_language": "C++",
+    "stars": 102595,
+    "topics": [
+      "cmd",
+      "command-line",
+      "console",
+      "contributions-welcome",
+      "good-first-issue",
+      "hacktoberfest",
+      "terminal",
+      "windows",
+      "windows-console",
+      "windows-terminal",
+      "wsl"
+    ],
+    "size_kb": 163935,
+    "updated_at": "2026-04-09T12:57:23Z",
+    "pushed_at": "2026-04-09T03:10:05Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "fastapi/fastapi",
+    "name": "fastapi-fastapi",
+    "git_url": "https://github.com/fastapi/fastapi.git",
+    "html_url": "https://github.com/fastapi/fastapi",
+    "description": "FastAPI framework, high performance, easy to learn, fast to code, ready for production",
+    "primary_language": "Python",
+    "stars": 96996,
+    "topics": [
+      "api",
+      "async",
+      "asyncio",
+      "fastapi",
+      "framework",
+      "json",
+      "json-schema",
+      "openapi",
+      "openapi3",
+      "pydantic",
+      "python",
+      "python-types",
+      "python3",
+      "redoc",
+      "rest",
+      "starlette",
+      "swagger",
+      "swagger-ui",
+      "uvicorn",
+      "web"
+    ],
+    "size_kb": 40076,
+    "updated_at": "2026-04-09T13:16:24Z",
+    "pushed_at": "2026-04-08T20:54:23Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "nvbn/thefuck",
+    "name": "nvbn-thefuck",
+    "git_url": "https://github.com/nvbn/thefuck.git",
+    "html_url": "https://github.com/nvbn/thefuck",
+    "description": "Magnificent app which corrects your previous console command.",
+    "primary_language": "Python",
+    "stars": 96319,
+    "topics": [
+      "python",
+      "shell"
+    ],
+    "size_kb": 4043,
+    "updated_at": "2026-04-09T13:01:38Z",
+    "pushed_at": "2024-07-19T14:56:13Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "bitcoin/bitcoin",
+    "name": "bitcoin-bitcoin",
+    "git_url": "https://github.com/bitcoin/bitcoin.git",
+    "html_url": "https://github.com/bitcoin/bitcoin",
+    "description": "Bitcoin Core integration/staging tree",
+    "primary_language": "C++",
+    "stars": 88745,
+    "topics": [
+      "bitcoin",
+      "c-plus-plus",
+      "cryptocurrency",
+      "cryptography",
+      "p2p"
+    ],
+    "size_kb": 311108,
+    "updated_at": "2026-04-09T13:11:35Z",
+    "pushed_at": "2026-04-09T13:11:27Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "gin-gonic/gin",
+    "name": "gin-gonic-gin",
+    "git_url": "https://github.com/gin-gonic/gin.git",
+    "html_url": "https://github.com/gin-gonic/gin",
+    "description": "Gin is a high-performance HTTP web framework written in Go. It provides a Martini-like API but with significantly better performance\u2014up to 40 times faster\u2014thanks to httprouter. Gin is designed for building REST APIs, web applications, and microservices.",
+    "primary_language": "Go",
+    "stars": 88301,
+    "topics": [
+      "framework",
+      "gin",
+      "go",
+      "middleware",
+      "performance",
+      "router",
+      "server"
+    ],
+    "size_kb": 10559,
+    "updated_at": "2026-04-09T12:45:54Z",
+    "pushed_at": "2026-04-08T22:32:41Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "gohugoio/hugo",
+    "name": "gohugoio-hugo",
+    "git_url": "https://github.com/gohugoio/hugo.git",
+    "html_url": "https://github.com/gohugoio/hugo",
+    "description": "The world\u2019s fastest framework for building websites.",
+    "primary_language": "Go",
+    "stars": 87484,
+    "topics": [
+      "blog-engine",
+      "cms",
+      "content-management-system",
+      "documentation-tool",
+      "go",
+      "hugo",
+      "static-site-generator"
+    ],
+    "size_kb": 138414,
+    "updated_at": "2026-04-09T11:29:18Z",
+    "pushed_at": "2026-04-09T10:25:19Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "django/django",
+    "name": "django-django",
+    "git_url": "https://github.com/django/django.git",
+    "html_url": "https://github.com/django/django",
+    "description": "The Web framework for perfectionists with deadlines.",
+    "primary_language": "Python",
+    "stars": 87222,
+    "topics": [
+      "apps",
+      "django",
+      "framework",
+      "models",
+      "orm",
+      "python",
+      "templates",
+      "views",
+      "web"
+    ],
+    "size_kb": 278615,
+    "updated_at": "2026-04-09T12:16:30Z",
+    "pushed_at": "2026-04-08T21:30:06Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "home-assistant/core",
+    "name": "home-assistant-core",
+    "git_url": "https://github.com/home-assistant/core.git",
+    "html_url": "https://github.com/home-assistant/core",
+    "description": ":house_with_garden: Open source home automation that puts local control and privacy first.",
+    "primary_language": "Python",
+    "stars": 85983,
+    "topics": [
+      "asyncio",
+      "hacktoberfest",
+      "home-automation",
+      "internet-of-things",
+      "iot",
+      "mqtt",
+      "python",
+      "raspberry-pi"
+    ],
+    "size_kb": 804685,
+    "updated_at": "2026-04-09T13:20:12Z",
+    "pushed_at": "2026-04-09T13:18:22Z",
+    "default_branch": "dev",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "3b1b/manim",
+    "name": "3b1b-manim",
+    "git_url": "https://github.com/3b1b/manim.git",
+    "html_url": "https://github.com/3b1b/manim",
+    "description": "Animation engine for explanatory math videos",
+    "primary_language": "Python",
+    "stars": 85902,
+    "topics": [
+      "3b1b-videos",
+      "animation",
+      "explanatory-math-videos",
+      "python"
+    ],
+    "size_kb": 76630,
+    "updated_at": "2026-04-09T13:09:46Z",
+    "pushed_at": "2026-03-26T14:56:44Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "macrozheng/mall",
+    "name": "macrozheng-mall",
+    "git_url": "https://github.com/macrozheng/mall.git",
+    "html_url": "https://github.com/macrozheng/mall",
+    "description": "mall\u9879\u76ee\u662f\u4e00\u5957\u7535\u5546\u7cfb\u7edf\uff0c\u5305\u62ec\u524d\u53f0\u5546\u57ce\u7cfb\u7edf\u53ca\u540e\u53f0\u7ba1\u7406\u7cfb\u7edf\uff0c\u57fa\u4e8eSpring Boot+MyBatis\u5b9e\u73b0\uff0c\u91c7\u7528Docker\u5bb9\u5668\u5316\u90e8\u7f72\u3002 \u524d\u53f0\u5546\u57ce\u7cfb\u7edf\u5305\u542b\u9996\u9875\u95e8\u6237\u3001\u5546\u54c1\u63a8\u8350\u3001\u5546\u54c1\u641c\u7d22\u3001\u5546\u54c1\u5c55\u793a\u3001\u8d2d\u7269\u8f66\u3001\u8ba2\u5355\u6d41\u7a0b\u3001\u4f1a\u5458\u4e2d\u5fc3\u3001\u5ba2\u6237\u670d\u52a1\u3001\u5e2e\u52a9\u4e2d\u5fc3\u7b49\u6a21\u5757\u3002 \u540e\u53f0\u7ba1\u7406\u7cfb\u7edf\u5305\u542b\u5546\u54c1\u7ba1\u7406\u3001\u8ba2\u5355\u7ba1\u7406\u3001\u4f1a\u5458\u7ba1\u7406\u3001\u4fc3\u9500\u7ba1\u7406\u3001\u8fd0\u8425\u7ba1\u7406\u3001\u5185\u5bb9\u7ba1\u7406\u3001\u7edf\u8ba1\u62a5\u8868\u3001\u8d22\u52a1\u7ba1\u7406\u3001\u6743\u9650\u7ba1\u7406\u3001\u8bbe\u7f6e\u7b49\u6a21\u5757\u3002",
+    "primary_language": "Java",
+    "stars": 83347,
+    "topics": [
+      "docker",
+      "elasticsearch",
+      "elk",
+      "java",
+      "mongodb",
+      "mybatis",
+      "mysql",
+      "rabbitmq",
+      "redis",
+      "spring",
+      "spring-boot",
+      "spring-cloud",
+      "spring-security",
+      "springboot",
+      "springcloud",
+      "swagger-ui"
+    ],
+    "size_kb": 58728,
+    "updated_at": "2026-04-09T13:05:45Z",
+    "pushed_at": "2026-03-06T07:30:02Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "astral-sh/uv",
+    "name": "astral-sh-uv",
+    "git_url": "https://github.com/astral-sh/uv.git",
+    "html_url": "https://github.com/astral-sh/uv",
+    "description": "An extremely fast Python package and project manager, written in Rust.",
+    "primary_language": "Rust",
+    "stars": 82909,
+    "topics": [
+      "packaging",
+      "python",
+      "resolver",
+      "uv"
+    ],
+    "size_kb": 151166,
+    "updated_at": "2026-04-09T13:20:48Z",
+    "pushed_at": "2026-04-09T12:26:20Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "syncthing/syncthing",
+    "name": "syncthing-syncthing",
+    "git_url": "https://github.com/syncthing/syncthing.git",
+    "html_url": "https://github.com/syncthing/syncthing",
+    "description": "Open Source Continuous File Synchronization",
+    "primary_language": "Go",
+    "stars": 81562,
+    "topics": [
+      "go",
+      "p2p",
+      "peer-to-peer",
+      "synchronization"
+    ],
+    "size_kb": 124896,
+    "updated_at": "2026-04-09T13:08:29Z",
+    "pushed_at": "2026-04-09T01:33:13Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "sherlock-project/sherlock",
+    "name": "sherlock-project-sherlock",
+    "git_url": "https://github.com/sherlock-project/sherlock.git",
+    "html_url": "https://github.com/sherlock-project/sherlock",
+    "description": "Hunt down social media accounts by username across social networks",
+    "primary_language": "Python",
+    "stars": 80670,
+    "topics": [
+      "cli",
+      "cti",
+      "cybersecurity",
+      "forensics",
+      "hacktoberfest",
+      "information-gathering",
+      "infosec",
+      "linux",
+      "osint",
+      "pentesting",
+      "python",
+      "python3",
+      "reconnaissance",
+      "redteam",
+      "sherlock",
+      "tools"
+    ],
+    "size_kb": 18408,
+    "updated_at": "2026-04-09T13:08:54Z",
+    "pushed_at": "2026-04-09T05:41:44Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "spring-projects/spring-boot",
+    "name": "spring-projects-spring-boot",
+    "git_url": "https://github.com/spring-projects/spring-boot.git",
+    "html_url": "https://github.com/spring-projects/spring-boot",
+    "description": "Spring Boot helps you to create Spring-powered, production-grade applications and services with absolute minimum fuss.",
+    "primary_language": "Java",
+    "stars": 80375,
+    "topics": [
+      "framework",
+      "java",
+      "spring",
+      "spring-boot"
+    ],
+    "size_kb": 213894,
+    "updated_at": "2026-04-09T13:20:21Z",
+    "pushed_at": "2026-04-09T11:33:00Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "junegunn/fzf",
+    "name": "junegunn-fzf",
+    "git_url": "https://github.com/junegunn/fzf.git",
+    "html_url": "https://github.com/junegunn/fzf",
+    "description": ":cherry_blossom: A command-line fuzzy finder",
+    "primary_language": "Go",
+    "stars": 79343,
+    "topics": [
+      "bash",
+      "cli",
+      "fish",
+      "fzf",
+      "go",
+      "neovim",
+      "tmux",
+      "unix",
+      "vim",
+      "zsh"
+    ],
+    "size_kb": 7973,
+    "updated_at": "2026-04-09T13:16:27Z",
+    "pushed_at": "2026-04-08T14:28:46Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "zed-industries/zed",
+    "name": "zed-industries-zed",
+    "git_url": "https://github.com/zed-industries/zed.git",
+    "html_url": "https://github.com/zed-industries/zed",
+    "description": "Code at the speed of thought \u2013 Zed is a high-performance, multiplayer code editor from the creators of Atom and Tree-sitter.",
+    "primary_language": "Rust",
+    "stars": 78777,
+    "topics": [
+      "gpui",
+      "rust-lang",
+      "text-editor",
+      "zed"
+    ],
+    "size_kb": 429769,
+    "updated_at": "2026-04-09T13:16:50Z",
+    "pushed_at": "2026-04-09T13:05:09Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "tensorflow/models",
+    "name": "tensorflow-models",
+    "git_url": "https://github.com/tensorflow/models.git",
+    "html_url": "https://github.com/tensorflow/models",
+    "description": "Models and examples built with TensorFlow",
+    "primary_language": "Python",
+    "stars": 77674,
+    "topics": [],
+    "size_kb": 659702,
+    "updated_at": "2026-04-09T13:15:19Z",
+    "pushed_at": "2026-04-02T09:54:37Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "elastic/elasticsearch",
+    "name": "elastic-elasticsearch",
+    "git_url": "https://github.com/elastic/elasticsearch.git",
+    "html_url": "https://github.com/elastic/elasticsearch",
+    "description": "Free and Open Source, Distributed, RESTful Search Engine",
+    "primary_language": "Java",
+    "stars": 76471,
+    "topics": [
+      "elasticsearch",
+      "java",
+      "search-engine"
+    ],
+    "size_kb": 1596620,
+    "updated_at": "2026-04-09T12:45:37Z",
+    "pushed_at": "2026-04-09T13:01:50Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "jesseduffield/lazygit",
+    "name": "jesseduffield-lazygit",
+    "git_url": "https://github.com/jesseduffield/lazygit.git",
+    "html_url": "https://github.com/jesseduffield/lazygit",
+    "description": "simple terminal UI for git commands",
+    "primary_language": "Go",
+    "stars": 75992,
+    "topics": [
+      "cli",
+      "git",
+      "terminal"
+    ],
+    "size_kb": 153232,
+    "updated_at": "2026-04-09T13:20:26Z",
+    "pushed_at": "2026-04-08T20:23:38Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "ventoy/Ventoy",
+    "name": "ventoy-ventoy",
+    "git_url": "https://github.com/ventoy/Ventoy.git",
+    "html_url": "https://github.com/ventoy/Ventoy",
+    "description": "A new bootable USB solution.",
+    "primary_language": "C",
+    "stars": 75708,
+    "topics": [
+      "arm64",
+      "auto-install",
+      "bootable-usb",
+      "bsd",
+      "chromeos",
+      "iso-files",
+      "legacy",
+      "linux",
+      "multiboot",
+      "persistence",
+      "secure-boot",
+      "uefi",
+      "unattended",
+      "unix",
+      "usb",
+      "windows",
+      "x86",
+      "x86-64"
+    ],
+    "size_kb": 218431,
+    "updated_at": "2026-04-09T13:11:13Z",
+    "pushed_at": "2026-04-05T15:50:16Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "unionlabs/union",
+    "name": "unionlabs-union",
+    "git_url": "https://github.com/unionlabs/union.git",
+    "html_url": "https://github.com/unionlabs/union",
+    "description": "The trust-minimized, zero-knowledge bridging protocol, designed for censorship resistance, extremely high security, and usage in decentralized finance.",
+    "primary_language": "Rust",
+    "stars": 74153,
+    "topics": [
+      "astro",
+      "blockchain",
+      "cosmos",
+      "cosmwasm",
+      "ethereum",
+      "evm",
+      "golang",
+      "indexer",
+      "interoperability",
+      "move",
+      "nix",
+      "prover",
+      "relayer",
+      "rust",
+      "solidity",
+      "svelte",
+      "typescipt",
+      "typescript",
+      "zero-knowledge"
+    ],
+    "size_kb": 483075,
+    "updated_at": "2026-04-09T10:34:49Z",
+    "pushed_at": "2026-04-01T13:13:17Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "redis/redis",
+    "name": "redis-redis",
+    "git_url": "https://github.com/redis/redis.git",
+    "html_url": "https://github.com/redis/redis",
+    "description": "For developers, who are building real-time data-driven applications, Redis is the preferred, fastest, and most feature-rich cache, data structure server, and document and vector query engine.",
+    "primary_language": "C",
+    "stars": 73721,
+    "topics": [
+      "cache",
+      "caching",
+      "database",
+      "distributed-systems",
+      "in-memory",
+      "in-memory-database",
+      "json",
+      "key-value",
+      "key-value-store",
+      "message-broker",
+      "message-queue",
+      "no-sql",
+      "nosql",
+      "open-source",
+      "real-time",
+      "realtime",
+      "redis",
+      "time-series",
+      "vector-databases",
+      "vector-search"
+    ],
+    "size_kb": 210192,
+    "updated_at": "2026-04-09T12:54:36Z",
+    "pushed_at": "2026-04-09T02:17:39Z",
+    "default_branch": "unstable",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "ocornut/imgui",
+    "name": "ocornut-imgui",
+    "git_url": "https://github.com/ocornut/imgui.git",
+    "html_url": "https://github.com/ocornut/imgui",
+    "description": "Dear ImGui: Bloat-free Graphical User interface for C++ with minimal dependencies",
+    "primary_language": "C++",
+    "stars": 72483,
+    "topics": [
+      "api",
+      "cplusplus",
+      "framework",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "gui",
+      "imgui",
+      "immediate-gui",
+      "library",
+      "multi-platform",
+      "native",
+      "toolkit",
+      "tools",
+      "ui"
+    ],
+    "size_kb": 124563,
+    "updated_at": "2026-04-09T13:13:22Z",
+    "pushed_at": "2026-04-09T13:01:47Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "python/cpython",
+    "name": "python-cpython",
+    "git_url": "https://github.com/python/cpython.git",
+    "html_url": "https://github.com/python/cpython",
+    "description": "The Python programming language",
+    "primary_language": "Python",
+    "stars": 72228,
+    "topics": [],
+    "size_kb": 807673,
+    "updated_at": "2026-04-09T13:09:59Z",
+    "pushed_at": "2026-04-09T13:20:51Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "moby/moby",
+    "name": "moby-moby",
+    "git_url": "https://github.com/moby/moby.git",
+    "html_url": "https://github.com/moby/moby",
+    "description": "The Moby Project - a collaborative project for the container ecosystem to assemble container-based systems",
+    "primary_language": "Go",
+    "stars": 71525,
+    "topics": [
+      "containers",
+      "docker",
+      "go",
+      "golang"
+    ],
+    "size_kb": 257035,
+    "updated_at": "2026-04-09T13:03:05Z",
+    "pushed_at": "2026-04-09T12:24:26Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "obsproject/obs-studio",
+    "name": "obsproject-obs-studio",
+    "git_url": "https://github.com/obsproject/obs-studio.git",
+    "html_url": "https://github.com/obsproject/obs-studio",
+    "description": "OBS Studio - Free and open source software for live streaming and screen recording",
+    "primary_language": "C",
+    "stars": 71471,
+    "topics": [
+      "c",
+      "c-plus-plus",
+      "directshow",
+      "facebook-live",
+      "ffmpeg",
+      "game-capture",
+      "live-streaming",
+      "screen-capture",
+      "twitch-tv",
+      "video-recording",
+      "youtube-live"
+    ],
+    "size_kb": 80332,
+    "updated_at": "2026-04-09T13:01:58Z",
+    "pushed_at": "2026-04-07T01:03:45Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "caddyserver/caddy",
+    "name": "caddyserver-caddy",
+    "git_url": "https://github.com/caddyserver/caddy.git",
+    "html_url": "https://github.com/caddyserver/caddy",
+    "description": "Fast and extensible multi-platform HTTP/1-2-3 web server with automatic HTTPS",
+    "primary_language": "Go",
+    "stars": 71393,
+    "topics": [
+      "acme",
+      "automatic-https",
+      "caddy",
+      "caddyfile",
+      "go",
+      "golang",
+      "http",
+      "http-server",
+      "http3",
+      "https",
+      "privacy",
+      "reverse-proxy",
+      "security",
+      "tls",
+      "web-server"
+    ],
+    "size_kb": 20948,
+    "updated_at": "2026-04-09T13:20:40Z",
+    "pushed_at": "2026-04-08T19:50:08Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "pallets/flask",
+    "name": "pallets-flask",
+    "git_url": "https://github.com/pallets/flask.git",
+    "html_url": "https://github.com/pallets/flask",
+    "description": "The Python micro framework for building web applications.",
+    "primary_language": "Python",
+    "stars": 71390,
+    "topics": [
+      "flask",
+      "jinja",
+      "pallets",
+      "python",
+      "web-framework",
+      "werkzeug",
+      "wsgi"
+    ],
+    "size_kb": 11723,
+    "updated_at": "2026-04-09T10:29:43Z",
+    "pushed_at": "2026-04-09T04:04:09Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "protocolbuffers/protobuf",
+    "name": "protocolbuffers-protobuf",
+    "git_url": "https://github.com/protocolbuffers/protobuf.git",
+    "html_url": "https://github.com/protocolbuffers/protobuf",
+    "description": "Protocol Buffers - Google's data interchange format",
+    "primary_language": "C++",
+    "stars": 71052,
+    "topics": [
+      "marshalling",
+      "protobuf",
+      "protobuf-runtime",
+      "protoc",
+      "protocol-buffers",
+      "protocol-compiler",
+      "rpc",
+      "serialization"
+    ],
+    "size_kb": 218271,
+    "updated_at": "2026-04-09T13:08:00Z",
+    "pushed_at": "2026-04-09T11:54:14Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "nektos/act",
+    "name": "nektos-act",
+    "git_url": "https://github.com/nektos/act.git",
+    "html_url": "https://github.com/nektos/act",
+    "description": "Run your GitHub Actions locally \ud83d\ude80",
+    "primary_language": "Go",
+    "stars": 69778,
+    "topics": [
+      "ci",
+      "devops",
+      "github-actions",
+      "golang"
+    ],
+    "size_kb": 17773,
+    "updated_at": "2026-04-09T11:10:38Z",
+    "pushed_at": "2026-04-08T21:41:03Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "base/node",
+    "name": "base-node",
+    "git_url": "https://github.com/base/node.git",
+    "html_url": "https://github.com/base/node",
+    "description": "Everything required to run your own Base node",
+    "primary_language": "Go",
+    "stars": 68634,
+    "topics": [],
+    "size_kb": 3131,
+    "updated_at": "2026-04-09T12:10:39Z",
+    "pushed_at": "2026-04-08T23:40:43Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "ansible/ansible",
+    "name": "ansible-ansible",
+    "git_url": "https://github.com/ansible/ansible.git",
+    "html_url": "https://github.com/ansible/ansible",
+    "description": "Ansible is a radically simple IT automation platform that makes your applications and systems easier to deploy and maintain. Automate everything from code deployment to network configuration to cloud management, in a language that approaches plain English, using SSH, with no agents to install on remote systems. https://docs.ansible.com.",
+    "primary_language": "Python",
+    "stars": 68395,
+    "topics": [
+      "ansible",
+      "python"
+    ],
+    "size_kb": 264069,
+    "updated_at": "2026-04-09T13:14:22Z",
+    "pushed_at": "2026-04-09T06:13:38Z",
+    "default_branch": "devel",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "NationalSecurityAgency/ghidra",
+    "name": "nationalsecurityagency-ghidra",
+    "git_url": "https://github.com/NationalSecurityAgency/ghidra.git",
+    "html_url": "https://github.com/NationalSecurityAgency/ghidra",
+    "description": "Ghidra is a software reverse engineering (SRE) framework",
+    "primary_language": "Java",
+    "stars": 66722,
+    "topics": [
+      "disassembler",
+      "reverse-engineering",
+      "software-analysis"
+    ],
+    "size_kb": 406910,
+    "updated_at": "2026-04-09T12:36:13Z",
+    "pushed_at": "2026-04-08T13:52:22Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "prometheus/prometheus",
+    "name": "prometheus-prometheus",
+    "git_url": "https://github.com/prometheus/prometheus.git",
+    "html_url": "https://github.com/prometheus/prometheus",
+    "description": "The Prometheus monitoring system and time series database.",
+    "primary_language": "Go",
+    "stars": 63485,
+    "topics": [
+      "alerting",
+      "graphing",
+      "hacktoberfest",
+      "metrics",
+      "monitoring",
+      "prometheus",
+      "time-series"
+    ],
+    "size_kb": 279374,
+    "updated_at": "2026-04-09T13:03:35Z",
+    "pushed_at": "2026-04-09T12:40:18Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "alacritty/alacritty",
+    "name": "alacritty-alacritty",
+    "git_url": "https://github.com/alacritty/alacritty.git",
+    "html_url": "https://github.com/alacritty/alacritty",
+    "description": "A cross-platform, OpenGL terminal emulator.",
+    "primary_language": "Rust",
+    "stars": 63317,
+    "topics": [
+      "bsd",
+      "gpu",
+      "linux",
+      "macos",
+      "opengl",
+      "rust",
+      "terminal",
+      "terminal-emulators",
+      "vte",
+      "windows"
+    ],
+    "size_kb": 14584,
+    "updated_at": "2026-04-09T12:55:08Z",
+    "pushed_at": "2026-04-06T19:21:00Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "traefik/traefik",
+    "name": "traefik-traefik",
+    "git_url": "https://github.com/traefik/traefik.git",
+    "html_url": "https://github.com/traefik/traefik",
+    "description": "The Cloud Native Application Proxy",
+    "primary_language": "Go",
+    "stars": 62557,
+    "topics": [
+      "consul",
+      "docker",
+      "etcd",
+      "go",
+      "golang",
+      "kubernetes",
+      "letsencrypt",
+      "load-balancer",
+      "marathon",
+      "mesos",
+      "microservice",
+      "reverse-proxy",
+      "traefik",
+      "zookeeper"
+    ],
+    "size_kb": 155873,
+    "updated_at": "2026-04-09T12:58:04Z",
+    "pushed_at": "2026-04-09T12:08:06Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "rust-lang/rustlings",
+    "name": "rust-lang-rustlings",
+    "git_url": "https://github.com/rust-lang/rustlings.git",
+    "html_url": "https://github.com/rust-lang/rustlings",
+    "description": ":crab: Small exercises to get you used to reading and writing Rust code!",
+    "primary_language": "Rust",
+    "stars": 62441,
+    "topics": [
+      "beginner-friendly",
+      "exercises",
+      "rust",
+      "rustlings"
+    ],
+    "size_kb": 4332,
+    "updated_at": "2026-04-09T13:18:49Z",
+    "pushed_at": "2026-04-08T11:02:34Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "LadybirdBrowser/ladybird",
+    "name": "ladybirdbrowser-ladybird",
+    "git_url": "https://github.com/LadybirdBrowser/ladybird.git",
+    "html_url": "https://github.com/LadybirdBrowser/ladybird",
+    "description": "Truly independent web browser",
+    "primary_language": "C++",
+    "stars": 62250,
+    "topics": [
+      "browser",
+      "browser-engine"
+    ],
+    "size_kb": 433500,
+    "updated_at": "2026-04-09T12:58:20Z",
+    "pushed_at": "2026-04-09T12:33:41Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "BurntSushi/ripgrep",
+    "name": "burntsushi-ripgrep",
+    "git_url": "https://github.com/BurntSushi/ripgrep.git",
+    "html_url": "https://github.com/BurntSushi/ripgrep",
+    "description": "ripgrep recursively searches directories for a regex pattern while respecting your gitignore",
+    "primary_language": "Rust",
+    "stars": 62113,
+    "topics": [
+      "cli",
+      "command-line",
+      "command-line-tool",
+      "gitignore",
+      "grep",
+      "recursively-search",
+      "regex",
+      "ripgrep",
+      "rust",
+      "search"
+    ],
+    "size_kb": 5472,
+    "updated_at": "2026-04-09T12:59:16Z",
+    "pushed_at": "2026-02-27T16:25:19Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "FuelLabs/sway",
+    "name": "fuellabs-sway",
+    "git_url": "https://github.com/FuelLabs/sway.git",
+    "html_url": "https://github.com/FuelLabs/sway",
+    "description": "\ud83c\udf34 Empowering everyone to build reliable and efficient smart contracts.",
+    "primary_language": "Rust",
+    "stars": 61806,
+    "topics": [
+      "compiler",
+      "fuel",
+      "language",
+      "sway"
+    ],
+    "size_kb": 116504,
+    "updated_at": "2026-04-09T10:29:29Z",
+    "pushed_at": "2026-04-09T13:15:08Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "scrapy/scrapy",
+    "name": "scrapy-scrapy",
+    "git_url": "https://github.com/scrapy/scrapy.git",
+    "html_url": "https://github.com/scrapy/scrapy",
+    "description": "Scrapy, a fast high-level web crawling & scraping framework for Python.",
+    "primary_language": "Python",
+    "stars": 61227,
+    "topics": [
+      "crawler",
+      "crawling",
+      "framework",
+      "hacktoberfest",
+      "python",
+      "scraping",
+      "web-scraping",
+      "web-scraping-python"
+    ],
+    "size_kb": 29963,
+    "updated_at": "2026-04-09T12:43:28Z",
+    "pushed_at": "2026-04-09T12:01:42Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "commaai/openpilot",
+    "name": "commaai-openpilot",
+    "git_url": "https://github.com/commaai/openpilot.git",
+    "html_url": "https://github.com/commaai/openpilot",
+    "description": "openpilot is an operating system for robotics. Currently, it upgrades the driver assistance system on 300+ supported cars.",
+    "primary_language": "Python",
+    "stars": 60555,
+    "topics": [
+      "advanced-driver-assistance-systems",
+      "driver-assistance-systems",
+      "robotics"
+    ],
+    "size_kb": 703544,
+    "updated_at": "2026-04-09T10:36:24Z",
+    "pushed_at": "2026-04-09T09:33:58Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "git/git",
+    "name": "git-git",
+    "git_url": "https://github.com/git/git.git",
+    "html_url": "https://github.com/git/git",
+    "description": "Git Source Code Mirror - This is a publish-only repository but pull requests can be turned into patches to the mailing list via GitGitGadget (https://gitgitgadget.github.io/). Please follow Documentation/SubmittingPatches procedure for any of your improvements.",
+    "primary_language": "C",
+    "stars": 60184,
+    "topics": [
+      "c",
+      "hacktoberfest",
+      "shell"
+    ],
+    "size_kb": 302281,
+    "updated_at": "2026-04-09T11:31:24Z",
+    "pushed_at": "2026-04-08T22:30:08Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "spring-projects/spring-framework",
+    "name": "spring-projects-spring-framework",
+    "git_url": "https://github.com/spring-projects/spring-framework.git",
+    "html_url": "https://github.com/spring-projects/spring-framework",
+    "description": "Spring Framework",
+    "primary_language": "Java",
+    "stars": 59830,
+    "topics": [
+      "framework",
+      "spring",
+      "spring-framework"
+    ],
+    "size_kb": 241499,
+    "updated_at": "2026-04-09T12:29:18Z",
+    "pushed_at": "2026-04-09T11:07:33Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "meta-llama/llama",
+    "name": "meta-llama-llama",
+    "git_url": "https://github.com/meta-llama/llama.git",
+    "html_url": "https://github.com/meta-llama/llama",
+    "description": "Inference code for Llama models",
+    "primary_language": "Python",
+    "stars": 59312,
+    "topics": [],
+    "size_kb": 1150,
+    "updated_at": "2026-04-09T10:29:42Z",
+    "pushed_at": "2025-01-26T21:42:26Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "FFmpeg/FFmpeg",
+    "name": "ffmpeg-ffmpeg",
+    "git_url": "https://github.com/FFmpeg/FFmpeg.git",
+    "html_url": "https://github.com/FFmpeg/FFmpeg",
+    "description": "Mirror of https://git.ffmpeg.org/ffmpeg.git",
+    "primary_language": "C",
+    "stars": 58749,
+    "topics": [
+      "audio",
+      "c",
+      "ffmpeg",
+      "fft",
+      "hevc",
+      "hls",
+      "matroska",
+      "mp4",
+      "mpeg",
+      "multimedia",
+      "rtmp",
+      "rtsp",
+      "streaming",
+      "video",
+      "webm"
+    ],
+    "size_kb": 473117,
+    "updated_at": "2026-04-09T13:01:47Z",
+    "pushed_at": "2026-04-09T11:01:19Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "FiloSottile/mkcert",
+    "name": "filosottile-mkcert",
+    "git_url": "https://github.com/FiloSottile/mkcert.git",
+    "html_url": "https://github.com/FiloSottile/mkcert",
+    "description": "A simple zero-config tool to make locally trusted development certificates with any names you'd like.",
+    "primary_language": "Go",
+    "stars": 58499,
+    "topics": [
+      "certificates",
+      "chrome",
+      "firefox",
+      "https",
+      "ios",
+      "linux",
+      "local-development",
+      "localhost",
+      "macos",
+      "root-ca",
+      "tls",
+      "windows"
+    ],
+    "size_kb": 1799,
+    "updated_at": "2026-04-09T13:20:58Z",
+    "pushed_at": "2024-08-13T13:37:46Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "dani-garcia/vaultwarden",
+    "name": "dani-garcia-vaultwarden",
+    "git_url": "https://github.com/dani-garcia/vaultwarden.git",
+    "html_url": "https://github.com/dani-garcia/vaultwarden",
+    "description": "Unofficial Bitwarden compatible server written in Rust, formerly known as bitwarden_rs",
+    "primary_language": "Rust",
+    "stars": 58144,
+    "topics": [
+      "bitwarden",
+      "bitwarden-rs",
+      "docker",
+      "rocket",
+      "rust",
+      "vaultwarden"
+    ],
+    "size_kb": 12135,
+    "updated_at": "2026-04-09T13:06:15Z",
+    "pushed_at": "2026-04-08T13:35:18Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "sharkdp/bat",
+    "name": "sharkdp-bat",
+    "git_url": "https://github.com/sharkdp/bat.git",
+    "html_url": "https://github.com/sharkdp/bat",
+    "description": "A cat(1) clone with wings.",
+    "primary_language": "Rust",
+    "stars": 58055,
+    "topics": [
+      "cli",
+      "command-line",
+      "git",
+      "hacktoberfest",
+      "rust",
+      "syntax-highlighting",
+      "terminal",
+      "tool"
+    ],
+    "size_kb": 34976,
+    "updated_at": "2026-04-09T12:25:52Z",
+    "pushed_at": "2026-04-08T02:20:55Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "Z4nzu/hackingtool",
+    "name": "z4nzu-hackingtool",
+    "git_url": "https://github.com/Z4nzu/hackingtool.git",
+    "html_url": "https://github.com/Z4nzu/hackingtool",
+    "description": "ALL IN ONE Hacking Tool For Hackers",
+    "primary_language": "Python",
+    "stars": 57973,
+    "topics": [
+      "allinonehackingtool",
+      "besthackingtool",
+      "ctf-tools",
+      "ddos-attack-tool",
+      "hacker",
+      "hacking",
+      "linux",
+      "password-attack",
+      "steganography",
+      "web-attack",
+      "wireless-attack",
+      "xss-attacks",
+      "xss-detection"
+    ],
+    "size_kb": 2486,
+    "updated_at": "2026-04-09T12:57:55Z",
+    "pushed_at": "2026-03-15T14:33:08Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "pocketbase/pocketbase",
+    "name": "pocketbase-pocketbase",
+    "git_url": "https://github.com/pocketbase/pocketbase.git",
+    "html_url": "https://github.com/pocketbase/pocketbase",
+    "description": "Open Source realtime backend in 1 file",
+    "primary_language": "Go",
+    "stars": 57490,
+    "topics": [
+      "authentication",
+      "backend",
+      "golang",
+      "realtime"
+    ],
+    "size_kb": 130635,
+    "updated_at": "2026-04-09T12:36:33Z",
+    "pushed_at": "2026-04-09T07:31:11Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "FuelLabs/fuel-core",
+    "name": "fuellabs-fuel-core",
+    "git_url": "https://github.com/FuelLabs/fuel-core.git",
+    "html_url": "https://github.com/FuelLabs/fuel-core",
+    "description": "Rust full node implementation of the Fuel v2 protocol.",
+    "primary_language": "Rust",
+    "stars": 57190,
+    "topics": [
+      "blockchain",
+      "fuel"
+    ],
+    "size_kb": 910923,
+    "updated_at": "2026-04-09T10:31:02Z",
+    "pushed_at": "2026-04-08T17:42:02Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "soimort/you-get",
+    "name": "soimort-you-get",
+    "git_url": "https://github.com/soimort/you-get.git",
+    "html_url": "https://github.com/soimort/you-get",
+    "description": ":arrow_double_down: Dumb downloader that scrapes the web",
+    "primary_language": "Python",
+    "stars": 56813,
+    "topics": [],
+    "size_kb": 3533,
+    "updated_at": "2026-04-09T11:04:41Z",
+    "pushed_at": "2025-04-27T15:33:25Z",
+    "default_branch": "develop",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "rclone/rclone",
+    "name": "rclone-rclone",
+    "git_url": "https://github.com/rclone/rclone.git",
+    "html_url": "https://github.com/rclone/rclone",
+    "description": "\"rsync for cloud storage\" - Google Drive, S3, Dropbox, Backblaze B2, One Drive, Swift, Hubic, Wasabi, Google Cloud Storage, Azure Blob, Azure Files, Yandex Files",
+    "primary_language": "Go",
+    "stars": 56551,
+    "topics": [
+      "azure-blob",
+      "azure-blob-storage",
+      "azure-files",
+      "backblaze-b2",
+      "cloud-storage",
+      "dropbox",
+      "encryption",
+      "ftp",
+      "fuse-filesystem",
+      "go",
+      "golang",
+      "google-cloud-storage",
+      "google-drive",
+      "onedrive",
+      "openstack-swift",
+      "rclone",
+      "s3",
+      "sftp",
+      "sync",
+      "webdav"
+    ],
+    "size_kb": 236616,
+    "updated_at": "2026-04-09T13:07:27Z",
+    "pushed_at": "2026-04-09T11:56:18Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "starship/starship",
+    "name": "starship-starship",
+    "git_url": "https://github.com/starship/starship.git",
+    "html_url": "https://github.com/starship/starship",
+    "description": "\u2604\ud83c\udf0c\ufe0f  The minimal, blazing-fast, and infinitely customizable prompt for any shell!",
+    "primary_language": "Rust",
+    "stars": 56066,
+    "topics": [
+      "bash",
+      "fish",
+      "fish-prompt",
+      "fish-theme",
+      "oh-my-zsh",
+      "powershell",
+      "rust",
+      "shell-prompt",
+      "starship",
+      "zsh",
+      "zsh-prompt",
+      "zsh-theme"
+    ],
+    "size_kb": 47810,
+    "updated_at": "2026-04-09T12:20:49Z",
+    "pushed_at": "2026-04-09T12:19:02Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "Textualize/rich",
+    "name": "textualize-rich",
+    "git_url": "https://github.com/Textualize/rich.git",
+    "html_url": "https://github.com/Textualize/rich",
+    "description": "Rich is a Python library for rich text and beautiful formatting in the terminal.",
+    "primary_language": "Python",
+    "stars": 56018,
+    "topics": [
+      "ansi-colors",
+      "emoji",
+      "markdown",
+      "progress-bar",
+      "progress-bar-python",
+      "python",
+      "python-library",
+      "python3",
+      "rich",
+      "syntax-highlighting",
+      "tables",
+      "terminal",
+      "terminal-color",
+      "traceback",
+      "tracebacks-rich",
+      "tui"
+    ],
+    "size_kb": 49893,
+    "updated_at": "2026-04-09T13:12:16Z",
+    "pushed_at": "2026-02-26T09:52:16Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "FoundationAgents/OpenManus",
+    "name": "foundationagents-openmanus",
+    "git_url": "https://github.com/FoundationAgents/OpenManus.git",
+    "html_url": "https://github.com/FoundationAgents/OpenManus",
+    "description": "No fortress, purely open ground.  OpenManus is Coming.",
+    "primary_language": "Python",
+    "stars": 55669,
+    "topics": [],
+    "size_kb": 4472,
+    "updated_at": "2026-04-09T12:50:18Z",
+    "pushed_at": "2026-02-11T13:48:00Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "go-gitea/gitea",
+    "name": "go-gitea-gitea",
+    "git_url": "https://github.com/go-gitea/gitea.git",
+    "html_url": "https://github.com/go-gitea/gitea",
+    "description": "Git with a cup of tea! Painless self-hosted all-in-one software development service, including Git hosting, code review, team collaboration, package registry and CI/CD",
+    "primary_language": "Go",
+    "stars": 54799,
+    "topics": [
+      "bitbucket",
+      "cicd",
+      "devops",
+      "docker-registry-v2",
+      "git",
+      "git-gui",
+      "git-lfs",
+      "git-server",
+      "gitea",
+      "github",
+      "github-actions",
+      "gitlab",
+      "go",
+      "golang",
+      "hacktoberfest",
+      "maven-server",
+      "npm-registry",
+      "self-hosted",
+      "typescript",
+      "vue"
+    ],
+    "size_kb": 329147,
+    "updated_at": "2026-04-09T13:03:40Z",
+    "pushed_at": "2026-04-09T13:17:50Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "psf/requests",
+    "name": "psf-requests",
+    "git_url": "https://github.com/psf/requests.git",
+    "html_url": "https://github.com/psf/requests",
+    "description": "A simple, yet elegant, HTTP library.",
+    "primary_language": "Python",
+    "stars": 53871,
+    "topics": [
+      "client",
+      "cookies",
+      "forhumans",
+      "http",
+      "humans",
+      "python",
+      "python-requests",
+      "requests"
+    ],
+    "size_kb": 13382,
+    "updated_at": "2026-04-09T10:29:54Z",
+    "pushed_at": "2026-04-09T02:18:20Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "wagoodman/dive",
+    "name": "wagoodman-dive",
+    "git_url": "https://github.com/wagoodman/dive.git",
+    "html_url": "https://github.com/wagoodman/dive",
+    "description": "A tool for exploring each layer in a docker image",
+    "primary_language": "Go",
+    "stars": 53726,
+    "topics": [
+      "cli",
+      "docker",
+      "docker-image",
+      "explorer",
+      "inspector",
+      "tui"
+    ],
+    "size_kb": 6927,
+    "updated_at": "2026-04-09T11:06:50Z",
+    "pushed_at": "2025-12-15T17:20:36Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "Zie619/n8n-workflows",
+    "name": "zie619-n8n-workflows",
+    "git_url": "https://github.com/Zie619/n8n-workflows.git",
+    "html_url": "https://github.com/Zie619/n8n-workflows",
+    "description": "all of the workflows of n8n i could find (also from the site itself)",
+    "primary_language": "Python",
+    "stars": 53629,
+    "topics": [],
+    "size_kb": 45314,
+    "updated_at": "2026-04-09T12:37:45Z",
+    "pushed_at": "2026-02-11T15:41:17Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "WerWolv/ImHex",
+    "name": "werwolv-imhex",
+    "git_url": "https://github.com/WerWolv/ImHex.git",
+    "html_url": "https://github.com/WerWolv/ImHex",
+    "description": "\ud83d\udd0d A Hex Editor for Reverse Engineers, Programmers and people who value their retinas when working at 3 AM.",
+    "primary_language": "C++",
+    "stars": 53110,
+    "topics": [
+      "analyzer",
+      "binary-analysis",
+      "c-plus-plus",
+      "cpp",
+      "cybersecurity",
+      "dark-mode",
+      "dear-imgui",
+      "disassembler",
+      "forensics",
+      "hacking",
+      "hacktoberfest",
+      "hex-editor",
+      "ips",
+      "linux",
+      "macos",
+      "multi-platform",
+      "pattern-language",
+      "reverse-engineering",
+      "static-analysis",
+      "windows"
+    ],
+    "size_kb": 52121,
+    "updated_at": "2026-04-09T12:43:33Z",
+    "pushed_at": "2026-04-02T04:21:13Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "termux/termux-app",
+    "name": "termux-termux-app",
+    "git_url": "https://github.com/termux/termux-app.git",
+    "html_url": "https://github.com/termux/termux-app",
+    "description": "Termux - a terminal emulator application for Android OS extendible by variety of packages.",
+    "primary_language": "Java",
+    "stars": 53107,
+    "topics": [
+      "android",
+      "hacktoberfest",
+      "linux",
+      "terminal",
+      "termux"
+    ],
+    "size_kb": 5124,
+    "updated_at": "2026-04-09T13:13:49Z",
+    "pushed_at": "2026-04-06T23:11:53Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "typst/typst",
+    "name": "typst-typst",
+    "git_url": "https://github.com/typst/typst.git",
+    "html_url": "https://github.com/typst/typst",
+    "description": "A markup-based typesetting system that is powerful and easy to learn.",
+    "primary_language": "Rust",
+    "stars": 52558,
+    "topics": [
+      "compiler",
+      "markup",
+      "typesetting",
+      "typst"
+    ],
+    "size_kb": 138328,
+    "updated_at": "2026-04-09T13:11:17Z",
+    "pushed_at": "2026-04-09T12:24:35Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "etcd-io/etcd",
+    "name": "etcd-io-etcd",
+    "git_url": "https://github.com/etcd-io/etcd.git",
+    "html_url": "https://github.com/etcd-io/etcd",
+    "description": "Distributed reliable key-value store for the most critical data of a distributed system",
+    "primary_language": "Go",
+    "stars": 51640,
+    "topics": [
+      "cncf",
+      "consensus",
+      "database",
+      "distributed-database",
+      "distributed-systems",
+      "etcd",
+      "go",
+      "key-value",
+      "kubernetes",
+      "raft"
+    ],
+    "size_kb": 96025,
+    "updated_at": "2026-04-09T11:09:09Z",
+    "pushed_at": "2026-04-08T20:26:27Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "xai-org/grok-1",
+    "name": "xai-org-grok-1",
+    "git_url": "https://github.com/xai-org/grok-1.git",
+    "html_url": "https://github.com/xai-org/grok-1",
+    "description": "Grok open release",
+    "primary_language": "Python",
+    "stars": 51526,
+    "topics": [],
+    "size_kb": 1008,
+    "updated_at": "2026-04-09T10:47:36Z",
+    "pushed_at": "2024-08-30T04:17:25Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "google/guava",
+    "name": "google-guava",
+    "git_url": "https://github.com/google/guava.git",
+    "html_url": "https://github.com/google/guava",
+    "description": "Google core libraries for Java",
+    "primary_language": "Java",
+    "stars": 51512,
+    "topics": [
+      "guava",
+      "java"
+    ],
+    "size_kb": 1354821,
+    "updated_at": "2026-04-09T11:25:46Z",
+    "pushed_at": "2026-04-08T23:36:00Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "ethereum/go-ethereum",
+    "name": "ethereum-go-ethereum",
+    "git_url": "https://github.com/ethereum/go-ethereum.git",
+    "html_url": "https://github.com/ethereum/go-ethereum",
+    "description": "Go implementation of the Ethereum protocol",
+    "primary_language": "Go",
+    "stars": 50973,
+    "topics": [
+      "blockchain",
+      "ethereum",
+      "geth",
+      "go",
+      "p2p"
+    ],
+    "size_kb": 234288,
+    "updated_at": "2026-04-09T12:24:50Z",
+    "pushed_at": "2026-04-09T13:19:29Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "jesseduffield/lazydocker",
+    "name": "jesseduffield-lazydocker",
+    "git_url": "https://github.com/jesseduffield/lazydocker.git",
+    "html_url": "https://github.com/jesseduffield/lazydocker",
+    "description": "The lazier way to manage everything docker",
+    "primary_language": "Go",
+    "stars": 50573,
+    "topics": [],
+    "size_kb": 28105,
+    "updated_at": "2026-04-09T11:28:49Z",
+    "pushed_at": "2026-03-15T22:26:04Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "odoo/odoo",
+    "name": "odoo-odoo",
+    "git_url": "https://github.com/odoo/odoo.git",
+    "html_url": "https://github.com/odoo/odoo",
+    "description": "Odoo. Open Source Apps To Grow Your Business.",
+    "primary_language": "Python",
+    "stars": 49999,
+    "topics": [
+      "apps",
+      "business",
+      "erp",
+      "management",
+      "odoo",
+      "odoo-apps",
+      "python"
+    ],
+    "size_kb": 15002223,
+    "updated_at": "2026-04-09T13:16:14Z",
+    "pushed_at": "2026-04-09T13:12:24Z",
+    "default_branch": "19.0",
+    "source_extensions": [
+      ".py"
+    ]
+  },
+  {
+    "full_name": "nlohmann/json",
+    "name": "nlohmann-json",
+    "git_url": "https://github.com/nlohmann/json.git",
+    "html_url": "https://github.com/nlohmann/json",
+    "description": "JSON for Modern C++",
+    "primary_language": "C++",
+    "stars": 49346,
+    "topics": [
+      "bson",
+      "cbor",
+      "header-only",
+      "json",
+      "json-diff",
+      "json-merge-patch",
+      "json-parser",
+      "json-patch",
+      "json-pointer",
+      "json-serialization",
+      "messagepack",
+      "msgpack",
+      "rfc-6901",
+      "rfc-6902",
+      "rfc-7049",
+      "rfc-7159",
+      "rfc-8259",
+      "stl-containers",
+      "ubjson"
+    ],
+    "size_kb": 241694,
+    "updated_at": "2026-04-09T12:33:47Z",
+    "pushed_at": "2026-04-06T16:36:31Z",
+    "default_branch": "develop",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "AlistGo/alist",
+    "name": "alistgo-alist",
+    "git_url": "https://github.com/AlistGo/alist.git",
+    "html_url": "https://github.com/AlistGo/alist",
+    "description": "\ud83d\uddc2\ufe0fA file list/WebDAV program that supports multiple storages, powered by Gin and Solidjs. / \u4e00\u4e2a\u652f\u6301\u591a\u5b58\u50a8\u7684\u6587\u4ef6\u5217\u8868/WebDAV\u7a0b\u5e8f\uff0c\u4f7f\u7528 Gin \u548c Solidjs\u3002",
+    "primary_language": "Go",
+    "stars": 49272,
+    "topics": [
+      "file-server",
+      "gin",
+      "golang",
+      "onedrive",
+      "solidjs",
+      "webdav"
+    ],
+    "size_kb": 6196,
+    "updated_at": "2026-04-09T12:55:25Z",
+    "pushed_at": "2026-03-30T06:01:37Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "ReactiveX/RxJava",
+    "name": "reactivex-rxjava",
+    "git_url": "https://github.com/ReactiveX/RxJava.git",
+    "html_url": "https://github.com/ReactiveX/RxJava",
+    "description": "RxJava \u2013 Reactive Extensions for the JVM \u2013 a library for composing asynchronous and event-based programs using observable sequences for the Java VM.",
+    "primary_language": "Java",
+    "stars": 48376,
+    "topics": [
+      "flow",
+      "java",
+      "reactive-streams",
+      "rxjava"
+    ],
+    "size_kb": 162971,
+    "updated_at": "2026-04-09T10:30:39Z",
+    "pushed_at": "2026-04-09T04:52:24Z",
+    "default_branch": "4.x",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "hashicorp/terraform",
+    "name": "hashicorp-terraform",
+    "git_url": "https://github.com/hashicorp/terraform.git",
+    "html_url": "https://github.com/hashicorp/terraform",
+    "description": "Terraform enables you to safely and predictably create, change, and improve infrastructure. It is a source-available tool that codifies APIs into declarative configuration files that can be shared amongst team members, treated as code, edited, reviewed, and versioned.",
+    "primary_language": "Go",
+    "stars": 48080,
+    "topics": [
+      "cloud",
+      "cloud-management",
+      "graph",
+      "infrastructure-as-code",
+      "terraform"
+    ],
+    "size_kb": 352636,
+    "updated_at": "2026-04-09T12:58:39Z",
+    "pushed_at": "2026-04-09T11:56:34Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".go"
+    ]
+  },
+  {
+    "full_name": "x64dbg/x64dbg",
+    "name": "x64dbg-x64dbg",
+    "git_url": "https://github.com/x64dbg/x64dbg.git",
+    "html_url": "https://github.com/x64dbg/x64dbg",
+    "description": "An open-source user mode debugger for Windows. Optimized for reverse engineering and malware analysis.",
+    "primary_language": "C++",
+    "stars": 48048,
+    "topics": [
+      "binary-analysis",
+      "ctf",
+      "cybersecurity",
+      "debugger",
+      "debugging",
+      "disassembler",
+      "dynamic-analysis",
+      "exploit-development",
+      "hacking",
+      "malware-analysis",
+      "offensive-security",
+      "oscp",
+      "program-analysis",
+      "reverse-engineering",
+      "security",
+      "security-tools",
+      "windows",
+      "x64",
+      "x86",
+      "x86-64"
+    ],
+    "size_kb": 63348,
+    "updated_at": "2026-04-09T10:32:08Z",
+    "pushed_at": "2026-03-22T22:41:36Z",
+    "default_branch": "development",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "skylot/jadx",
+    "name": "skylot-jadx",
+    "git_url": "https://github.com/skylot/jadx.git",
+    "html_url": "https://github.com/skylot/jadx",
+    "description": "Dex to Java decompiler",
+    "primary_language": "Java",
+    "stars": 48011,
+    "topics": [
+      "android",
+      "decompiler",
+      "dex",
+      "java"
+    ],
+    "size_kb": 25464,
+    "updated_at": "2026-04-09T12:40:36Z",
+    "pushed_at": "2026-04-05T17:48:49Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "bevyengine/bevy",
+    "name": "bevyengine-bevy",
+    "git_url": "https://github.com/bevyengine/bevy.git",
+    "html_url": "https://github.com/bevyengine/bevy",
+    "description": "A refreshingly simple data-driven game engine built in Rust",
+    "primary_language": "Rust",
+    "stars": 45510,
+    "topics": [
+      "bevy",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "open-source",
+      "rust"
+    ],
+    "size_kb": 162225,
+    "updated_at": "2026-04-09T12:50:18Z",
+    "pushed_at": "2026-04-09T04:56:50Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "grpc/grpc",
+    "name": "grpc-grpc",
+    "git_url": "https://github.com/grpc/grpc.git",
+    "html_url": "https://github.com/grpc/grpc",
+    "description": "C++ based gRPC (C++, Python, Ruby, Objective-C, PHP, C#)",
+    "primary_language": "C++",
+    "stars": 44604,
+    "topics": [],
+    "size_kb": 604274,
+    "updated_at": "2026-04-09T11:21:04Z",
+    "pushed_at": "2026-04-09T08:36:37Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "tmux/tmux",
+    "name": "tmux-tmux",
+    "git_url": "https://github.com/tmux/tmux.git",
+    "html_url": "https://github.com/tmux/tmux",
+    "description": "tmux source code",
+    "primary_language": "C",
+    "stars": 44250,
+    "topics": [],
+    "size_kb": 19212,
+    "updated_at": "2026-04-09T12:54:31Z",
+    "pushed_at": "2026-04-05T23:41:01Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "zhongyang219/TrafficMonitor",
+    "name": "zhongyang219-trafficmonitor",
+    "git_url": "https://github.com/zhongyang219/TrafficMonitor.git",
+    "html_url": "https://github.com/zhongyang219/TrafficMonitor",
+    "description": "\u8fd9\u662f\u4e00\u4e2a\u7528\u4e8e\u663e\u793a\u5f53\u524d\u7f51\u901f\u3001CPU\u53ca\u5185\u5b58\u5229\u7528\u7387\u7684\u684c\u9762\u60ac\u6d6e\u7a97\u8f6f\u4ef6\uff0c\u5e76\u652f\u6301\u4efb\u52a1\u680f\u663e\u793a\uff0c\u652f\u6301\u66f4\u6362\u76ae\u80a4\u3002",
+    "primary_language": "C++",
+    "stars": 43863,
+    "topics": [],
+    "size_kb": 16715,
+    "updated_at": "2026-04-09T09:45:47Z",
+    "pushed_at": "2026-04-06T11:26:46Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "helix-editor/helix",
+    "name": "helix-editor-helix",
+    "git_url": "https://github.com/helix-editor/helix.git",
+    "html_url": "https://github.com/helix-editor/helix",
+    "description": "A post-modern modal text editor.",
+    "primary_language": "Rust",
+    "stars": 43852,
+    "topics": [
+      "kakoune",
+      "rust",
+      "text-editor",
+      "vim"
+    ],
+    "size_kb": 69461,
+    "updated_at": "2026-04-09T12:09:46Z",
+    "pushed_at": "2026-04-08T13:32:09Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "FuelLabs/fuels-rs",
+    "name": "fuellabs-fuels-rs",
+    "git_url": "https://github.com/FuelLabs/fuels-rs.git",
+    "html_url": "https://github.com/FuelLabs/fuels-rs",
+    "description": "Fuel Network Rust SDK",
+    "primary_language": "Rust",
+    "stars": 43292,
+    "topics": [],
+    "size_kb": 20145,
+    "updated_at": "2026-04-09T10:29:30Z",
+    "pushed_at": "2026-04-06T18:57:03Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "Light-City/CPlusPlusThings",
+    "name": "light-city-cplusplusthings",
+    "git_url": "https://github.com/Light-City/CPlusPlusThings.git",
+    "html_url": "https://github.com/Light-City/CPlusPlusThings",
+    "description": "C++\u90a3\u4e9b\u4e8b",
+    "primary_language": "C++",
+    "stars": 43041,
+    "topics": [
+      "cplusplus",
+      "cpp",
+      "cpp11",
+      "cpp14"
+    ],
+    "size_kb": 1331,
+    "updated_at": "2026-04-09T12:31:39Z",
+    "pushed_at": "2026-03-12T15:48:05Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "sharkdp/fd",
+    "name": "sharkdp-fd",
+    "git_url": "https://github.com/sharkdp/fd.git",
+    "html_url": "https://github.com/sharkdp/fd",
+    "description": "A simple, fast and user-friendly alternative to 'find'",
+    "primary_language": "Rust",
+    "stars": 42401,
+    "topics": [
+      "cli",
+      "command-line",
+      "filesystem",
+      "hacktoberfest",
+      "regex",
+      "rust",
+      "search",
+      "terminal",
+      "tool"
+    ],
+    "size_kb": 2396,
+    "updated_at": "2026-04-09T12:17:17Z",
+    "pushed_at": "2026-04-04T05:44:14Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "juspay/hyperswitch",
+    "name": "juspay-hyperswitch",
+    "git_url": "https://github.com/juspay/hyperswitch.git",
+    "html_url": "https://github.com/juspay/hyperswitch",
+    "description": "An open source payments switch written in Rust to make payments fast, reliable and affordable",
+    "primary_language": "Rust",
+    "stars": 42396,
+    "topics": [
+      "beginner-friendly",
+      "featured",
+      "finance",
+      "hacktoberfest",
+      "high-performance",
+      "open-source",
+      "orchestration",
+      "payments",
+      "postgresql",
+      "redis",
+      "restful-api",
+      "rust",
+      "sdk",
+      "works-with-react"
+    ],
+    "size_kb": 303806,
+    "updated_at": "2026-04-09T13:03:29Z",
+    "pushed_at": "2026-04-09T12:52:27Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "apache/dubbo",
+    "name": "apache-dubbo",
+    "git_url": "https://github.com/apache/dubbo.git",
+    "html_url": "https://github.com/apache/dubbo",
+    "description": "The java implementation of Apache Dubbo. An RPC and microservice framework.",
+    "primary_language": "Java",
+    "stars": 41626,
+    "topics": [
+      "distributed-systems",
+      "dubbo",
+      "framework",
+      "grpc",
+      "http",
+      "java",
+      "microservices",
+      "restful",
+      "rpc",
+      "service-mesh",
+      "web"
+    ],
+    "size_kb": 61526,
+    "updated_at": "2026-04-09T11:52:31Z",
+    "pushed_at": "2026-04-09T02:54:04Z",
+    "default_branch": "3.3",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "curl/curl",
+    "name": "curl-curl",
+    "git_url": "https://github.com/curl/curl.git",
+    "html_url": "https://github.com/curl/curl",
+    "description": "A command line tool and library for transferring data with URL syntax, supporting DICT, FILE, FTP, FTPS, GOPHER, GOPHERS, HTTP, HTTPS, IMAP, IMAPS, LDAP, LDAPS, MQTT, MQTTS, POP3, POP3S, RTMP, RTMPS, RTSP, SCP, SFTP, SMB, SMBS, SMTP, SMTPS, TELNET, TFTP, WS and WSS. libcurl offers a myriad of powerful features",
+    "primary_language": "C",
+    "stars": 41227,
+    "topics": [
+      "c",
+      "client",
+      "curl",
+      "ftp",
+      "gopher",
+      "hacktoberfest",
+      "http",
+      "https",
+      "imaps",
+      "ldap",
+      "libcurl",
+      "library",
+      "mqtt",
+      "pop3",
+      "scp",
+      "sftp",
+      "transfer-data",
+      "transferring-data",
+      "user-agent",
+      "websocket"
+    ],
+    "size_kb": 134627,
+    "updated_at": "2026-04-09T13:20:37Z",
+    "pushed_at": "2026-04-09T12:10:42Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "aria2/aria2",
+    "name": "aria2-aria2",
+    "git_url": "https://github.com/aria2/aria2.git",
+    "html_url": "https://github.com/aria2/aria2",
+    "description": "aria2 is a lightweight multi-protocol & multi-source, cross platform download utility operated in command-line. It supports HTTP/HTTPS, FTP, SFTP, BitTorrent and Metalink.",
+    "primary_language": "C++",
+    "stars": 40536,
+    "topics": [
+      "bittorrent",
+      "cpp11",
+      "download",
+      "ftp",
+      "http",
+      "metalink",
+      "rpc",
+      "sftp"
+    ],
+    "size_kb": 31491,
+    "updated_at": "2026-04-09T12:08:15Z",
+    "pushed_at": "2026-03-10T10:01:53Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "wg/wrk",
+    "name": "wg-wrk",
+    "git_url": "https://github.com/wg/wrk.git",
+    "html_url": "https://github.com/wg/wrk",
+    "description": "Modern HTTP benchmarking tool",
+    "primary_language": "C",
+    "stars": 40184,
+    "topics": [],
+    "size_kb": 38743,
+    "updated_at": "2026-04-09T10:25:18Z",
+    "pushed_at": "2023-12-30T10:33:51Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "php/php-src",
+    "name": "php-php-src",
+    "git_url": "https://github.com/php/php-src.git",
+    "html_url": "https://github.com/php/php-src",
+    "description": "The PHP Interpreter",
+    "primary_language": "C",
+    "stars": 39978,
+    "topics": [],
+    "size_kb": 631072,
+    "updated_at": "2026-04-09T12:37:26Z",
+    "pushed_at": "2026-04-09T12:37:15Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "facebookresearch/faiss",
+    "name": "facebookresearch-faiss",
+    "git_url": "https://github.com/facebookresearch/faiss.git",
+    "html_url": "https://github.com/facebookresearch/faiss",
+    "description": "A library for efficient similarity search and clustering of dense vectors.",
+    "primary_language": "C++",
+    "stars": 39660,
+    "topics": [],
+    "size_kb": 268751,
+    "updated_at": "2026-04-09T11:22:18Z",
+    "pushed_at": "2026-04-09T11:22:59Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "nushell/nushell",
+    "name": "nushell-nushell",
+    "git_url": "https://github.com/nushell/nushell.git",
+    "html_url": "https://github.com/nushell/nushell",
+    "description": "A new type of shell",
+    "primary_language": "Rust",
+    "stars": 38973,
+    "topics": [
+      "nushell",
+      "rust",
+      "shell"
+    ],
+    "size_kb": 63502,
+    "updated_at": "2026-04-09T12:53:05Z",
+    "pushed_at": "2026-04-09T10:49:28Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "google/leveldb",
+    "name": "google-leveldb",
+    "git_url": "https://github.com/google/leveldb.git",
+    "html_url": "https://github.com/google/leveldb",
+    "description": "LevelDB is a fast key-value storage library written at Google that provides an ordered mapping from string keys to string values.",
+    "primary_language": "C++",
+    "stars": 38957,
+    "topics": [],
+    "size_kb": 1848,
+    "updated_at": "2026-04-09T11:41:11Z",
+    "pushed_at": "2026-03-11T04:06:29Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "google/googletest",
+    "name": "google-googletest",
+    "git_url": "https://github.com/google/googletest.git",
+    "html_url": "https://github.com/google/googletest",
+    "description": "GoogleTest - Google Testing and Mocking Framework",
+    "primary_language": "C++",
+    "stars": 38449,
+    "topics": [],
+    "size_kb": 14135,
+    "updated_at": "2026-04-09T10:31:24Z",
+    "pushed_at": "2026-03-31T14:22:45Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "lapce/lapce",
+    "name": "lapce-lapce",
+    "git_url": "https://github.com/lapce/lapce.git",
+    "html_url": "https://github.com/lapce/lapce",
+    "description": "Lightning-fast and Powerful Code Editor written in Rust",
+    "primary_language": "Rust",
+    "stars": 38275,
+    "topics": [
+      "code-editor",
+      "developer-tools",
+      "rust",
+      "text-editor",
+      "vim"
+    ],
+    "size_kb": 28751,
+    "updated_at": "2026-04-09T13:02:48Z",
+    "pushed_at": "2026-04-09T00:48:46Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".rs"
+    ]
+  },
+  {
+    "full_name": "PhilJay/MPAndroidChart",
+    "name": "philjay-mpandroidchart",
+    "git_url": "https://github.com/PhilJay/MPAndroidChart.git",
+    "html_url": "https://github.com/PhilJay/MPAndroidChart",
+    "description": "A powerful \ud83d\ude80 Android chart view / graph view library, supporting line- bar- pie- radar- bubble- and candlestick charts as well as scaling, panning and animations.",
+    "primary_language": "Java",
+    "stars": 38227,
+    "topics": [
+      "android",
+      "chart",
+      "graph",
+      "java",
+      "mpandroidchart"
+    ],
+    "size_kb": 21593,
+    "updated_at": "2026-04-09T10:31:23Z",
+    "pushed_at": "2025-06-05T07:06:39Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "halo-dev/halo",
+    "name": "halo-dev-halo",
+    "git_url": "https://github.com/halo-dev/halo.git",
+    "html_url": "https://github.com/halo-dev/halo",
+    "description": "Halo \u662f\u4e00\u6b3e\u5f3a\u5927\u6613\u7528\u7684\u5f00\u6e90\u5efa\u7ad9\u5de5\u5177\uff0c\u4ece\u4e2a\u4eba\u535a\u5ba2\u3001\u77e5\u8bc6\u5e93\uff0c\u5230\u4f01\u4e1a\u5b98\u7f51\u3001\u5728\u7ebf\u5546\u57ce\uff0cHalo \u90fd\u80fd\u52a9\u60a8\u8f7b\u677e\u5b9e\u73b0\uff0c\u4e00\u7ad9\u5f0f\u6ee1\u8db3\u60a8\u7684\u591a\u6837\u5316\u5efa\u7ad9\u9700\u6c42\u3002",
+    "primary_language": "Java",
+    "stars": 38217,
+    "topics": [
+      "blog",
+      "blog-engine",
+      "cms",
+      "content-management-system",
+      "halo",
+      "halocms",
+      "website-builder"
+    ],
+    "size_kb": 84422,
+    "updated_at": "2026-04-09T12:41:06Z",
+    "pushed_at": "2026-04-09T09:40:41Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "TeamNewPipe/NewPipe",
+    "name": "teamnewpipe-newpipe",
+    "git_url": "https://github.com/TeamNewPipe/NewPipe.git",
+    "html_url": "https://github.com/TeamNewPipe/NewPipe",
+    "description": "A libre lightweight streaming front-end for Android.",
+    "primary_language": "Java",
+    "stars": 37763,
+    "topics": [
+      "4k",
+      "android",
+      "bandcamp",
+      "download-videos",
+      "newpipe",
+      "peertube",
+      "soundcloud",
+      "translation",
+      "video",
+      "watch",
+      "youtube-video"
+    ],
+    "size_kb": 86335,
+    "updated_at": "2026-04-09T10:31:26Z",
+    "pushed_at": "2026-04-08T15:28:00Z",
+    "default_branch": "dev",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "duckdb/duckdb",
+    "name": "duckdb-duckdb",
+    "git_url": "https://github.com/duckdb/duckdb.git",
+    "html_url": "https://github.com/duckdb/duckdb",
+    "description": "DuckDB is an analytical in-process SQL database management system",
+    "primary_language": "C++",
+    "stars": 37295,
+    "topics": [
+      "analytics",
+      "database",
+      "embedded-database",
+      "olap",
+      "sql"
+    ],
+    "size_kb": 422980,
+    "updated_at": "2026-04-09T12:05:48Z",
+    "pushed_at": "2026-04-09T12:27:05Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "alibaba/arthas",
+    "name": "alibaba-arthas",
+    "git_url": "https://github.com/alibaba/arthas.git",
+    "html_url": "https://github.com/alibaba/arthas",
+    "description": "Alibaba Java Diagnostic Tool Arthas/Alibaba Java\u8bca\u65ad\u5229\u5668Arthas",
+    "primary_language": "Java",
+    "stars": 37228,
+    "topics": [
+      "agent",
+      "alibaba",
+      "arthas",
+      "classloader",
+      "diagnosis",
+      "java",
+      "jvm",
+      "trace",
+      "trouble-shooting"
+    ],
+    "size_kb": 65979,
+    "updated_at": "2026-04-09T12:38:05Z",
+    "pushed_at": "2026-03-31T11:42:06Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "aseprite/aseprite",
+    "name": "aseprite-aseprite",
+    "git_url": "https://github.com/aseprite/aseprite.git",
+    "html_url": "https://github.com/aseprite/aseprite",
+    "description": "Animated sprite editor & pixel art tool (Windows, macOS, Linux)",
+    "primary_language": "C++",
+    "stars": 36436,
+    "topics": [
+      "animated-sprites",
+      "animation",
+      "aseprite",
+      "c-plus-plus",
+      "cpp",
+      "draw",
+      "gif",
+      "graphics",
+      "pixel-art",
+      "pixel-editor",
+      "sprite-editor",
+      "sprites",
+      "spritesheet",
+      "tile-editor",
+      "tilemap-editor"
+    ],
+    "size_kb": 47045,
+    "updated_at": "2026-04-09T13:07:51Z",
+    "pushed_at": "2026-04-08T22:27:57Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "qbittorrent/qBittorrent",
+    "name": "qbittorrent-qbittorrent",
+    "git_url": "https://github.com/qbittorrent/qBittorrent.git",
+    "html_url": "https://github.com/qbittorrent/qBittorrent",
+    "description": "qBittorrent BitTorrent client",
+    "primary_language": "C++",
+    "stars": 36400,
+    "topics": [
+      "bittorrent",
+      "bittorrent-client",
+      "c-plus-plus",
+      "crossplatform",
+      "torrent",
+      "torrent-client"
+    ],
+    "size_kb": 295671,
+    "updated_at": "2026-04-09T13:11:48Z",
+    "pushed_at": "2026-04-06T10:08:59Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "LizardByte/Sunshine",
+    "name": "lizardbyte-sunshine",
+    "git_url": "https://github.com/LizardByte/Sunshine.git",
+    "html_url": "https://github.com/LizardByte/Sunshine",
+    "description": "Self-hosted game stream host for Moonlight.",
+    "primary_language": "C++",
+    "stars": 35883,
+    "topics": [
+      "cpp",
+      "docker",
+      "flathub-pkg",
+      "game-stream",
+      "game-streaming",
+      "game-streaming-server",
+      "geforce-experience",
+      "homebrew-pkg",
+      "maintainer-wanted",
+      "moonlight",
+      "pacman-pkg",
+      "python",
+      "remote-desktop",
+      "replicator-custom-issues",
+      "replicator-release-notifications",
+      "rtd",
+      "winget-pkg"
+    ],
+    "size_kb": 62151,
+    "updated_at": "2026-04-09T13:03:09Z",
+    "pushed_at": "2026-04-09T07:05:07Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "airbnb/lottie-android",
+    "name": "airbnb-lottie-android",
+    "git_url": "https://github.com/airbnb/lottie-android.git",
+    "html_url": "https://github.com/airbnb/lottie-android",
+    "description": "Render After Effects animations natively on Android and iOS, Web, and React Native",
+    "primary_language": "Java",
+    "stars": 35594,
+    "topics": [
+      "after-effects",
+      "airbnb",
+      "android",
+      "animation",
+      "lottie"
+    ],
+    "size_kb": 137398,
+    "updated_at": "2026-04-09T03:10:09Z",
+    "pushed_at": "2026-02-15T22:03:57Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "bumptech/glide",
+    "name": "bumptech-glide",
+    "git_url": "https://github.com/bumptech/glide.git",
+    "html_url": "https://github.com/bumptech/glide",
+    "description": "An image loading and caching library for Android focused on smooth scrolling",
+    "primary_language": "Java",
+    "stars": 35028,
+    "topics": [],
+    "size_kb": 97800,
+    "updated_at": "2026-04-09T10:30:50Z",
+    "pushed_at": "2026-04-07T09:27:05Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "hyprwm/Hyprland",
+    "name": "hyprwm-hyprland",
+    "git_url": "https://github.com/hyprwm/Hyprland.git",
+    "html_url": "https://github.com/hyprwm/Hyprland",
+    "description": "Hyprland is an independent, highly customizable, dynamic tiling Wayland compositor that doesn't sacrifice on its looks.",
+    "primary_language": "C++",
+    "stars": 34945,
+    "topics": [
+      "compositor",
+      "cpp26",
+      "wayland",
+      "wayland-compositor"
+    ],
+    "size_kb": 74366,
+    "updated_at": "2026-04-09T12:26:31Z",
+    "pushed_at": "2026-04-08T11:06:58Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "netty/netty",
+    "name": "netty-netty",
+    "git_url": "https://github.com/netty/netty.git",
+    "html_url": "https://github.com/netty/netty",
+    "description": "Netty project - an event-driven asynchronous network application framework",
+    "primary_language": "Java",
+    "stars": 34907,
+    "topics": [],
+    "size_kb": 109203,
+    "updated_at": "2026-04-09T09:56:54Z",
+    "pushed_at": "2026-04-09T12:48:07Z",
+    "default_branch": "4.2",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "mpv-player/mpv",
+    "name": "mpv-player-mpv",
+    "git_url": "https://github.com/mpv-player/mpv.git",
+    "html_url": "https://github.com/mpv-player/mpv",
+    "description": "\ud83c\udfa5 Command line media player",
+    "primary_language": "C",
+    "stars": 34724,
+    "topics": [
+      "audio",
+      "c",
+      "ffmpeg",
+      "mplayer",
+      "mpv",
+      "multimedia",
+      "video"
+    ],
+    "size_kb": 117318,
+    "updated_at": "2026-04-09T13:14:05Z",
+    "pushed_at": "2026-04-09T11:40:37Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "SeleniumHQ/selenium",
+    "name": "seleniumhq-selenium",
+    "git_url": "https://github.com/SeleniumHQ/selenium.git",
+    "html_url": "https://github.com/SeleniumHQ/selenium",
+    "description": "A browser automation framework and ecosystem.",
+    "primary_language": "Java",
+    "stars": 34121,
+    "topics": [
+      "dotnet",
+      "java",
+      "javascript",
+      "python",
+      "ruby",
+      "rust",
+      "selenium",
+      "webdriver"
+    ],
+    "size_kb": 2332411,
+    "updated_at": "2026-04-09T11:45:53Z",
+    "pushed_at": "2026-04-09T11:53:47Z",
+    "default_branch": "trunk",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "xkcoding/spring-boot-demo",
+    "name": "xkcoding-spring-boot-demo",
+    "git_url": "https://github.com/xkcoding/spring-boot-demo.git",
+    "html_url": "https://github.com/xkcoding/spring-boot-demo",
+    "description": "\ud83d\ude80\u4e00\u4e2a\u7528\u6765\u6df1\u5165\u5b66\u4e60\u5e76\u5b9e\u6218 Spring Boot \u7684\u9879\u76ee\u3002",
+    "primary_language": "Java",
+    "stars": 34108,
+    "topics": [
+      "demo",
+      "in-action",
+      "java",
+      "spring",
+      "spring-boot",
+      "spring-boot-2",
+      "spring-boot-demo",
+      "web",
+      "xkcoding"
+    ],
+    "size_kb": 14194,
+    "updated_at": "2026-04-09T06:47:01Z",
+    "pushed_at": "2024-07-24T02:02:52Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "jqlang/jq",
+    "name": "jqlang-jq",
+    "git_url": "https://github.com/jqlang/jq.git",
+    "html_url": "https://github.com/jqlang/jq",
+    "description": "Command-line JSON processor",
+    "primary_language": "C",
+    "stars": 34078,
+    "topics": [
+      "jq"
+    ],
+    "size_kb": 7456,
+    "updated_at": "2026-04-09T13:20:47Z",
+    "pushed_at": "2026-04-08T14:02:42Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "zxing/zxing",
+    "name": "zxing-zxing",
+    "git_url": "https://github.com/zxing/zxing.git",
+    "html_url": "https://github.com/zxing/zxing",
+    "description": "ZXing (\"Zebra Crossing\") barcode scanning library for Java, Android",
+    "primary_language": "Java",
+    "stars": 33909,
+    "topics": [
+      "android",
+      "barcode",
+      "barcode-scanner",
+      "datamatrix",
+      "java",
+      "qr-code",
+      "upc",
+      "zxing"
+    ],
+    "size_kb": 243541,
+    "updated_at": "2026-04-09T12:42:43Z",
+    "pushed_at": "2026-04-08T03:42:18Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "keycloak/keycloak",
+    "name": "keycloak-keycloak",
+    "git_url": "https://github.com/keycloak/keycloak.git",
+    "html_url": "https://github.com/keycloak/keycloak",
+    "description": "Open Source Identity and Access Management For Modern Applications and Services",
+    "primary_language": "Java",
+    "stars": 33792,
+    "topics": [
+      "keycloak",
+      "oidc",
+      "saml"
+    ],
+    "size_kb": 584381,
+    "updated_at": "2026-04-09T13:08:53Z",
+    "pushed_at": "2026-04-09T10:55:28Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "Blankj/AndroidUtilCode",
+    "name": "blankj-androidutilcode",
+    "git_url": "https://github.com/Blankj/AndroidUtilCode.git",
+    "html_url": "https://github.com/Blankj/AndroidUtilCode",
+    "description": ":fire: Android developers should collect the following utils(updating).",
+    "primary_language": "Java",
+    "stars": 33698,
+    "topics": [
+      "android",
+      "androidx",
+      "app",
+      "bar",
+      "cache",
+      "encode",
+      "encrypt",
+      "eventbus",
+      "file",
+      "fragment",
+      "log",
+      "network",
+      "permission",
+      "reflect",
+      "regex",
+      "snackbar",
+      "spannable-string",
+      "thread-pool",
+      "toast",
+      "utils"
+    ],
+    "size_kb": 47329,
+    "updated_at": "2026-04-09T03:10:10Z",
+    "pushed_at": "2024-08-15T10:38:10Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "nothings/stb",
+    "name": "nothings-stb",
+    "git_url": "https://github.com/nothings/stb.git",
+    "html_url": "https://github.com/nothings/stb",
+    "description": "stb single-file public domain libraries for C/C++",
+    "primary_language": "C",
+    "stars": 33288,
+    "topics": [],
+    "size_kb": 5855,
+    "updated_at": "2026-04-09T11:07:30Z",
+    "pushed_at": "2026-03-18T12:22:40Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "bilibili/ijkplayer",
+    "name": "bilibili-ijkplayer",
+    "git_url": "https://github.com/bilibili/ijkplayer.git",
+    "html_url": "https://github.com/bilibili/ijkplayer",
+    "description": "Android/iOS video player based on FFmpeg n3.4, with MediaCodec, VideoToolbox support.",
+    "primary_language": "C",
+    "stars": 33133,
+    "topics": [
+      "android",
+      "ffmpeg",
+      "ijkplayer",
+      "ios",
+      "player",
+      "video"
+    ],
+    "size_kb": 8283,
+    "updated_at": "2026-04-09T12:53:42Z",
+    "pushed_at": "2024-08-13T00:53:33Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "SerenityOS/serenity",
+    "name": "serenityos-serenity",
+    "git_url": "https://github.com/SerenityOS/serenity.git",
+    "html_url": "https://github.com/SerenityOS/serenity",
+    "description": "The Serenity Operating System \ud83d\udc1e",
+    "primary_language": "C++",
+    "stars": 33078,
+    "topics": [
+      "browser",
+      "c-plus-plus",
+      "desktop-environment",
+      "kernel",
+      "operating-system",
+      "os",
+      "unix"
+    ],
+    "size_kb": 240283,
+    "updated_at": "2026-04-09T12:33:52Z",
+    "pushed_at": "2026-04-08T12:27:02Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".cpp",
+      ".hpp",
+      ".cc",
+      ".cxx",
+      ".h",
+      ".hh",
+      ".hxx"
+    ]
+  },
+  {
+    "full_name": "binarywang/WxJava",
+    "name": "binarywang-wxjava",
+    "git_url": "https://github.com/binarywang/WxJava.git",
+    "html_url": "https://github.com/binarywang/WxJava",
+    "description": "\u5fae\u4fe1\u5f00\u53d1 Java SDK \uff0c\u652f\u6301\u5305\u62ec\u5fae\u4fe1\u652f\u4ed8\uff0c\u5f00\u653e\u5e73\u53f0\uff0c\u5c0f\u7a0b\u5e8f\uff0c\u4f01\u4e1a\u5fae\u4fe1\uff0c\u89c6\u9891\u53f7\uff0c\u516c\u4f17\u53f7\u7b49\u7684\u540e\u7aef\u5f00\u53d1",
+    "primary_language": "Java",
+    "stars": 32693,
+    "topics": [
+      "cp",
+      "hacktoberfest",
+      "java",
+      "miniapp",
+      "miniprogram",
+      "mp",
+      "open",
+      "sdk",
+      "weapp",
+      "wechat",
+      "wechat-sdk",
+      "weixin",
+      "weixin-sdk",
+      "wxjava",
+      "wxpay"
+    ],
+    "size_kb": 20088,
+    "updated_at": "2026-04-09T12:12:10Z",
+    "pushed_at": "2026-04-07T13:35:35Z",
+    "default_branch": "develop",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "apache/kafka",
+    "name": "apache-kafka",
+    "git_url": "https://github.com/apache/kafka.git",
+    "html_url": "https://github.com/apache/kafka",
+    "description": "Apache Kafka - A distributed event streaming platform",
+    "primary_language": "Java",
+    "stars": 32325,
+    "topics": [
+      "java",
+      "kafka",
+      "scala",
+      "streaming"
+    ],
+    "size_kb": 284397,
+    "updated_at": "2026-04-09T13:21:14Z",
+    "pushed_at": "2026-04-09T12:04:55Z",
+    "default_branch": "trunk",
+    "source_extensions": [
+      ".java"
+    ]
+  },
+  {
+    "full_name": "lizongying/my-tv",
+    "name": "lizongying-my-tv",
+    "git_url": "https://github.com/lizongying/my-tv.git",
+    "html_url": "https://github.com/lizongying/my-tv",
+    "description": "\u6211\u7684\u7535\u89c6 \u7535\u89c6\u76f4\u64ad\u8f6f\u4ef6\uff0c\u5b89\u88c5\u5373\u53ef\u4f7f\u7528",
+    "primary_language": "C",
+    "stars": 32184,
+    "topics": [
+      "iptv",
+      "my-tv",
+      "mytv",
+      "tv"
+    ],
+    "size_kb": 72954,
+    "updated_at": "2026-04-09T12:17:56Z",
+    "pushed_at": "2024-06-20T06:21:11Z",
+    "default_branch": "main",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "valinet/ExplorerPatcher",
+    "name": "valinet-explorerpatcher",
+    "git_url": "https://github.com/valinet/ExplorerPatcher.git",
+    "html_url": "https://github.com/valinet/ExplorerPatcher",
+    "description": "This project aims to enhance the working environment on Windows",
+    "primary_language": "C",
+    "stars": 32143,
+    "topics": [],
+    "size_kb": 9438,
+    "updated_at": "2026-04-09T10:10:10Z",
+    "pushed_at": "2026-04-08T19:39:32Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "raysan5/raylib",
+    "name": "raysan5-raylib",
+    "git_url": "https://github.com/raysan5/raylib.git",
+    "html_url": "https://github.com/raysan5/raylib",
+    "description": "A simple and easy-to-use library to enjoy videogames programming",
+    "primary_language": "C",
+    "stars": 31972,
+    "topics": [
+      "android",
+      "c",
+      "embedded",
+      "game-development",
+      "game-engine",
+      "gamedev",
+      "graphics",
+      "iot",
+      "linux",
+      "opengl",
+      "programming",
+      "raspberry-pi",
+      "raylib",
+      "riscv",
+      "videogames",
+      "wasm",
+      "webassembly",
+      "win32"
+    ],
+    "size_kb": 419753,
+    "updated_at": "2026-04-09T12:51:41Z",
+    "pushed_at": "2026-04-09T09:52:09Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "coolsnowwolf/lede",
+    "name": "coolsnowwolf-lede",
+    "git_url": "https://github.com/coolsnowwolf/lede.git",
+    "html_url": "https://github.com/coolsnowwolf/lede",
+    "description": "Lean's LEDE source",
+    "primary_language": "C",
+    "stars": 31403,
+    "topics": [
+      "lede",
+      "lua",
+      "openwrt-feed",
+      "openwrt-package",
+      "openwrt-zh-cn"
+    ],
+    "size_kb": 323352,
+    "updated_at": "2026-04-09T12:58:24Z",
+    "pushed_at": "2026-04-09T10:06:02Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "kingToolbox/WindTerm",
+    "name": "kingtoolbox-windterm",
+    "git_url": "https://github.com/kingToolbox/WindTerm.git",
+    "html_url": "https://github.com/kingToolbox/WindTerm",
+    "description": "A professional cross-platform SSH/Sftp/Shell/Telnet/Tmux/Serial terminal.",
+    "primary_language": "C",
+    "stars": 30437,
+    "topics": [
+      "bash",
+      "client",
+      "cmd",
+      "linux",
+      "mac",
+      "powershell",
+      "serial",
+      "sftp",
+      "shell",
+      "ssh",
+      "telnet",
+      "terminal",
+      "tmux",
+      "windows",
+      "wsl",
+      "x11",
+      "xmodem",
+      "xterm",
+      "ymodem",
+      "zmodem"
+    ],
+    "size_kb": 18742,
+    "updated_at": "2026-04-09T12:03:34Z",
+    "pushed_at": "2025-03-11T19:12:09Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "openssl/openssl",
+    "name": "openssl-openssl",
+    "git_url": "https://github.com/openssl/openssl.git",
+    "html_url": "https://github.com/openssl/openssl",
+    "description": "TLS/SSL and crypto library",
+    "primary_language": "C",
+    "stars": 29892,
+    "topics": [
+      "cryptography",
+      "decryption",
+      "encryption",
+      "openssl",
+      "ssl",
+      "tls"
+    ],
+    "size_kb": 336136,
+    "updated_at": "2026-04-09T10:47:12Z",
+    "pushed_at": "2026-04-08T10:35:20Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "nginx/nginx",
+    "name": "nginx-nginx",
+    "git_url": "https://github.com/nginx/nginx.git",
+    "html_url": "https://github.com/nginx/nginx",
+    "description": "The official NGINX Open Source repository.",
+    "primary_language": "C",
+    "stars": 29862,
+    "topics": [
+      "content-cache",
+      "http",
+      "http2",
+      "http3",
+      "https",
+      "load-balancer",
+      "mail-proxy-server",
+      "nginx",
+      "quic",
+      "reverse-proxy",
+      "security",
+      "tcp-proxy-server",
+      "tls",
+      "udp-proxy-server",
+      "web-server"
+    ],
+    "size_kb": 75532,
+    "updated_at": "2026-04-09T13:21:21Z",
+    "pushed_at": "2026-04-07T11:39:57Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "asmvik/yabai",
+    "name": "asmvik-yabai",
+    "git_url": "https://github.com/asmvik/yabai.git",
+    "html_url": "https://github.com/asmvik/yabai",
+    "description": "A tiling window manager for macOS based on binary space partitioning",
+    "primary_language": "C",
+    "stars": 28593,
+    "topics": [],
+    "size_kb": 7609,
+    "updated_at": "2026-04-09T11:43:45Z",
+    "pushed_at": "2026-04-06T15:51:45Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  },
+  {
+    "full_name": "ggreer/the_silver_searcher",
+    "name": "ggreer-the_silver_searcher",
+    "git_url": "https://github.com/ggreer/the_silver_searcher.git",
+    "html_url": "https://github.com/ggreer/the_silver_searcher",
+    "description": "A code-searching tool similar to ack, but faster.",
+    "primary_language": "C",
+    "stars": 27160,
+    "topics": [
+      "ag",
+      "c",
+      "command-line-tool",
+      "pcre",
+      "search-in-text",
+      "silver-searcher"
+    ],
+    "size_kb": 2426,
+    "updated_at": "2026-04-09T10:30:08Z",
+    "pushed_at": "2024-06-16T19:37:41Z",
+    "default_branch": "master",
+    "source_extensions": [
+      ".c",
+      ".h"
+    ]
+  }
+]

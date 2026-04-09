@@ -65,6 +65,9 @@ def main():
     for entry in corpus:
         if entry.name not in opacity_df["name"].values:
             continue
+        if not entry.cpe_id:
+            logger.info("Skipping %s: no CPE identifier configured", entry.name)
+            continue
 
         logger.info(f"Fetching CVEs for {entry.name} ({entry.cpe_id})...")
         records = fetch_cves_for_cpe(

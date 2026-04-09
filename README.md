@@ -8,7 +8,7 @@ The repository implements a measurement and simulation workflow for structural o
 
 ## Scope
 
-The codebase supports nine experiment families:
+The codebase supports fourteen experiment families:
 
 1. Synthetic opacity separation.
 2. Structural opacity measurement across a curated software corpus.
@@ -19,6 +19,11 @@ The codebase supports nine experiment families:
 7. Leave-one-repository-out predictive validation for file-level risk scoring.
 8. Ground-truth policy comparison across alternative event definitions.
 9. Negative-control comparison between security-fix files and ordinary bug-fix files.
+10. Forward-looking release-level panel analysis using pre-event opacity and later advisory outcomes.
+11. Larger external corpus discovery and manifest construction for expanded follow-on studies.
+12. Prospective file-level panel analysis using pre-release file opacity and later security-fix involvement.
+13. Reviewed label-audit summaries for the prospective file-level panel.
+14. Horizon and severity robustness summaries for the prospective file-level panel.
 
 ## Repository Contents
 
@@ -72,6 +77,12 @@ python -m experiments.e07_predictive_validation --config experiments/config.yaml
 python -m experiments.e08_policy_comparison --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml --security-e06-subdir e06_file_case_control__expanded_advisory_event
+python -m experiments.e10_forward_release_panel --config experiments/config.yaml --repos openssl,libxml2,curl,redis,sqlite,zlib,git,openssh --max-tags 4 --min-tag-gap-days 180 --horizon-days 365 --results-subdir e10_forward_release_panel__core8
+python -m experiments.e10_forward_release_panel --config experiments/config.forward_panel_light8.yaml --max-tags 3 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e10_forward_release_panel__light8_h730_l10
+GITHUB_TOKEN=... python -m experiments.e11_large_corpus_builder --config experiments/config.yaml --per-language 24 --min-stars 4000 --min-remote-tags 10 --results-subdir e11_large_corpus__filtered
+python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__curated15_h730_l10_t5
+python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5
+python -m experiments.e14_prospective_robustness --config experiments/config.forward_panel_curated.yaml --runs e12_prospective_file_panel__curated15_h365_l10_t5,e12_prospective_file_panel__curated15_h365_l10_t5__high_critical,e12_prospective_file_panel__curated15_h730_l10_t5,e12_prospective_file_panel__curated15_h730_l10_t5__high_critical --results-subdir e14_prospective_robustness__curated15
 ```
 
 For the file-level analyses, the event-definition variants are:
@@ -102,6 +113,18 @@ The repository ships with generated outputs under `data/results/`:
 - `e08_policy_comparison`: side-by-side policy comparison tables and figures.
 - `e09_negative_control_bugfix`: security-versus-ordinary-bugfix matched comparisons and held-out classification outputs.
 - `e09_negative_control_bugfix__e06_file_case_control__expanded_advisory_event`: negative-control outputs using the advisory-expanded security dataset.
+- `e10_forward_release_panel__core8`: forward-looking release-panel outputs for the current tag-rich core subset.
+- `e10_forward_corpus_screen__curated15_h730_l10`: screening table for the expanded forward-looking candidate set.
+- `e10_forward_release_panel__light8_h730_l10`: completed forward-looking panel for the focused eight-repository subset with full-horizon observation and a ten-year lookback window.
+- `e11_large_corpus__filtered`: GitHub-discovered expanded-corpus candidate list, validated subset, and manifest.
+- `e12_prospective_file_panel__light8_h730_l10`: prospective file-level panel outputs for the focused eight-repository subset.
+- `e12_prospective_file_panel__curated15_h730_l10`: prospective file-level panel outputs for the screened 15-repository subset with two sampled tags per repository.
+- `e12_prospective_file_panel__curated15_h730_l10_t5`: prospective file-level panel outputs for the screened 15-repository subset with five sampled tags per repository.
+- `e12_prospective_file_panel__curated15_h365_l10_t5`: prospective file-level panel outputs for the screened 15-repository subset at a one-year horizon.
+- `e12_prospective_file_panel__curated15_h365_l10_t5__high_critical`: one-year prospective panel restricted to high/critical-severity future events.
+- `e12_prospective_file_panel__curated15_h730_l10_t5__high_critical`: two-year prospective panel restricted to high/critical-severity future events.
+- `e13_prospective_label_audit__curated15_h730_l10_t5`: reviewed audit sample and audit-summary tables for the main prospective panel.
+- `e14_prospective_robustness__curated15`: side-by-side horizon/severity robustness summary for the prospective panel.
 
 ## Reproducibility Notes
 
@@ -116,6 +139,13 @@ The repository ships with generated outputs under `data/results/`:
 - The `expanded_advisory_event` specification additionally incorporates OSV-linked repository advisories resolved against local repository tags and histories.
 - The predictive validation layer evaluates incremental discrimination beyond a size-only reference model within the curated corpus.
 - The negative-control experiment compares security-fix files with ordinary bug-fix files selected under a conservative text filter; the advisory-expanded variant uses the `e06_file_case_control__expanded_advisory_event` security dataset.
+- The forward-looking panel currently uses release tags as snapshot units and OSV-linked fixing events as later outcomes; its power depends heavily on tag coverage and advisory density in local histories.
+- The focused `e10_forward_release_panel__light8_h730_l10` run uses only fully observed two-year horizons and restricts snapshot sampling to the trailing ten-year window before the horizon cutoff.
+- The prospective `e12` study uses release snapshots as pre-event file baselines, labels future file involvement from advisory-linked fixing events, and compares matched future-case files against untouched controls from the same snapshot.
+- The denser `e12_prospective_file_panel__curated15_h730_l10_t5` run uses up to five sampled release tags per repository within the fully observed ten-year window in order to recover intermediate release windows with usable future-event density.
+- The reviewed `e13` audit currently covers a 40-observation sample from the main `e12` run; its purpose is to estimate label precision conservatively, not to certify every event observation.
+- The `e14` robustness summary compares one-year versus two-year horizons and all-severity versus high/critical-severity specifications using the same prospective file-level design.
+- The large-corpus builder is a reproducible discovery tool for follow-on studies, not a substitute for final substantive curation of a publication corpus.
 
 Additional procedural details are documented in `REPRODUCIBILITY.md`.
 

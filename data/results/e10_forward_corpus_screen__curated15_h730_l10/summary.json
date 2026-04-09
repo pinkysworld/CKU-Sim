@@ -1,0 +1,26 @@
+{
+  "n_screened": 23,
+  "n_selected": 15,
+  "selection_rule": "selected_for_panel = 1 when candidate_events >= 3 and usable_snapshots >= 4",
+  "horizon_days": 730,
+  "lookback_years": 10,
+  "max_tags": 4,
+  "min_tag_gap_days": 365,
+  "selected_repositories": [
+    "curl",
+    "php-src",
+    "django-django",
+    "openssl",
+    "redis",
+    "sqlite",
+    "git",
+    "openssh",
+    "traefik-traefik",
+    "jq",
+    "zlib",
+    "go-gitea-gitea",
+    "gin-gonic-gin",
+    "psf-requests",
+    "pallets-flask"
+  ]
+}

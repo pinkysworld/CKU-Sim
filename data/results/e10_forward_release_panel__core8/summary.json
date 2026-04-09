@@ -1,0 +1,85 @@
+{
+  "panel": {
+    "n_snapshots": 32,
+    "n_repos": 8,
+    "snapshot_start": "1998-09-23T00:58:59+00:00",
+    "snapshot_end": "2026-03-24T15:13:44+00:00",
+    "future_event_rate": 0.125,
+    "mean_future_event_count": 0.5,
+    "median_days_to_next_event": 156.53174189814814,
+    "median_composite_future_event": 0.3274192782054993,
+    "median_composite_no_event": 0.34696331070274644,
+    "mann_whitney_pvalue": 0.9687708565072303,
+    "opacity_quartiles": [
+      {
+        "opacity_quartile": "(0.307, 0.321]",
+        "n_snapshots": 8,
+        "future_event_rate": 0.25,
+        "mean_future_event_count": 0.25,
+        "median_composite": 0.3125068618602928
+      },
+      {
+        "opacity_quartile": "(0.321, 0.345]",
+        "n_snapshots": 8,
+        "future_event_rate": 0.25,
+        "mean_future_event_count": 1.75,
+        "median_composite": 0.34112497511548684
+      },
+      {
+        "opacity_quartile": "(0.345, 0.355]",
+        "n_snapshots": 8,
+        "future_event_rate": 0.0,
+        "mean_future_event_count": 0.0,
+        "median_composite": 0.3482149834740061
+      },
+      {
+        "opacity_quartile": "(0.355, 0.374]",
+        "n_snapshots": 8,
+        "future_event_rate": 0.0,
+        "mean_future_event_count": 0.0,
+        "median_composite": 0.3622801002335043
+      }
+    ],
+    "association_models": {
+      "logit_future_any_event": {
+        "coef": -20.745364211989028,
+        "pvalue": 0.46936550919993814,
+        "ci_lo": -76.94371078732695,
+        "ci_hi": 35.45298236334889
+      },
+      "poisson_future_event_count": {
+        "coef": 0.6935814261733242,
+        "pvalue": 0.9776862784032798,
+        "ci_lo": -47.90873565205074,
+        "ci_hi": 49.295898504397385
+      }
+    }
+  },
+  "prediction": {
+    "n_snapshots": 32,
+    "n_repos": 8,
+    "models": {
+      "baseline_size": {
+        "roc_auc": 0.3571428571428572,
+        "average_precision": 0.11904761904761904,
+        "brier_score": 0.1277821958107141,
+        "log_loss": 0.466665371592398,
+        "macro_roc_auc": 0.5,
+        "macro_average_precision": 0.625,
+        "macro_brier_score": 0.1277821958107141
+      },
+      "baseline_plus_composite": {
+        "roc_auc": 0.39285714285714285,
+        "average_precision": 0.1728641456582633,
+        "brier_score": 0.12387392259512797,
+        "log_loss": 0.46101830820811596,
+        "macro_roc_auc": 0.8333333333333334,
+        "macro_average_precision": 0.75,
+        "macro_brier_score": 0.12387392259512794
+      }
+    }
+  },
+  "horizon_days": 365,
+  "max_tags": 4,
+  "min_tag_gap_days": 180
+}

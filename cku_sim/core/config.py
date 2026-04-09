@@ -16,9 +16,12 @@ class CorpusEntry:
 
     name: str
     git_url: str
-    cpe_id: str  # NVD CPE identifier, e.g. "cpe:2.3:a:openssl:openssl:*:*:*:*:*:*:*:*"
-    category: str  # "high_opacity", "low_opacity", "mixed"
+    cpe_id: str | None = None  # NVD CPE identifier when available
+    category: str = "expanded"  # "high_opacity", "low_opacity", "mixed", "expanded"
     subdirectory: str | None = None  # e.g. "net/" for Linux kernel subset
+    full_name: str | None = None  # owner/repo when known
+    primary_language: str | None = None
+    stars: int | None = None
     source_extensions: list[str] = field(
         default_factory=lambda: [".c", ".h", ".cpp", ".hpp", ".cc", ".cxx"]
     )

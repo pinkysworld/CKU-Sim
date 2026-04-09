@@ -1,0 +1,88 @@
+# Focused configuration for the completed forward-looking panel.
+
+data_dir: "data"
+
+nvd_api_key: null
+nvd_rate_limit: 6.0
+osv_rate_limit: 0.1
+osv_query_batch_size: 100
+
+compression_algorithms:
+  - gzip
+  - lzma
+  - zstd
+
+composite_weights:
+  compressibility: 0.35
+  entropy: 0.25
+  cyclomatic_density: 0.25
+  halstead_volume: 0.15
+
+monte_carlo_runs: 10000
+random_seed: 42
+portfolio_size: 100
+
+corpus:
+  - name: django-django
+    git_url: https://github.com/django/django.git
+    category: expanded
+    full_name: django/django
+    primary_language: Python
+    stars: 87222
+    source_extensions:
+      - .py
+
+  - name: traefik-traefik
+    git_url: https://github.com/traefik/traefik.git
+    category: expanded
+    full_name: traefik/traefik
+    primary_language: Go
+    stars: 62557
+    source_extensions:
+      - .go
+
+  - name: zlib
+    git_url: https://github.com/madler/zlib.git
+    cpe_id: "cpe:2.3:a:zlib:zlib:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: jq
+    git_url: https://github.com/jqlang/jq.git
+    cpe_id: "cpe:2.3:a:jqlang:jq:*:*:*:*:*:*:*:*"
+    category: low_opacity
+
+  - name: go-gitea-gitea
+    git_url: https://github.com/go-gitea/gitea.git
+    category: expanded
+    full_name: go-gitea/gitea
+    primary_language: Go
+    stars: 54799
+    source_extensions:
+      - .go
+
+  - name: gin-gonic-gin
+    git_url: https://github.com/gin-gonic/gin.git
+    category: expanded
+    full_name: gin-gonic/gin
+    primary_language: Go
+    stars: 88301
+    source_extensions:
+      - .go
+
+  - name: psf-requests
+    git_url: https://github.com/psf/requests.git
+    category: expanded
+    full_name: psf/requests
+    primary_language: Python
+    stars: 53871
+    source_extensions:
+      - .py
+
+  - name: pallets-flask
+    git_url: https://github.com/pallets/flask.git
+    category: expanded
+    full_name: pallets/flask
+    primary_language: Python
+    stars: 71390
+    source_extensions:
+      - .py

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
 import tempfile
 from collections import Counter
 from pathlib import Path
@@ -36,6 +38,26 @@ from cku_sim.collectors.osv_collector import (
     build_osv_alias_map,
     extract_osv_event_candidates,
     repo_url_variants,
+)
+from cku_sim.collectors.github_corpus import (
+    build_manifest_entries,
+    infer_source_extensions,
+    is_research_corpus_candidate,
+    slug_to_local_name,
+)
+from cku_sim.analysis.forward_panel import summarise_forward_panel
+from cku_sim.analysis.forward_panel import sample_release_snapshots
+from cku_sim.analysis.prospective_file_panel import (
+    _cvss_v3_score_from_vector,
+    _extract_osv_record_severity,
+    build_prospective_prediction_dataset,
+    fit_repo_fixed_effect_models,
+    sample_audit_rows,
+    summarise_prospective_pairs,
+)
+from cku_sim.analysis.label_audit import (
+    apply_review_decisions,
+    summarise_reviewed_audit,
 )
 from cku_sim.simulation.scenario_generator import (
     generate_regular_source,
@@ -280,6 +302,159 @@ class TestOSVCollectorHelpers:
         assert candidates["CVE-2023-46218"]["sources"] == {"osv_range", "osv_ref"}
 
 
+class TestGitHubCorpusHelpers:
+    def test_infer_source_extensions_maps_language(self):
+        assert infer_source_extensions("Rust") == [".rs"]
+        assert ".hpp" in infer_source_extensions("C++")
+
+    def test_build_manifest_entries_emits_corpus_rows(self):
+        candidates = [
+            {
+                "name": slug_to_local_name("curl/curl"),
+                "full_name": "curl/curl",
+                "git_url": "https://github.com/curl/curl.git",
+                "primary_language": "C",
+                "stars": 12345,
+                "source_extensions": [".c", ".h"],
+            }
+        ]
+        manifest = build_manifest_entries(candidates)
+
+        assert manifest[0]["name"] == "curl-curl"
+        assert manifest[0]["cpe_id"] is None
+        assert manifest[0]["primary_language"] == "C"
+
+    def test_is_research_corpus_candidate_rejects_guides(self):
+        assert not is_research_corpus_candidate(
+            {
+                "full_name": "someone/awesome-python",
+                "description": "awesome python list",
+                "topics": [],
+                "size_kb": 2000,
+            }
+        )
+        assert is_research_corpus_candidate(
+            {
+                "full_name": "curl/curl",
+                "description": "command line tool and library for transferring data with URLs",
+                "topics": [],
+                "size_kb": 5000,
+            }
+        )
+
+
+class TestForwardPanelHelpers:
+    def test_sample_release_snapshots_respects_date_window(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            repo_path = Path(tmpdir) / "repo"
+            repo_path.mkdir()
+            subprocess.run(["git", "init", str(repo_path)], check=True, capture_output=True)
+            subprocess.run(
+                ["git", "-C", str(repo_path), "config", "user.name", "Test User"],
+                check=True,
+                capture_output=True,
+            )
+            subprocess.run(
+                ["git", "-C", str(repo_path), "config", "user.email", "test@example.com"],
+                check=True,
+                capture_output=True,
+            )
+
+            target = repo_path / "demo.txt"
+            history = [
+                ("v1.0.0", "2020-01-15T12:00:00+0000"),
+                ("v2.0.0", "2022-06-15T12:00:00+0000"),
+                ("v3.0.0", "2024-06-15T12:00:00+0000"),
+            ]
+            for idx, (tag, timestamp) in enumerate(history, start=1):
+                target.write_text(f"{tag}\n")
+                env = {
+                    **dict(os.environ),
+                    "GIT_AUTHOR_DATE": timestamp,
+                    "GIT_COMMITTER_DATE": timestamp,
+                }
+                subprocess.run(
+                    ["git", "-C", str(repo_path), "add", "demo.txt"],
+                    check=True,
+                    capture_output=True,
+                    env=env,
+                )
+                subprocess.run(
+                    ["git", "-C", str(repo_path), "commit", "-m", f"commit {idx}"],
+                    check=True,
+                    capture_output=True,
+                    env=env,
+                )
+                subprocess.run(
+                    ["git", "-C", str(repo_path), "tag", tag],
+                    check=True,
+                    capture_output=True,
+                    env=env,
+                )
+
+            snapshots = sample_release_snapshots(
+                repo_path,
+                max_tags=10,
+                min_gap_days=30,
+                min_date=pd.Timestamp("2021-01-01T00:00:00+00:00"),
+                max_date=pd.Timestamp("2023-12-31T00:00:00+00:00"),
+            )
+
+            assert [row["tag"] for row in snapshots] == ["v2.0.0"]
+
+    def test_summarise_forward_panel_counts_snapshots(self):
+        panel = pd.DataFrame(
+            [
+                {
+                    "repo": "r1",
+                    "snapshot_date": "2025-01-01T00:00:00+00:00",
+                    "future_any_event": 0,
+                    "future_event_count": 0,
+                    "days_to_next_event": np.nan,
+                    "composite_score": 0.2,
+                    "log_total_loc": 3.0,
+                    "log_total_bytes": 4.0,
+                },
+                {
+                    "repo": "r1",
+                    "snapshot_date": "2025-06-01T00:00:00+00:00",
+                    "future_any_event": 1,
+                    "future_event_count": 2,
+                    "days_to_next_event": 14.0,
+                    "composite_score": 0.6,
+                    "log_total_loc": 3.2,
+                    "log_total_bytes": 4.2,
+                },
+                {
+                    "repo": "r2",
+                    "snapshot_date": "2025-03-01T00:00:00+00:00",
+                    "future_any_event": 0,
+                    "future_event_count": 0,
+                    "days_to_next_event": np.nan,
+                    "composite_score": 0.3,
+                    "log_total_loc": 3.1,
+                    "log_total_bytes": 4.1,
+                },
+                {
+                    "repo": "r2",
+                    "snapshot_date": "2025-09-01T00:00:00+00:00",
+                    "future_any_event": 1,
+                    "future_event_count": 1,
+                    "days_to_next_event": 30.0,
+                    "composite_score": 0.7,
+                    "log_total_loc": 3.3,
+                    "log_total_bytes": 4.3,
+                },
+            ]
+        )
+
+        summary = summarise_forward_panel(panel)
+
+        assert summary["n_snapshots"] == 4
+        assert summary["n_repos"] == 2
+        assert summary["future_event_rate"] == 0.5
+
+
 class TestPredictiveValidationHelpers:
     def test_build_prediction_dataset_expands_pairs(self):
         pairs = pd.DataFrame(
@@ -391,6 +566,315 @@ class TestPredictiveValidationHelpers:
             assert comparison.loc[0, "pair_n_pairs"] == 10
             assert comparison.loc[0, "pred_auc_lift"] == pytest.approx(0.06)
             assert comparison.loc[0, "pred_pairacc_lift"] == pytest.approx(0.06)
+
+
+class TestProspectivePanelHelpers:
+    def test_cvss_v3_score_from_vector_parses_high(self):
+        score = _cvss_v3_score_from_vector("CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N")
+        assert score == pytest.approx(7.5)
+
+    def test_extract_osv_record_severity_uses_cvss_vector(self):
+        severity = _extract_osv_record_severity(
+            {
+                "severity": [
+                    {"type": "CVSS_V3", "score": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"}
+                ]
+            }
+        )
+
+        assert severity["label"] == "HIGH"
+        assert severity["score"] == pytest.approx(7.5)
+
+    def test_build_prospective_prediction_dataset_expands_pairs(self):
+        pairs = pd.DataFrame(
+            [
+                {
+                    "pair_id": 0,
+                    "repo": "demo",
+                    "snapshot_tag": "v1.0.0",
+                    "snapshot_key": "demo:v1.0.0",
+                    "event_id": "CVE-2026-0001",
+                    "event_observation_id": "demo:v1.0.0:CVE-2026-0001",
+                    "ground_truth_policy": "expanded_advisory_plus_explicit",
+                    "ground_truth_source": "osv_ref+explicit_id",
+                    "case_file_path": "src/a.c",
+                    "case_suffix": ".c",
+                    "case_loc": 100,
+                    "case_size_bytes": 1000,
+                    "case_ci_gzip": 0.6,
+                    "case_shannon_entropy": 0.7,
+                    "case_cyclomatic_density": 0.1,
+                    "case_halstead_volume": 0.4,
+                    "case_composite_score": 0.55,
+                    "case_directory_depth": 1,
+                    "case_prior_touches_total": 10,
+                    "case_prior_touches_365d": 4,
+                    "case_total_churn": 120,
+                    "case_churn_365d": 30,
+                    "case_author_count_total": 3,
+                    "case_author_count_365d": 2,
+                    "case_file_age_days": 200,
+                    "case_latest_touch_days": 10,
+                    "control_file_path": "src/b.c",
+                    "control_suffix": ".c",
+                    "control_loc": 90,
+                    "control_size_bytes": 900,
+                    "control_ci_gzip": 0.5,
+                    "control_shannon_entropy": 0.6,
+                    "control_cyclomatic_density": 0.05,
+                    "control_halstead_volume": 0.3,
+                    "control_composite_score": 0.45,
+                    "control_directory_depth": 1,
+                    "control_prior_touches_total": 7,
+                    "control_prior_touches_365d": 3,
+                    "control_total_churn": 90,
+                    "control_churn_365d": 25,
+                    "control_author_count_total": 2,
+                    "control_author_count_365d": 2,
+                    "control_file_age_days": 180,
+                    "control_latest_touch_days": 14,
+                }
+            ]
+        )
+
+        dataset = build_prospective_prediction_dataset(pairs)
+
+        assert len(dataset) == 2
+        assert set(dataset["label"]) == {0, 1}
+        assert set(dataset["kind"]) == {"case", "control"}
+        assert set(dataset["suffix"]) == {".c"}
+        assert set(dataset["event_observation_id"]) == {"demo:v1.0.0:CVE-2026-0001"}
+
+    def test_summarise_prospective_pairs_reports_bootstrap(self):
+        pairs = pd.DataFrame(
+            [
+                {
+                    "pair_id": 0,
+                    "repo": "r1",
+                    "snapshot_key": "r1:v1",
+                    "event_observation_id": "r1:v1:e1",
+                    "ground_truth_policy": "expanded_advisory_plus_explicit",
+                    "delta_composite": 0.05,
+                    "case_loc": 100,
+                    "control_loc": 80,
+                },
+                {
+                    "pair_id": 1,
+                    "repo": "r2",
+                    "snapshot_key": "r2:v1",
+                    "event_observation_id": "r2:v1:e2",
+                    "ground_truth_policy": "expanded_advisory_plus_explicit",
+                    "delta_composite": 0.01,
+                    "case_loc": 120,
+                    "control_loc": 100,
+                },
+                {
+                    "pair_id": 2,
+                    "repo": "r2",
+                    "snapshot_key": "r2:v2",
+                    "event_observation_id": "r2:v2:e3",
+                    "ground_truth_policy": "expanded_advisory_plus_explicit",
+                    "delta_composite": -0.01,
+                    "case_loc": 95,
+                    "control_loc": 92,
+                },
+            ]
+        )
+
+        summary = summarise_prospective_pairs(pairs)
+
+        assert summary["n_pairs"] == 3
+        assert summary["n_events"] == 3
+        assert "bootstrap_primary_cluster" in summary
+
+    def test_sample_audit_rows_deduplicates_event_observations(self):
+        audit = pd.DataFrame(
+            [
+                {"repo": "r1", "snapshot_date": "2024-01-01", "event_id": "e1", "event_observation_id": "r1:v1:e1"},
+                {"repo": "r1", "snapshot_date": "2024-01-01", "event_id": "e1", "event_observation_id": "r1:v1:e1"},
+                {"repo": "r2", "snapshot_date": "2024-02-01", "event_id": "e2", "event_observation_id": "r2:v1:e2"},
+            ]
+        )
+
+        sampled = sample_audit_rows(audit, sample_size=10, random_seed=7)
+
+        assert len(sampled) == 2
+        assert sampled["event_observation_id"].nunique() == 2
+
+    def test_fit_repo_fixed_effect_models_returns_composite_effect(self):
+        dataset = pd.DataFrame(
+            [
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e1",
+                    "label": 1,
+                    "log_loc": 4.0,
+                    "log_size_bytes": 6.0,
+                    "directory_depth": 1.0,
+                    "file_age_days": 400.0,
+                    "log_prior_touches_total": 2.0,
+                    "composite_score": 0.62,
+                },
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e1",
+                    "label": 0,
+                    "log_loc": 3.8,
+                    "log_size_bytes": 5.8,
+                    "directory_depth": 1.0,
+                    "file_age_days": 380.0,
+                    "log_prior_touches_total": 1.8,
+                    "composite_score": 0.55,
+                },
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e2",
+                    "label": 1,
+                    "log_loc": 4.1,
+                    "log_size_bytes": 6.2,
+                    "directory_depth": 2.0,
+                    "file_age_days": 420.0,
+                    "log_prior_touches_total": 2.2,
+                    "composite_score": 0.59,
+                },
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e2",
+                    "label": 0,
+                    "log_loc": 3.7,
+                    "log_size_bytes": 5.7,
+                    "directory_depth": 1.0,
+                    "file_age_days": 300.0,
+                    "log_prior_touches_total": 1.4,
+                    "composite_score": 0.48,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e3",
+                    "label": 1,
+                    "log_loc": 4.2,
+                    "log_size_bytes": 6.3,
+                    "directory_depth": 2.0,
+                    "file_age_days": 410.0,
+                    "log_prior_touches_total": 2.4,
+                    "composite_score": 0.66,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e3",
+                    "label": 0,
+                    "log_loc": 3.9,
+                    "log_size_bytes": 5.9,
+                    "directory_depth": 1.0,
+                    "file_age_days": 360.0,
+                    "log_prior_touches_total": 1.6,
+                    "composite_score": 0.58,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e4",
+                    "label": 1,
+                    "log_loc": 4.0,
+                    "log_size_bytes": 6.1,
+                    "directory_depth": 1.0,
+                    "file_age_days": 390.0,
+                    "log_prior_touches_total": 2.1,
+                    "composite_score": 0.57,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e4",
+                    "label": 0,
+                    "log_loc": 3.6,
+                    "log_size_bytes": 5.6,
+                    "directory_depth": 1.0,
+                    "file_age_days": 320.0,
+                    "log_prior_touches_total": 1.3,
+                    "composite_score": 0.60,
+                },
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e5",
+                    "label": 1,
+                    "log_loc": 3.9,
+                    "log_size_bytes": 5.9,
+                    "directory_depth": 1.0,
+                    "file_age_days": 340.0,
+                    "log_prior_touches_total": 1.7,
+                    "composite_score": 0.53,
+                },
+                {
+                    "repo": "r1",
+                    "event_observation_id": "r1:e5",
+                    "label": 0,
+                    "log_loc": 4.0,
+                    "log_size_bytes": 6.0,
+                    "directory_depth": 2.0,
+                    "file_age_days": 430.0,
+                    "log_prior_touches_total": 2.3,
+                    "composite_score": 0.61,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e6",
+                    "label": 1,
+                    "log_loc": 3.7,
+                    "log_size_bytes": 5.8,
+                    "directory_depth": 1.0,
+                    "file_age_days": 310.0,
+                    "log_prior_touches_total": 1.5,
+                    "composite_score": 0.51,
+                },
+                {
+                    "repo": "r2",
+                    "event_observation_id": "r2:e6",
+                    "label": 0,
+                    "log_loc": 4.1,
+                    "log_size_bytes": 6.2,
+                    "directory_depth": 2.0,
+                    "file_age_days": 440.0,
+                    "log_prior_touches_total": 2.5,
+                    "composite_score": 0.63,
+                },
+            ]
+        )
+
+        summary = fit_repo_fixed_effect_models(dataset)
+
+        assert "baseline_plus_composite_repo_fixed_effects" in summary
+        assert "composite_coef" in summary["baseline_plus_composite_repo_fixed_effects"]
+
+    def test_summarise_reviewed_audit_counts_ambiguous_rows(self):
+        reviewed = apply_review_decisions(
+            pd.DataFrame(
+                [
+                    {
+                        "repo": "curl",
+                        "event_id": "CVE-2024-2379",
+                        "fixed_commit": "aedbbdf18e689a5eee8dc39600914f5eda6c409c",
+                        "ground_truth_source": "osv_range",
+                        "case_file_in_changed_files": 1,
+                        "changed_source_files_review_count": 1,
+                        "commit_mentions_event_id": 0,
+                    },
+                    {
+                        "repo": "git",
+                        "event_id": "CVE-2022-24765",
+                        "fixed_commit": "3b0bf2704980b1ed6018622bdf5377ec22289688",
+                        "ground_truth_source": "explicit_id+osv_range",
+                        "case_file_in_changed_files": 1,
+                        "changed_source_files_review_count": 1,
+                        "commit_mentions_event_id": 1,
+                    },
+                ]
+            )
+        )
+
+        summary = summarise_reviewed_audit(reviewed)
+
+        assert summary["n_reviewed"] == 2
+        assert summary["overall_review"]["ambiguous"] == 1
+        assert summary["overall_review"]["accept"] == 1
 
 
 class TestNegativeControlHelpers:

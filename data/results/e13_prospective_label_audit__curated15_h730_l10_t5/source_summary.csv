@@ -1,0 +1,7 @@
+ground_truth_source,n_reviewed,overall_accept,overall_ambiguous,overall_reject,event_accept,file_accept,case_file_touch_confirmed_rate
+explicit_id+osv_range,14,12,2,0,14,12,1.0
+explicit_id,10,10,0,0,10,10,1.0
+osv_range,7,0,7,0,0,6,1.0
+explicit_id+nvd_ref+osv_range+osv_ref,4,4,0,0,4,4,1.0
+nvd_ref+osv_range+osv_ref,4,4,0,0,4,4,1.0
+nvd_ref,1,1,0,0,1,1,1.0

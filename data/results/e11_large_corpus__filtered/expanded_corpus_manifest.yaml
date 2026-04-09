@@ -1,0 +1,1311 @@
+corpus:
+- name: torvalds-linux
+  full_name: torvalds/linux
+  git_url: https://github.com/torvalds/linux.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 227671
+  source_extensions:
+  - .c
+  - .h
+- name: yt-dlp-yt-dlp
+  full_name: yt-dlp/yt-dlp
+  git_url: https://github.com/yt-dlp/yt-dlp.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 155651
+  source_extensions:
+  - .py
+- name: ytdl-org-youtube-dl
+  full_name: ytdl-org/youtube-dl
+  git_url: https://github.com/ytdl-org/youtube-dl.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 140004
+  source_extensions:
+  - .py
+- name: genymobile-scrcpy
+  full_name: Genymobile/scrcpy
+  git_url: https://github.com/Genymobile/scrcpy.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 138211
+  source_extensions:
+  - .c
+  - .h
+- name: golang-go
+  full_name: golang/go
+  git_url: https://github.com/golang/go.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 133346
+  source_extensions:
+  - .go
+- name: facebook-react-native
+  full_name: facebook/react-native
+  git_url: https://github.com/facebook/react-native.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 125666
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: kubernetes-kubernetes
+  full_name: kubernetes/kubernetes
+  git_url: https://github.com/kubernetes/kubernetes.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 121616
+  source_extensions:
+  - .go
+- name: electron-electron
+  full_name: electron/electron
+  git_url: https://github.com/electron/electron.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 120807
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: rust-lang-rust
+  full_name: rust-lang/rust
+  git_url: https://github.com/rust-lang/rust.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 111840
+  source_extensions:
+  - .rs
+- name: rustdesk-rustdesk
+  full_name: rustdesk/rustdesk
+  git_url: https://github.com/rustdesk/rustdesk.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 110899
+  source_extensions:
+  - .rs
+- name: godotengine-godot
+  full_name: godotengine/godot
+  git_url: https://github.com/godotengine/godot.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 109187
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: denoland-deno
+  full_name: denoland/deno
+  git_url: https://github.com/denoland/deno.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 106443
+  source_extensions:
+  - .rs
+- name: fatedier-frp
+  full_name: fatedier/frp
+  git_url: https://github.com/fatedier/frp.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 105819
+  source_extensions:
+  - .go
+- name: tauri-apps-tauri
+  full_name: tauri-apps/tauri
+  git_url: https://github.com/tauri-apps/tauri.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 105184
+  source_extensions:
+  - .rs
+- name: microsoft-terminal
+  full_name: microsoft/terminal
+  git_url: https://github.com/microsoft/terminal.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 102595
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: fastapi-fastapi
+  full_name: fastapi/fastapi
+  git_url: https://github.com/fastapi/fastapi.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 96996
+  source_extensions:
+  - .py
+- name: nvbn-thefuck
+  full_name: nvbn/thefuck
+  git_url: https://github.com/nvbn/thefuck.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 96319
+  source_extensions:
+  - .py
+- name: bitcoin-bitcoin
+  full_name: bitcoin/bitcoin
+  git_url: https://github.com/bitcoin/bitcoin.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 88745
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: gin-gonic-gin
+  full_name: gin-gonic/gin
+  git_url: https://github.com/gin-gonic/gin.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 88301
+  source_extensions:
+  - .go
+- name: gohugoio-hugo
+  full_name: gohugoio/hugo
+  git_url: https://github.com/gohugoio/hugo.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 87484
+  source_extensions:
+  - .go
+- name: django-django
+  full_name: django/django
+  git_url: https://github.com/django/django.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 87222
+  source_extensions:
+  - .py
+- name: home-assistant-core
+  full_name: home-assistant/core
+  git_url: https://github.com/home-assistant/core.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 85983
+  source_extensions:
+  - .py
+- name: 3b1b-manim
+  full_name: 3b1b/manim
+  git_url: https://github.com/3b1b/manim.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 85902
+  source_extensions:
+  - .py
+- name: astral-sh-uv
+  full_name: astral-sh/uv
+  git_url: https://github.com/astral-sh/uv.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 82909
+  source_extensions:
+  - .rs
+- name: syncthing-syncthing
+  full_name: syncthing/syncthing
+  git_url: https://github.com/syncthing/syncthing.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 81562
+  source_extensions:
+  - .go
+- name: spring-projects-spring-boot
+  full_name: spring-projects/spring-boot
+  git_url: https://github.com/spring-projects/spring-boot.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 80375
+  source_extensions:
+  - .java
+- name: junegunn-fzf
+  full_name: junegunn/fzf
+  git_url: https://github.com/junegunn/fzf.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 79343
+  source_extensions:
+  - .go
+- name: zed-industries-zed
+  full_name: zed-industries/zed
+  git_url: https://github.com/zed-industries/zed.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 78777
+  source_extensions:
+  - .rs
+- name: tensorflow-models
+  full_name: tensorflow/models
+  git_url: https://github.com/tensorflow/models.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 77674
+  source_extensions:
+  - .py
+- name: elastic-elasticsearch
+  full_name: elastic/elasticsearch
+  git_url: https://github.com/elastic/elasticsearch.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 76471
+  source_extensions:
+  - .java
+- name: jesseduffield-lazygit
+  full_name: jesseduffield/lazygit
+  git_url: https://github.com/jesseduffield/lazygit.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 75992
+  source_extensions:
+  - .go
+- name: ventoy-ventoy
+  full_name: ventoy/Ventoy
+  git_url: https://github.com/ventoy/Ventoy.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 75708
+  source_extensions:
+  - .c
+  - .h
+- name: unionlabs-union
+  full_name: unionlabs/union
+  git_url: https://github.com/unionlabs/union.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 74153
+  source_extensions:
+  - .rs
+- name: redis-redis
+  full_name: redis/redis
+  git_url: https://github.com/redis/redis.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 73721
+  source_extensions:
+  - .c
+  - .h
+- name: ocornut-imgui
+  full_name: ocornut/imgui
+  git_url: https://github.com/ocornut/imgui.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 72483
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: python-cpython
+  full_name: python/cpython
+  git_url: https://github.com/python/cpython.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 72228
+  source_extensions:
+  - .py
+- name: moby-moby
+  full_name: moby/moby
+  git_url: https://github.com/moby/moby.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 71525
+  source_extensions:
+  - .go
+- name: obsproject-obs-studio
+  full_name: obsproject/obs-studio
+  git_url: https://github.com/obsproject/obs-studio.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 71471
+  source_extensions:
+  - .c
+  - .h
+- name: caddyserver-caddy
+  full_name: caddyserver/caddy
+  git_url: https://github.com/caddyserver/caddy.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 71393
+  source_extensions:
+  - .go
+- name: pallets-flask
+  full_name: pallets/flask
+  git_url: https://github.com/pallets/flask.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 71390
+  source_extensions:
+  - .py
+- name: protocolbuffers-protobuf
+  full_name: protocolbuffers/protobuf
+  git_url: https://github.com/protocolbuffers/protobuf.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 71052
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: nektos-act
+  full_name: nektos/act
+  git_url: https://github.com/nektos/act.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 69778
+  source_extensions:
+  - .go
+- name: base-node
+  full_name: base/node
+  git_url: https://github.com/base/node.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 68634
+  source_extensions:
+  - .go
+- name: ansible-ansible
+  full_name: ansible/ansible
+  git_url: https://github.com/ansible/ansible.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 68395
+  source_extensions:
+  - .py
+- name: nationalsecurityagency-ghidra
+  full_name: NationalSecurityAgency/ghidra
+  git_url: https://github.com/NationalSecurityAgency/ghidra.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 66722
+  source_extensions:
+  - .java
+- name: prometheus-prometheus
+  full_name: prometheus/prometheus
+  git_url: https://github.com/prometheus/prometheus.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 63485
+  source_extensions:
+  - .go
+- name: alacritty-alacritty
+  full_name: alacritty/alacritty
+  git_url: https://github.com/alacritty/alacritty.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 63317
+  source_extensions:
+  - .rs
+- name: traefik-traefik
+  full_name: traefik/traefik
+  git_url: https://github.com/traefik/traefik.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 62557
+  source_extensions:
+  - .go
+- name: rust-lang-rustlings
+  full_name: rust-lang/rustlings
+  git_url: https://github.com/rust-lang/rustlings.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 62441
+  source_extensions:
+  - .rs
+- name: burntsushi-ripgrep
+  full_name: BurntSushi/ripgrep
+  git_url: https://github.com/BurntSushi/ripgrep.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 62113
+  source_extensions:
+  - .rs
+- name: fuellabs-sway
+  full_name: FuelLabs/sway
+  git_url: https://github.com/FuelLabs/sway.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 61806
+  source_extensions:
+  - .rs
+- name: scrapy-scrapy
+  full_name: scrapy/scrapy
+  git_url: https://github.com/scrapy/scrapy.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 61227
+  source_extensions:
+  - .py
+- name: commaai-openpilot
+  full_name: commaai/openpilot
+  git_url: https://github.com/commaai/openpilot.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 60555
+  source_extensions:
+  - .py
+- name: git-git
+  full_name: git/git
+  git_url: https://github.com/git/git.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 60184
+  source_extensions:
+  - .c
+  - .h
+- name: spring-projects-spring-framework
+  full_name: spring-projects/spring-framework
+  git_url: https://github.com/spring-projects/spring-framework.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 59830
+  source_extensions:
+  - .java
+- name: ffmpeg-ffmpeg
+  full_name: FFmpeg/FFmpeg
+  git_url: https://github.com/FFmpeg/FFmpeg.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 58749
+  source_extensions:
+  - .c
+  - .h
+- name: filosottile-mkcert
+  full_name: FiloSottile/mkcert
+  git_url: https://github.com/FiloSottile/mkcert.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 58499
+  source_extensions:
+  - .go
+- name: dani-garcia-vaultwarden
+  full_name: dani-garcia/vaultwarden
+  git_url: https://github.com/dani-garcia/vaultwarden.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 58144
+  source_extensions:
+  - .rs
+- name: sharkdp-bat
+  full_name: sharkdp/bat
+  git_url: https://github.com/sharkdp/bat.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 58055
+  source_extensions:
+  - .rs
+- name: pocketbase-pocketbase
+  full_name: pocketbase/pocketbase
+  git_url: https://github.com/pocketbase/pocketbase.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 57490
+  source_extensions:
+  - .go
+- name: fuellabs-fuel-core
+  full_name: FuelLabs/fuel-core
+  git_url: https://github.com/FuelLabs/fuel-core.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 57190
+  source_extensions:
+  - .rs
+- name: soimort-you-get
+  full_name: soimort/you-get
+  git_url: https://github.com/soimort/you-get.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 56813
+  source_extensions:
+  - .py
+- name: rclone-rclone
+  full_name: rclone/rclone
+  git_url: https://github.com/rclone/rclone.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 56551
+  source_extensions:
+  - .go
+- name: starship-starship
+  full_name: starship/starship
+  git_url: https://github.com/starship/starship.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 56066
+  source_extensions:
+  - .rs
+- name: textualize-rich
+  full_name: Textualize/rich
+  git_url: https://github.com/Textualize/rich.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 56018
+  source_extensions:
+  - .py
+- name: go-gitea-gitea
+  full_name: go-gitea/gitea
+  git_url: https://github.com/go-gitea/gitea.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 54799
+  source_extensions:
+  - .go
+- name: psf-requests
+  full_name: psf/requests
+  git_url: https://github.com/psf/requests.git
+  cpe_id: null
+  category: expanded
+  primary_language: Python
+  stars: 53871
+  source_extensions:
+  - .py
+- name: wagoodman-dive
+  full_name: wagoodman/dive
+  git_url: https://github.com/wagoodman/dive.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 53726
+  source_extensions:
+  - .go
+- name: werwolv-imhex
+  full_name: WerWolv/ImHex
+  git_url: https://github.com/WerWolv/ImHex.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 53110
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: termux-termux-app
+  full_name: termux/termux-app
+  git_url: https://github.com/termux/termux-app.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 53107
+  source_extensions:
+  - .java
+- name: typst-typst
+  full_name: typst/typst
+  git_url: https://github.com/typst/typst.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 52558
+  source_extensions:
+  - .rs
+- name: etcd-io-etcd
+  full_name: etcd-io/etcd
+  git_url: https://github.com/etcd-io/etcd.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 51640
+  source_extensions:
+  - .go
+- name: google-guava
+  full_name: google/guava
+  git_url: https://github.com/google/guava.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 51512
+  source_extensions:
+  - .java
+- name: ethereum-go-ethereum
+  full_name: ethereum/go-ethereum
+  git_url: https://github.com/ethereum/go-ethereum.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 50973
+  source_extensions:
+  - .go
+- name: jesseduffield-lazydocker
+  full_name: jesseduffield/lazydocker
+  git_url: https://github.com/jesseduffield/lazydocker.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 50573
+  source_extensions:
+  - .go
+- name: nlohmann-json
+  full_name: nlohmann/json
+  git_url: https://github.com/nlohmann/json.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 49346
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: alistgo-alist
+  full_name: AlistGo/alist
+  git_url: https://github.com/AlistGo/alist.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 49272
+  source_extensions:
+  - .go
+- name: reactivex-rxjava
+  full_name: ReactiveX/RxJava
+  git_url: https://github.com/ReactiveX/RxJava.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 48376
+  source_extensions:
+  - .java
+- name: hashicorp-terraform
+  full_name: hashicorp/terraform
+  git_url: https://github.com/hashicorp/terraform.git
+  cpe_id: null
+  category: expanded
+  primary_language: Go
+  stars: 48080
+  source_extensions:
+  - .go
+- name: x64dbg-x64dbg
+  full_name: x64dbg/x64dbg
+  git_url: https://github.com/x64dbg/x64dbg.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 48048
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: skylot-jadx
+  full_name: skylot/jadx
+  git_url: https://github.com/skylot/jadx.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 48011
+  source_extensions:
+  - .java
+- name: bevyengine-bevy
+  full_name: bevyengine/bevy
+  git_url: https://github.com/bevyengine/bevy.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 45510
+  source_extensions:
+  - .rs
+- name: grpc-grpc
+  full_name: grpc/grpc
+  git_url: https://github.com/grpc/grpc.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 44604
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: tmux-tmux
+  full_name: tmux/tmux
+  git_url: https://github.com/tmux/tmux.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 44250
+  source_extensions:
+  - .c
+  - .h
+- name: zhongyang219-trafficmonitor
+  full_name: zhongyang219/TrafficMonitor
+  git_url: https://github.com/zhongyang219/TrafficMonitor.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 43863
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: helix-editor-helix
+  full_name: helix-editor/helix
+  git_url: https://github.com/helix-editor/helix.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 43852
+  source_extensions:
+  - .rs
+- name: fuellabs-fuels-rs
+  full_name: FuelLabs/fuels-rs
+  git_url: https://github.com/FuelLabs/fuels-rs.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 43292
+  source_extensions:
+  - .rs
+- name: sharkdp-fd
+  full_name: sharkdp/fd
+  git_url: https://github.com/sharkdp/fd.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 42401
+  source_extensions:
+  - .rs
+- name: juspay-hyperswitch
+  full_name: juspay/hyperswitch
+  git_url: https://github.com/juspay/hyperswitch.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 42396
+  source_extensions:
+  - .rs
+- name: apache-dubbo
+  full_name: apache/dubbo
+  git_url: https://github.com/apache/dubbo.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 41626
+  source_extensions:
+  - .java
+- name: curl-curl
+  full_name: curl/curl
+  git_url: https://github.com/curl/curl.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 41227
+  source_extensions:
+  - .c
+  - .h
+- name: aria2-aria2
+  full_name: aria2/aria2
+  git_url: https://github.com/aria2/aria2.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 40536
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: wg-wrk
+  full_name: wg/wrk
+  git_url: https://github.com/wg/wrk.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 40184
+  source_extensions:
+  - .c
+  - .h
+- name: php-php-src
+  full_name: php/php-src
+  git_url: https://github.com/php/php-src.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 39978
+  source_extensions:
+  - .c
+  - .h
+- name: facebookresearch-faiss
+  full_name: facebookresearch/faiss
+  git_url: https://github.com/facebookresearch/faiss.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 39660
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: nushell-nushell
+  full_name: nushell/nushell
+  git_url: https://github.com/nushell/nushell.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 38973
+  source_extensions:
+  - .rs
+- name: google-leveldb
+  full_name: google/leveldb
+  git_url: https://github.com/google/leveldb.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 38957
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: google-googletest
+  full_name: google/googletest
+  git_url: https://github.com/google/googletest.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 38449
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: lapce-lapce
+  full_name: lapce/lapce
+  git_url: https://github.com/lapce/lapce.git
+  cpe_id: null
+  category: expanded
+  primary_language: Rust
+  stars: 38275
+  source_extensions:
+  - .rs
+- name: philjay-mpandroidchart
+  full_name: PhilJay/MPAndroidChart
+  git_url: https://github.com/PhilJay/MPAndroidChart.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 38227
+  source_extensions:
+  - .java
+- name: halo-dev-halo
+  full_name: halo-dev/halo
+  git_url: https://github.com/halo-dev/halo.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 38217
+  source_extensions:
+  - .java
+- name: teamnewpipe-newpipe
+  full_name: TeamNewPipe/NewPipe
+  git_url: https://github.com/TeamNewPipe/NewPipe.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 37763
+  source_extensions:
+  - .java
+- name: duckdb-duckdb
+  full_name: duckdb/duckdb
+  git_url: https://github.com/duckdb/duckdb.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 37295
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: alibaba-arthas
+  full_name: alibaba/arthas
+  git_url: https://github.com/alibaba/arthas.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 37228
+  source_extensions:
+  - .java
+- name: aseprite-aseprite
+  full_name: aseprite/aseprite
+  git_url: https://github.com/aseprite/aseprite.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 36436
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: qbittorrent-qbittorrent
+  full_name: qbittorrent/qBittorrent
+  git_url: https://github.com/qbittorrent/qBittorrent.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 36400
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: lizardbyte-sunshine
+  full_name: LizardByte/Sunshine
+  git_url: https://github.com/LizardByte/Sunshine.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 35883
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: airbnb-lottie-android
+  full_name: airbnb/lottie-android
+  git_url: https://github.com/airbnb/lottie-android.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 35594
+  source_extensions:
+  - .java
+- name: bumptech-glide
+  full_name: bumptech/glide
+  git_url: https://github.com/bumptech/glide.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 35028
+  source_extensions:
+  - .java
+- name: hyprwm-hyprland
+  full_name: hyprwm/Hyprland
+  git_url: https://github.com/hyprwm/Hyprland.git
+  cpe_id: null
+  category: expanded
+  primary_language: C++
+  stars: 34945
+  source_extensions:
+  - .cpp
+  - .hpp
+  - .cc
+  - .cxx
+  - .h
+  - .hh
+  - .hxx
+- name: netty-netty
+  full_name: netty/netty
+  git_url: https://github.com/netty/netty.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 34907
+  source_extensions:
+  - .java
+- name: mpv-player-mpv
+  full_name: mpv-player/mpv
+  git_url: https://github.com/mpv-player/mpv.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 34724
+  source_extensions:
+  - .c
+  - .h
+- name: seleniumhq-selenium
+  full_name: SeleniumHQ/selenium
+  git_url: https://github.com/SeleniumHQ/selenium.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 34121
+  source_extensions:
+  - .java
+- name: jqlang-jq
+  full_name: jqlang/jq
+  git_url: https://github.com/jqlang/jq.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 34078
+  source_extensions:
+  - .c
+  - .h
+- name: zxing-zxing
+  full_name: zxing/zxing
+  git_url: https://github.com/zxing/zxing.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 33909
+  source_extensions:
+  - .java
+- name: keycloak-keycloak
+  full_name: keycloak/keycloak
+  git_url: https://github.com/keycloak/keycloak.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 33792
+  source_extensions:
+  - .java
+- name: blankj-androidutilcode
+  full_name: Blankj/AndroidUtilCode
+  git_url: https://github.com/Blankj/AndroidUtilCode.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 33698
+  source_extensions:
+  - .java
+- name: bilibili-ijkplayer
+  full_name: bilibili/ijkplayer
+  git_url: https://github.com/bilibili/ijkplayer.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 33133
+  source_extensions:
+  - .c
+  - .h
+- name: binarywang-wxjava
+  full_name: binarywang/WxJava
+  git_url: https://github.com/binarywang/WxJava.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 32693
+  source_extensions:
+  - .java
+- name: apache-kafka
+  full_name: apache/kafka
+  git_url: https://github.com/apache/kafka.git
+  cpe_id: null
+  category: expanded
+  primary_language: Java
+  stars: 32325
+  source_extensions:
+  - .java
+- name: lizongying-my-tv
+  full_name: lizongying/my-tv
+  git_url: https://github.com/lizongying/my-tv.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 32184
+  source_extensions:
+  - .c
+  - .h
+- name: valinet-explorerpatcher
+  full_name: valinet/ExplorerPatcher
+  git_url: https://github.com/valinet/ExplorerPatcher.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 32143
+  source_extensions:
+  - .c
+  - .h
+- name: raysan5-raylib
+  full_name: raysan5/raylib
+  git_url: https://github.com/raysan5/raylib.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 31972
+  source_extensions:
+  - .c
+  - .h
+- name: coolsnowwolf-lede
+  full_name: coolsnowwolf/lede
+  git_url: https://github.com/coolsnowwolf/lede.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 31403
+  source_extensions:
+  - .c
+  - .h
+- name: kingtoolbox-windterm
+  full_name: kingToolbox/WindTerm
+  git_url: https://github.com/kingToolbox/WindTerm.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 30437
+  source_extensions:
+  - .c
+  - .h
+- name: openssl-openssl
+  full_name: openssl/openssl
+  git_url: https://github.com/openssl/openssl.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 29892
+  source_extensions:
+  - .c
+  - .h
+- name: nginx-nginx
+  full_name: nginx/nginx
+  git_url: https://github.com/nginx/nginx.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 29862
+  source_extensions:
+  - .c
+  - .h
+- name: asmvik-yabai
+  full_name: asmvik/yabai
+  git_url: https://github.com/asmvik/yabai.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 28593
+  source_extensions:
+  - .c
+  - .h
+- name: ggreer-the_silver_searcher
+  full_name: ggreer/the_silver_searcher
+  git_url: https://github.com/ggreer/the_silver_searcher.git
+  cpe_id: null
+  category: expanded
+  primary_language: C
+  stars: 27160
+  source_extensions:
+  - .c
+  - .h

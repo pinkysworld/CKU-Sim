@@ -32,6 +32,10 @@ Key configuration fields:
 - `corpus`: repository list and product identifiers.
 - `monte_carlo_runs`: simulation count for the insurance model.
 
+Environment variables used by optional experiments:
+
+- `GITHUB_TOKEN`: optional GitHub API token for `e11_large_corpus_builder`; recommended to reduce rate-limit pressure during corpus discovery.
+
 ## Data Policy
 
 The public repository includes:
@@ -67,6 +71,15 @@ python -m experiments.e07_predictive_validation --config experiments/config.yaml
 python -m experiments.e08_policy_comparison --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml --security-e06-subdir e06_file_case_control__expanded_advisory_event
+python -m experiments.e10_forward_release_panel --config experiments/config.yaml --repos openssl,libxml2,curl,redis,sqlite,zlib,git,openssh --max-tags 4 --min-tag-gap-days 180 --horizon-days 365 --results-subdir e10_forward_release_panel__core8
+python -m experiments.e10_forward_release_panel --config experiments/config.forward_panel_light8.yaml --max-tags 3 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e10_forward_release_panel__light8_h730_l10
+GITHUB_TOKEN=... python -m experiments.e11_large_corpus_builder --config experiments/config.yaml --per-language 24 --min-stars 4000 --min-remote-tags 10 --results-subdir e11_large_corpus__filtered
+python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__curated15_h730_l10_t5
+python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 365 --lookback-years 10 --results-subdir e12_prospective_file_panel__curated15_h365_l10_t5
+python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --severity-band high_critical --results-subdir e12_prospective_file_panel__curated15_h730_l10_t5__high_critical
+python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 365 --lookback-years 10 --severity-band high_critical --results-subdir e12_prospective_file_panel__curated15_h365_l10_t5__high_critical
+python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5
+python -m experiments.e14_prospective_robustness --config experiments/config.forward_panel_curated.yaml --runs e12_prospective_file_panel__curated15_h365_l10_t5,e12_prospective_file_panel__curated15_h365_l10_t5__high_critical,e12_prospective_file_panel__curated15_h730_l10_t5,e12_prospective_file_panel__curated15_h730_l10_t5__high_critical --results-subdir e14_prospective_robustness__curated15
 ```
 
 Notes:
@@ -78,6 +91,23 @@ Notes:
 - `e07` depends on `e06`.
 - `e08` compares multiple `e06`/`e07` policy runs and is only as complete as the upstream policy-specific outputs.
 - `e09` depends on an existing `e06` security dataset and on local repository history for the negative-control bug-fix pool.
+- `e10` depends on sufficiently deep local Git histories with usable release tags and on OSV records that can be resolved to fixing commits in those local histories.
+- `e11` queries the GitHub repository search API and validates candidate repositories by remote tag counts; the generated manifest is intended as an input to later corpus curation rather than as an automatically final study set.
+- `e12` depends on the screened forward-panel corpus, sufficiently deep local Git histories with usable release tags, and future advisory events that can be resolved to fixing commits and files in those local histories.
+- `e13` depends on an existing `e12` audit sample and is intended to estimate label precision conservatively rather than to certify every event observation in the full panel.
+- `e14` depends on completed `e12` runs with comparable matching settings and summarizes horizon/severity sensitivity across those runs.
+
+Focused forward-panel notes:
+
+- `experiments/config.forward_panel_curated.yaml` stores the broader screened forward-panel corpus.
+- `experiments/config.forward_panel_light8.yaml` stores the focused eight-repository subset used for the completed light-panel run.
+- The focused `e10_forward_release_panel__light8_h730_l10` run enforces a fully observed two-year outcome horizon by excluding snapshots that fall within two years of the analysis date.
+- The same run also restricts candidate tags to the trailing ten-year window before the horizon cutoff to better align release sampling with modern advisory coverage.
+- The prospective `e12_prospective_file_panel__curated15_h730_l10_t5` run uses the same fully observed two-year horizon and ten-year lookback window, but samples up to five release tags per repository to retain intermediate release windows with non-trivial future-event density.
+- The `e12` prospective study also supports severity-restricted outcomes through `--severity-band high_critical`; this currently retains events with severity information mapped to high or critical labels from NVD or OSV metadata.
+- The one-year `e12_prospective_file_panel__curated15_h365_l10_t5` run provides a shorter-horizon sensitivity check using the same release-sampling and matching design.
+- The `e13_prospective_label_audit__curated15_h730_l10_t5` audit currently reviews a 40-observation sample from the main `e12` run and reports reviewed event-to-commit and file-touch precision.
+- The `e14_prospective_robustness__curated15` summary compares one-year versus two-year horizons and all-severity versus high/critical-severity versions of the same prospective file-level design.
 
 ## Ground-Truth Policy Tiers
 
@@ -100,6 +130,7 @@ Experiment `e09_negative_control_bugfix` compares security-fix files with ordina
 
 - NVD-backed results depend on the state and availability of the NVD API at run time.
 - OSV-backed results depend on the state and availability of the OSV API at run time and on local repository tag coverage.
+- GitHub-discovery outputs depend on the state of the GitHub repository search API, token rate limits, and the evolving star counts, topics, and tag structures of public repositories.
 - Repository histories may evolve after publication; exact reruns should pin commits if strict archival replication is required.
 - Temporal outputs depend on the local clone depth and branch state.
 

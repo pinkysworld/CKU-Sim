@@ -1,0 +1,114 @@
+{
+  "n_candidates": 144,
+  "n_validated": 129,
+  "languages": [
+    "C",
+    "C++",
+    "Go",
+    "Java",
+    "Python",
+    "Rust"
+  ],
+  "top_repositories": [
+    {
+      "full_name": "torvalds/linux",
+      "stars": 227671,
+      "remote_tag_count": 926
+    },
+    {
+      "full_name": "yt-dlp/yt-dlp",
+      "stars": 155651,
+      "remote_tag_count": 137
+    },
+    {
+      "full_name": "ytdl-org/youtube-dl",
+      "stars": 140004,
+      "remote_tag_count": 1120
+    },
+    {
+      "full_name": "Genymobile/scrcpy",
+      "stars": 138211,
+      "remote_tag_count": 60
+    },
+    {
+      "full_name": "golang/go",
+      "stars": 133346,
+      "remote_tag_count": 480
+    },
+    {
+      "full_name": "facebook/react-native",
+      "stars": 125666,
+      "remote_tag_count": 665
+    },
+    {
+      "full_name": "kubernetes/kubernetes",
+      "stars": 121616,
+      "remote_tag_count": 1218
+    },
+    {
+      "full_name": "electron/electron",
+      "stars": 120807,
+      "remote_tag_count": 3572
+    },
+    {
+      "full_name": "rust-lang/rust",
+      "stars": 111840,
+      "remote_tag_count": 156
+    },
+    {
+      "full_name": "rustdesk/rustdesk",
+      "stars": 110899,
+      "remote_tag_count": 36
+    },
+    {
+      "full_name": "godotengine/godot",
+      "stars": 109187,
+      "remote_tag_count": 69
+    },
+    {
+      "full_name": "denoland/deno",
+      "stars": 106443,
+      "remote_tag_count": 427
+    },
+    {
+      "full_name": "fatedier/frp",
+      "stars": 105819,
+      "remote_tag_count": 111
+    },
+    {
+      "full_name": "tauri-apps/tauri",
+      "stars": 105184,
+      "remote_tag_count": 1731
+    },
+    {
+      "full_name": "microsoft/terminal",
+      "stars": 102595,
+      "remote_tag_count": 180
+    },
+    {
+      "full_name": "fastapi/fastapi",
+      "stars": 96996,
+      "remote_tag_count": 275
+    },
+    {
+      "full_name": "nvbn/thefuck",
+      "stars": 96319,
+      "remote_tag_count": 83
+    },
+    {
+      "full_name": "bitcoin/bitcoin",
+      "stars": 88745,
+      "remote_tag_count": 355
+    },
+    {
+      "full_name": "gin-gonic/gin",
+      "stars": 88301,
+      "remote_tag_count": 38
+    },
+    {
+      "full_name": "gohugoio/hugo",
+      "stars": 87484,
+      "remote_tag_count": 371
+    }
+  ]
+}
