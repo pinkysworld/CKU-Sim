@@ -67,8 +67,11 @@ python -m experiments.e06_file_level_case_control --config experiments/config.ya
 python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__strict_nvd_event
 python -m experiments.e06_file_level_case_control --config experiments/config.yaml --ground-truth-policy balanced_explicit_id_event
 python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__balanced_explicit_id_event
+python -m experiments.e06_file_level_case_control --config experiments/config.yaml --ground-truth-policy expanded_advisory_event
+python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__expanded_advisory_event
 python -m experiments.e08_policy_comparison --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml
+python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml --security-e06-subdir e06_file_case_control__expanded_advisory_event
 ```
 
 For the file-level analyses, the event-definition variants are:
@@ -76,6 +79,7 @@ For the file-level analyses, the event-definition variants are:
 - `nvd_commit_refs`: one observation per locally accessible NVD-linked fixing commit.
 - `strict_nvd_event`: one primary source-touching fixing commit per NVD-linked vulnerability.
 - `balanced_explicit_id_event`: the event-collapsed NVD set augmented with locally explicit `CVE-...` and `GHSA-...` commit identifiers.
+- `expanded_advisory_event`: the event-collapsed NVD set augmented with OSV-linked repository advisories and locally explicit `CVE-...` and `GHSA-...` commit identifiers.
 - `e09_negative_control_bugfix`: a comparison of security-fix files against ordinary bug-fix files selected under a conservative text filter.
 
 ## Results Included In This Repository
@@ -90,23 +94,28 @@ The repository ships with generated outputs under `data/results/`:
 - `e06_file_case_control`: matched pre-fix file-level case-control outputs, commit summaries, and figures.
 - `e06_file_case_control__strict_nvd_event`: event-collapsed NVD case-control outputs.
 - `e06_file_case_control__balanced_explicit_id_event`: expanded explicit-ID case-control outputs.
+- `e06_file_case_control__expanded_advisory_event`: advisory-expanded case-control outputs.
 - `e07_predictive_validation`: leave-one-repository-out predictive validation outputs and held-out model comparisons.
 - `e07_predictive_validation__e06_file_case_control__strict_nvd_event`: predictive validation for the event-collapsed NVD specification.
 - `e07_predictive_validation__e06_file_case_control__balanced_explicit_id_event`: predictive validation for the expanded explicit-ID specification.
+- `e07_predictive_validation__e06_file_case_control__expanded_advisory_event`: predictive validation for the advisory-expanded specification.
 - `e08_policy_comparison`: side-by-side policy comparison tables and figures.
 - `e09_negative_control_bugfix`: security-versus-ordinary-bugfix matched comparisons and held-out classification outputs.
+- `e09_negative_control_bugfix__e06_file_case_control__expanded_advisory_event`: negative-control outputs using the advisory-expanded security dataset.
 
 ## Reproducibility Notes
 
 - Large cloned upstream repositories are not committed.
 - NVD responses are not committed because they are transient external data pulls.
+- OSV query caches are not committed because they are transient external data pulls.
 - The temporal analysis requires full repository history for the selected projects.
 - CVE results depend on NVD availability and may change as NVD records evolve.
 - The file-level case-control study depends on which NVD entries expose usable fixing-commit references for locally available repository histories.
 - The `strict_nvd_event` specification maps each NVD-linked vulnerability to one primary fixing event.
 - The `balanced_explicit_id_event` specification augments the NVD-linked event set with locally explicit `CVE-...` and `GHSA-...` identifiers found in commit history.
+- The `expanded_advisory_event` specification additionally incorporates OSV-linked repository advisories resolved against local repository tags and histories.
 - The predictive validation layer evaluates incremental discrimination beyond a size-only reference model within the curated corpus.
-- The negative-control experiment compares security-fix files with ordinary bug-fix files selected under a conservative text filter.
+- The negative-control experiment compares security-fix files with ordinary bug-fix files selected under a conservative text filter; the advisory-expanded variant uses the `e06_file_case_control__expanded_advisory_event` security dataset.
 
 Additional procedural details are documented in `REPRODUCIBILITY.md`.
 

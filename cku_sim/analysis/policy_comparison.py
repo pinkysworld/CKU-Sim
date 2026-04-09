@@ -20,6 +20,7 @@ DEFAULT_POLICY_ORDER = [
     "nvd_commit_refs",
     "strict_nvd_event",
     "balanced_explicit_id_event",
+    "expanded_advisory_event",
 ]
 
 

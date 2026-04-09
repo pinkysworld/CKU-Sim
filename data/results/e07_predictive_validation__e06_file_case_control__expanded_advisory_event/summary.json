@@ -1,0 +1,41 @@
+{
+  "n_files": 2496,
+  "n_pairs": 1248,
+  "n_commits": 636,
+  "n_repos": 12,
+  "models": {
+    "baseline_size": {
+      "roc_auc": 0.5239838870397765,
+      "average_precision": 0.5040788466825785,
+      "brier_score": 0.2495291238912977,
+      "log_loss": 0.6921988820770587,
+      "pairwise_accuracy": 0.5280448717948718,
+      "macro_roc_auc": 0.577680777487495,
+      "macro_average_precision": 0.5831833524488917,
+      "macro_brier_score": 0.24804257782489536,
+      "macro_pairwise_accuracy": 0.5806915971158956
+    },
+    "baseline_plus_composite": {
+      "roc_auc": 0.5509992269682775,
+      "average_precision": 0.5393385355007753,
+      "brier_score": 0.24684937770600898,
+      "log_loss": 0.6867079115469602,
+      "pairwise_accuracy": 0.5753205128205128,
+      "macro_roc_auc": 0.5361951075787638,
+      "macro_average_precision": 0.5933938083899063,
+      "macro_brier_score": 0.2477385788979337,
+      "macro_pairwise_accuracy": 0.5428581930071775
+    },
+    "baseline_plus_components": {
+      "roc_auc": 0.541882717476167,
+      "average_precision": 0.5303768588078666,
+      "brier_score": 0.24889419792530504,
+      "log_loss": 0.6912035208733874,
+      "pairwise_accuracy": 0.5753205128205128,
+      "macro_roc_auc": 0.6050564719476142,
+      "macro_average_precision": 0.6269734145091707,
+      "macro_brier_score": 0.24717200783904503,
+      "macro_pairwise_accuracy": 0.6205887224872885
+    }
+  }
+}

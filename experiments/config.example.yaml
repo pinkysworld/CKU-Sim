@@ -9,6 +9,8 @@ data_dir: "data"
 # With a key: ~50 requests per 30 seconds
 nvd_api_key: null
 nvd_rate_limit: 6.0  # seconds between NVD requests (0.6 with API key)
+osv_rate_limit: 0.1  # seconds between OSV requests
+osv_query_batch_size: 100
 
 # Compression algorithms to test
 compression_algorithms:

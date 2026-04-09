@@ -116,6 +116,7 @@ def main() -> None:
     results_dir = config.results_dir / results_subdir
     results_dir.mkdir(parents=True, exist_ok=True)
     cache_dir = config.processed_dir / "nvd_cache"
+    osv_cache_dir = config.processed_dir / "osv_cache"
     policy_meta = describe_ground_truth_policy(args.ground_truth_policy)
 
     logger.info("=" * 60)
@@ -145,6 +146,9 @@ def main() -> None:
             cache_dir,
             min_loc=args.min_loc,
             ground_truth_policy=args.ground_truth_policy,
+            osv_cache_dir=osv_cache_dir,
+            osv_rate_limit=config.osv_rate_limit,
+            osv_query_batch_size=config.osv_query_batch_size,
         )
         if pairs.empty:
             logger.info("  %s: no usable matched pairs", entry.name)

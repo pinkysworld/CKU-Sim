@@ -27,6 +27,8 @@ Key configuration fields:
 - `data_dir`: local data root.
 - `nvd_api_key`: optional NVD API key.
 - `nvd_rate_limit`: delay between NVD requests.
+- `osv_rate_limit`: delay between OSV requests.
+- `osv_query_batch_size`: number of repository tags submitted per OSV batch query.
 - `corpus`: repository list and product identifiers.
 - `monte_carlo_runs`: simulation count for the insurance model.
 
@@ -40,7 +42,7 @@ The public repository includes:
 The public repository excludes:
 
 - Local raw repository clones in `data/raw/`.
-- Transient caches in `data/processed/`, including NVD cache files.
+- Transient caches in `data/processed/`, including NVD and OSV cache files.
 
 This keeps the published repository compact while preserving the outputs referenced in the paper.
 
@@ -60,8 +62,11 @@ python -m experiments.e06_file_level_case_control --config experiments/config.ya
 python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__strict_nvd_event
 python -m experiments.e06_file_level_case_control --config experiments/config.yaml --ground-truth-policy balanced_explicit_id_event
 python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__balanced_explicit_id_event
+python -m experiments.e06_file_level_case_control --config experiments/config.yaml --ground-truth-policy expanded_advisory_event
+python -m experiments.e07_predictive_validation --config experiments/config.yaml --e06-subdir e06_file_case_control__expanded_advisory_event
 python -m experiments.e08_policy_comparison --config experiments/config.yaml
 python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml
+python -m experiments.e09_negative_control_bugfix --config experiments/config.yaml --security-e06-subdir e06_file_case_control__expanded_advisory_event
 ```
 
 Notes:
@@ -76,11 +81,12 @@ Notes:
 
 ## Ground-Truth Policy Tiers
 
-The file-level study now supports three event-definition policies:
+The file-level study now supports four event-definition policies:
 
 - `nvd_commit_refs`: each usable NVD-linked fixing commit is treated as one observation.
 - `strict_nvd_event`: each NVD-linked vulnerability is mapped to one primary single-parent source-touching fix.
 - `balanced_explicit_id_event`: the event-collapsed NVD set is augmented with locally explicit `CVE-...` and `GHSA-...` commit identifiers.
+- `expanded_advisory_event`: the event-collapsed NVD set is augmented with OSV-linked repository advisories and locally explicit `CVE-...` and `GHSA-...` commit identifiers.
 
 ## Negative-Control Design
 
@@ -93,6 +99,7 @@ Experiment `e09_negative_control_bugfix` compares security-fix files with ordina
 ## External Dependencies And Stability
 
 - NVD-backed results depend on the state and availability of the NVD API at run time.
+- OSV-backed results depend on the state and availability of the OSV API at run time and on local repository tag coverage.
 - Repository histories may evolve after publication; exact reruns should pin commits if strict archival replication is required.
 - Temporal outputs depend on the local clone depth and branch state.
 

@@ -32,6 +32,11 @@ from cku_sim.analysis.negative_control import (
     build_security_file_dataset,
     summarise_negative_control_pairs,
 )
+from cku_sim.collectors.osv_collector import (
+    build_osv_alias_map,
+    extract_osv_event_candidates,
+    repo_url_variants,
+)
 from cku_sim.simulation.scenario_generator import (
     generate_regular_source,
     generate_irregular_source,
@@ -215,6 +220,64 @@ class TestFileLevelCaseControlHelpers:
         ids = extract_security_ids(text)
         assert "CVE-2026-12345" in ids
         assert "GHSA-AB12-CD34-EF56" in ids
+
+
+class TestOSVCollectorHelpers:
+    def test_build_osv_alias_map_prefers_cve_alias(self):
+        records = [
+            {
+                "id": "CURL-CVE-2023-46218",
+                "aliases": ["CVE-2023-46218", "GHSA-1111-2222-3333"],
+            }
+        ]
+
+        alias_map = build_osv_alias_map(records)
+
+        assert alias_map["CURL-CVE-2023-46218"] == "CVE-2023-46218"
+        assert alias_map["CVE-2023-46218"] == "CVE-2023-46218"
+        assert alias_map["GHSA-1111-2222-3333"] == "CVE-2023-46218"
+
+    def test_extract_osv_event_candidates_uses_git_ranges_and_refs(self):
+        records = [
+            {
+                "id": "CURL-CVE-2023-46218",
+                "aliases": ["CVE-2023-46218"],
+                "affected": [
+                    {
+                        "ranges": [
+                            {
+                                "type": "GIT",
+                                "repo": "https://github.com/curl/curl.git",
+                                "events": [
+                                    {"introduced": "abc1234"},
+                                    {"fixed": "2b0994c29a721c91c572cff7808c572a24d251eb"},
+                                ],
+                            }
+                        ]
+                    }
+                ],
+                "references": [
+                    {
+                        "url": (
+                            "https://github.com/curl/curl/commit/"
+                            "172e54cda18412da73fd8eb4e444e8a5b371ca59"
+                        )
+                    }
+                ],
+            }
+        ]
+
+        candidates = extract_osv_event_candidates(
+            records,
+            repo_url_variants("https://github.com/curl/curl.git"),
+        )
+
+        assert list(candidates) == ["CVE-2023-46218"]
+        assert candidates["CVE-2023-46218"]["commits"] == {
+            "2b0994c29a721c91c572cff7808c572a24d251eb",
+            "172e54cda18412da73fd8eb4e444e8a5b371ca59",
+        }
+        assert candidates["CVE-2023-46218"]["sources"] == {"osv_range", "osv_ref"}
 
 
 class TestPredictiveValidationHelpers:

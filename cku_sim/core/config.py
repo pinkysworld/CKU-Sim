@@ -38,6 +38,10 @@ class Config:
     nvd_api_key: str | None = None
     nvd_rate_limit: float = 6.0  # seconds between requests (0.6 with API key)
 
+    # OSV
+    osv_rate_limit: float = 0.1  # seconds between OSV requests
+    osv_query_batch_size: int = 100
+
     # Metrics
     compression_algorithms: list[str] = field(
         default_factory=lambda: ["gzip", "lzma", "zstd"]

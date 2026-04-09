@@ -16,6 +16,12 @@ import pandas as pd
 from scipy import stats
 
 from cku_sim.analysis.bootstrap import clustered_delta_bootstrap
+from cku_sim.collectors.osv_collector import (
+    build_osv_alias_map,
+    extract_osv_event_candidates,
+    fetch_osv_records_for_repo,
+    repo_url_variants,
+)
 from cku_sim.core.config import CorpusEntry
 from cku_sim.core.opacity import StructuralOpacity
 from cku_sim.metrics.compressibility import compressibility_index
@@ -117,6 +123,14 @@ GROUND_TRUTH_POLICY_METADATA = {
         "description": (
             "The event-collapsed NVD set is augmented with locally explicit CVE/GHSA-tagged "
             "security-fix commits, with one primary fixing commit retained per event."
+        ),
+    },
+    "expanded_advisory_event": {
+        "label": "Expanded advisory observations",
+        "description": (
+            "The event-collapsed NVD set is augmented with OSV-linked repository advisories "
+            "and locally explicit CVE/GHSA-tagged security-fix commits, with one primary "
+            "fixing commit retained per event."
         ),
     },
 }
@@ -501,6 +515,21 @@ def _extract_explicit_id_event_candidates(repo_path: Path) -> dict[str, set[str]
     return event_to_commits
 
 
+def _canonicalise_event_candidate_map(
+    candidates: dict[str, set[str]],
+    alias_map: dict[str, str],
+) -> dict[str, set[str]]:
+    """Collapse event identifiers through an alias map."""
+    if not alias_map:
+        return {event_id.upper(): set(commits) for event_id, commits in candidates.items()}
+
+    canonical: dict[str, set[str]] = {}
+    for event_id, commits in candidates.items():
+        key = alias_map.get(event_id.upper(), event_id.upper())
+        canonical.setdefault(key, set()).update(commits)
+    return canonical
+
+
 def _select_primary_event_commit(
     repo_path: Path,
     entry: CorpusEntry,
@@ -547,8 +576,11 @@ def collect_ground_truth_events(
     cache_dir: Path,
     *,
     ground_truth_policy: str = "nvd_commit_refs",
+    osv_cache_dir: Path | None = None,
+    osv_rate_limit: float = 0.1,
+    osv_query_batch_size: int = 100,
 ) -> list[GroundTruthEvent]:
-    """Collect event-labeled fixing commits under an explicit precision/recall policy."""
+    """Collect event-labeled fixing commits under an explicit event-definition policy."""
     if ground_truth_policy not in GROUND_TRUTH_POLICIES:
         raise ValueError(f"Unknown ground_truth_policy: {ground_truth_policy}")
 
@@ -575,13 +607,37 @@ def collect_ground_truth_events(
     nvd_event_candidates = _extract_nvd_event_candidates(vuln_items, expected_slug)
     explicit_event_candidates = (
         _extract_explicit_id_event_candidates(repo_path)
-        if ground_truth_policy == "balanced_explicit_id_event"
+        if ground_truth_policy in {"balanced_explicit_id_event", "expanded_advisory_event"}
         else {}
     )
+    osv_event_candidates: dict[str, dict[str, set[str]]] = {}
+    alias_map: dict[str, str] = {}
+    if ground_truth_policy == "expanded_advisory_event" and osv_cache_dir is not None:
+        repo_urls = repo_url_variants(entry.git_url)
+        try:
+            osv_records = fetch_osv_records_for_repo(
+                repo_path,
+                entry.git_url,
+                osv_cache_dir,
+                rate_limit=osv_rate_limit,
+                batch_size=osv_query_batch_size,
+            )
+        except Exception as exc:  # pragma: no cover - network failures are environment-specific
+            logger.warning("OSV fetch failed for %s: %s", entry.name, exc)
+            osv_records = []
+        alias_map = build_osv_alias_map(osv_records)
+        osv_event_candidates = extract_osv_event_candidates(osv_records, repo_urls)
+        nvd_event_candidates = _canonicalise_event_candidate_map(nvd_event_candidates, alias_map)
+        explicit_event_candidates = _canonicalise_event_candidate_map(
+            explicit_event_candidates,
+            alias_map,
+        )
 
     all_event_ids = set(nvd_event_candidates)
-    if ground_truth_policy == "balanced_explicit_id_event":
+    if ground_truth_policy in {"balanced_explicit_id_event", "expanded_advisory_event"}:
         all_event_ids |= set(explicit_event_candidates)
+    if ground_truth_policy == "expanded_advisory_event":
+        all_event_ids |= set(osv_event_candidates)
 
     metadata_cache: dict[str, tuple[str, tuple[str, ...], int] | None] = {}
     events: list[GroundTruthEvent] = []
@@ -592,11 +648,17 @@ def collect_ground_truth_events(
         if candidate_commits:
             sources.add("nvd_ref")
 
-        if ground_truth_policy == "balanced_explicit_id_event":
+        if ground_truth_policy in {"balanced_explicit_id_event", "expanded_advisory_event"}:
             explicit_commits = explicit_event_candidates.get(event_id, set())
             if explicit_commits:
                 candidate_commits |= explicit_commits
                 sources.add("explicit_id")
+
+        if ground_truth_policy == "expanded_advisory_event":
+            osv_entry = osv_event_candidates.get(event_id)
+            if osv_entry:
+                candidate_commits |= set(osv_entry.get("commits", set()))
+                sources |= set(osv_entry.get("sources", set()))
 
         selected_commit = _select_primary_event_commit(
             repo_path,
@@ -626,6 +688,9 @@ def match_case_control_pairs(
     *,
     min_loc: int = 20,
     ground_truth_policy: str = "nvd_commit_refs",
+    osv_cache_dir: Path | None = None,
+    osv_rate_limit: float = 0.1,
+    osv_query_batch_size: int = 100,
 ) -> pd.DataFrame:
     """Build matched file-level pairs for one repository."""
     if (
@@ -646,6 +711,9 @@ def match_case_control_pairs(
         entry,
         cache_dir,
         ground_truth_policy=ground_truth_policy,
+        osv_cache_dir=osv_cache_dir,
+        osv_rate_limit=osv_rate_limit,
+        osv_query_batch_size=osv_query_batch_size,
     )
     if not events:
         logger.info("Skipping %s: no usable ground-truth events under %s", entry.name, ground_truth_policy)
