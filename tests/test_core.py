@@ -30,6 +30,7 @@ from cku_sim.analysis.predictive_validation import (
 from cku_sim.analysis.policy_comparison import compile_policy_comparison
 from cku_sim.analysis.bootstrap import clustered_delta_bootstrap, flatten_bootstrap_interval
 from cku_sim.analysis.negative_control import (
+    augment_security_file_dataset,
     build_negative_control_prediction_dataset,
     build_security_file_dataset,
     summarise_negative_control_pairs,
@@ -51,12 +52,15 @@ from cku_sim.analysis.prospective_file_panel import (
     _cvss_v3_score_from_vector,
     _extract_osv_record_severity,
     build_prospective_prediction_dataset,
+    evaluate_external_holdout,
     fit_repo_fixed_effect_models,
     sample_audit_rows,
     summarise_prospective_pairs,
 )
 from cku_sim.analysis.label_audit import (
     apply_review_decisions,
+    classify_ground_truth_source,
+    sample_stratified_audit_rows,
     summarise_reviewed_audit,
 )
 from cku_sim.simulation.scenario_generator import (
@@ -701,6 +705,148 @@ class TestProspectivePanelHelpers:
         assert len(sampled) == 2
         assert sampled["event_observation_id"].nunique() == 2
 
+    def test_evaluate_external_holdout_scores_frozen_models(self):
+        train = pd.DataFrame(
+            [
+                {
+                    "pair_id": 0,
+                    "repo": "train-a",
+                    "snapshot_tag": "v1",
+                    "event_id": "e1",
+                    "label": 1,
+                    "kind": "case",
+                    "file_path": "src/a.c",
+                    "suffix": ".c",
+                    "loc": 100.0,
+                    "size_bytes": 1000.0,
+                    "ci_gzip": 0.6,
+                    "shannon_entropy": 0.7,
+                    "cyclomatic_density": 0.2,
+                    "halstead_volume": 0.4,
+                    "composite_score": 0.65,
+                    "directory_depth": 1.0,
+                    "prior_touches_total": 10.0,
+                    "prior_touches_365d": 3.0,
+                    "total_churn": 120.0,
+                    "churn_365d": 25.0,
+                    "author_count_total": 3.0,
+                    "author_count_365d": 2.0,
+                    "file_age_days": 300.0,
+                    "latest_touch_days": 20.0,
+                    "log_loc": np.log1p(100.0),
+                    "log_size_bytes": np.log1p(1000.0),
+                    "log_prior_touches_total": np.log1p(10.0),
+                    "log_prior_touches_365d": np.log1p(3.0),
+                    "log_total_churn": np.log1p(120.0),
+                    "log_churn_365d": np.log1p(25.0),
+                },
+                {
+                    "pair_id": 0,
+                    "repo": "train-a",
+                    "snapshot_tag": "v1",
+                    "event_id": "e1",
+                    "label": 0,
+                    "kind": "control",
+                    "file_path": "src/b.c",
+                    "suffix": ".c",
+                    "loc": 70.0,
+                    "size_bytes": 800.0,
+                    "ci_gzip": 0.4,
+                    "shannon_entropy": 0.6,
+                    "cyclomatic_density": 0.1,
+                    "halstead_volume": 0.3,
+                    "composite_score": 0.45,
+                    "directory_depth": 1.0,
+                    "prior_touches_total": 4.0,
+                    "prior_touches_365d": 2.0,
+                    "total_churn": 70.0,
+                    "churn_365d": 15.0,
+                    "author_count_total": 2.0,
+                    "author_count_365d": 1.0,
+                    "file_age_days": 250.0,
+                    "latest_touch_days": 10.0,
+                    "log_loc": np.log1p(70.0),
+                    "log_size_bytes": np.log1p(800.0),
+                    "log_prior_touches_total": np.log1p(4.0),
+                    "log_prior_touches_365d": np.log1p(2.0),
+                    "log_total_churn": np.log1p(70.0),
+                    "log_churn_365d": np.log1p(15.0),
+                },
+                {
+                    "pair_id": 1,
+                    "repo": "train-b",
+                    "snapshot_tag": "v2",
+                    "event_id": "e2",
+                    "label": 1,
+                    "kind": "case",
+                    "file_path": "lib/a.py",
+                    "suffix": ".py",
+                    "loc": 90.0,
+                    "size_bytes": 1200.0,
+                    "ci_gzip": 0.62,
+                    "shannon_entropy": 0.72,
+                    "cyclomatic_density": 0.18,
+                    "halstead_volume": 0.42,
+                    "composite_score": 0.66,
+                    "directory_depth": 2.0,
+                    "prior_touches_total": 12.0,
+                    "prior_touches_365d": 5.0,
+                    "total_churn": 150.0,
+                    "churn_365d": 40.0,
+                    "author_count_total": 4.0,
+                    "author_count_365d": 2.0,
+                    "file_age_days": 320.0,
+                    "latest_touch_days": 18.0,
+                    "log_loc": np.log1p(90.0),
+                    "log_size_bytes": np.log1p(1200.0),
+                    "log_prior_touches_total": np.log1p(12.0),
+                    "log_prior_touches_365d": np.log1p(5.0),
+                    "log_total_churn": np.log1p(150.0),
+                    "log_churn_365d": np.log1p(40.0),
+                },
+                {
+                    "pair_id": 1,
+                    "repo": "train-b",
+                    "snapshot_tag": "v2",
+                    "event_id": "e2",
+                    "label": 0,
+                    "kind": "control",
+                    "file_path": "lib/b.py",
+                    "suffix": ".py",
+                    "loc": 60.0,
+                    "size_bytes": 700.0,
+                    "ci_gzip": 0.38,
+                    "shannon_entropy": 0.55,
+                    "cyclomatic_density": 0.09,
+                    "halstead_volume": 0.28,
+                    "composite_score": 0.39,
+                    "directory_depth": 2.0,
+                    "prior_touches_total": 3.0,
+                    "prior_touches_365d": 1.0,
+                    "total_churn": 60.0,
+                    "churn_365d": 10.0,
+                    "author_count_total": 1.0,
+                    "author_count_365d": 1.0,
+                    "file_age_days": 210.0,
+                    "latest_touch_days": 8.0,
+                    "log_loc": np.log1p(60.0),
+                    "log_size_bytes": np.log1p(700.0),
+                    "log_prior_touches_total": np.log1p(3.0),
+                    "log_prior_touches_365d": np.log1p(1.0),
+                    "log_total_churn": np.log1p(60.0),
+                    "log_churn_365d": np.log1p(10.0),
+                },
+            ]
+        )
+        holdout = train.copy()
+        holdout["repo"] = ["holdout-a", "holdout-a", "holdout-b", "holdout-b"]
+
+        predictions, repo_metrics, summary = evaluate_external_holdout(train, holdout)
+
+        assert not predictions.empty
+        assert set(repo_metrics["repo"]) == {"holdout-a", "holdout-b"}
+        assert "baseline_plus_composite" in summary["models"]
+
     def test_fit_repo_fixed_effect_models_returns_composite_effect(self):
         dataset = pd.DataFrame(
             [
@@ -876,6 +1022,39 @@ class TestProspectivePanelHelpers:
         assert summary["overall_review"]["ambiguous"] == 1
         assert summary["overall_review"]["accept"] == 1
 
+    def test_classify_ground_truth_source_collapses_range_only(self):
+        assert classify_ground_truth_source("osv_range") == "range_only"
+        assert classify_ground_truth_source("explicit_id+osv_range") == "explicit_plus_range"
+        assert (
+            classify_ground_truth_source("explicit_id+nvd_ref+osv_range+osv_ref")
+            == "explicit_plus_reference_plus_range"
+        )
+
+    def test_sample_stratified_audit_rows_preserves_source_mix(self):
+        audit = pd.DataFrame(
+            [
+                {
+                    "repo": f"r{i}",
+                    "snapshot_date": f"2024-01-{i:02d}",
+                    "event_id": f"e{i}",
+                    "event_observation_id": f"r{i}:v1:e{i}",
+                    "ground_truth_source": "explicit_id" if i <= 8 else "osv_range",
+                }
+                for i in range(1, 13)
+            ]
+        )
+        audit["source_family"] = audit["ground_truth_source"].map(classify_ground_truth_source)
+
+        sampled = sample_stratified_audit_rows(
+            audit,
+            sample_size=6,
+            stratify_by="ground_truth_source",
+            random_seed=7,
+        )
+
+        assert len(sampled) == 6
+        assert set(sampled["ground_truth_source"]) == {"explicit_id", "osv_range"}
+
 
 class TestNegativeControlHelpers:
     def test_build_security_file_dataset_projects_case_side(self):
@@ -907,6 +1086,7 @@ class TestNegativeControlHelpers:
         assert security.loc[0, "security_event_id"] == "CVE-2026-0001"
         assert security.loc[0, "security_ground_truth_policy"] == "strict_nvd_event"
         assert security.loc[0, "security_file"] == "src/a.c"
+        assert security.loc[0, "security_subsystem_key"] == "src"
 
     def test_summarise_negative_control_pairs_reports_positive_effect(self):
         pairs = pd.DataFrame(

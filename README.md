@@ -8,7 +8,7 @@ The repository implements a measurement and simulation workflow for structural o
 
 ## Scope
 
-The codebase supports fourteen experiment families:
+The codebase supports sixteen experiment families:
 
 1. Synthetic opacity separation.
 2. Structural opacity measurement across a curated software corpus.
@@ -24,6 +24,8 @@ The codebase supports fourteen experiment families:
 12. Prospective file-level panel analysis using pre-release file opacity and later security-fix involvement.
 13. Reviewed label-audit summaries for the prospective file-level panel.
 14. Horizon and severity robustness summaries for the prospective file-level panel.
+15. Strict negative-control comparison between security-fix files and tightly matched ordinary bug-fix files.
+16. Frozen external-holdout validation using an out-of-corpus prospective file-level panel.
 
 ## Repository Contents
 
@@ -81,8 +83,11 @@ python -m experiments.e10_forward_release_panel --config experiments/config.yaml
 python -m experiments.e10_forward_release_panel --config experiments/config.forward_panel_light8.yaml --max-tags 3 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e10_forward_release_panel__light8_h730_l10
 GITHUB_TOKEN=... python -m experiments.e11_large_corpus_builder --config experiments/config.yaml --per-language 24 --min-stars 4000 --min-remote-tags 10 --results-subdir e11_large_corpus__filtered
 python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__curated15_h730_l10_t5
-python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5
+python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --audit-input audit_full.csv --sample-size 120 --sampling stratified --stratify-by ground_truth_source --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5__stratified120
 python -m experiments.e14_prospective_robustness --config experiments/config.forward_panel_curated.yaml --runs e12_prospective_file_panel__curated15_h365_l10_t5,e12_prospective_file_panel__curated15_h365_l10_t5__high_critical,e12_prospective_file_panel__curated15_h730_l10_t5,e12_prospective_file_panel__curated15_h730_l10_t5__high_critical --results-subdir e14_prospective_robustness__curated15
+python -m experiments.e15_negative_control_strict --config experiments/config.yaml --repos libxml2,openssh,sqlite,jq,zlib,nginx --security-e06-subdir e06_file_case_control__expanded_advisory_event --max-bugfix-commits 200 --results-subdir e15_negative_control_strict__expanded_advisory__light6
+python -m experiments.e12_prospective_file_panel --config experiments/config.external_holdout.yaml --repos pallets-flask,psf-requests --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5
+python -m experiments.e16_external_holdout --config experiments/config.forward_panel_curated.yaml --train-e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --holdout-e12-subdir e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5 --results-subdir e16_external_holdout__curated15_to_external_flask_requests
 ```
 
 For the file-level analyses, the event-definition variants are:
@@ -124,7 +129,11 @@ The repository ships with generated outputs under `data/results/`:
 - `e12_prospective_file_panel__curated15_h365_l10_t5__high_critical`: one-year prospective panel restricted to high/critical-severity future events.
 - `e12_prospective_file_panel__curated15_h730_l10_t5__high_critical`: two-year prospective panel restricted to high/critical-severity future events.
 - `e13_prospective_label_audit__curated15_h730_l10_t5`: reviewed audit sample and audit-summary tables for the main prospective panel.
+- `e13_prospective_label_audit__curated15_h730_l10_t5__stratified120`: larger stratified audit sample and source-stratified review summaries for the main prospective panel.
 - `e14_prospective_robustness__curated15`: side-by-side horizon/severity robustness summary for the prospective panel.
+- `e15_negative_control_strict__expanded_advisory__light6`: stricter same-subsystem security-versus-bugfix matched comparison on the lighter six-repository subset.
+- `e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5`: frozen-spec prospective file-level holdout panel for the external Flask and Requests subset.
+- `e16_external_holdout__curated15_to_external_flask_requests`: frozen train/test validation from the curated prospective panel to the external Flask/Requests holdout.
 
 ## Reproducibility Notes
 
@@ -143,8 +152,10 @@ The repository ships with generated outputs under `data/results/`:
 - The focused `e10_forward_release_panel__light8_h730_l10` run uses only fully observed two-year horizons and restricts snapshot sampling to the trailing ten-year window before the horizon cutoff.
 - The prospective `e12` study uses release snapshots as pre-event file baselines, labels future file involvement from advisory-linked fixing events, and compares matched future-case files against untouched controls from the same snapshot.
 - The denser `e12_prospective_file_panel__curated15_h730_l10_t5` run uses up to five sampled release tags per repository within the fully observed ten-year window in order to recover intermediate release windows with usable future-event density.
-- The reviewed `e13` audit currently covers a 40-observation sample from the main `e12` run; its purpose is to estimate label precision conservatively, not to certify every event observation.
+- The stratified `e13_prospective_label_audit__curated15_h730_l10_t5__stratified120` audit reviews a 120-observation sample from the main `e12` run and separates stronger explicit/reference-backed labels from `osv_range`-only mappings.
 - The `e14` robustness summary compares one-year versus two-year horizons and all-severity versus high/critical-severity specifications using the same prospective file-level design.
+- The strict `e15_negative_control_strict__expanded_advisory__light6` design requires same-subsystem and almost always same-suffix matches between security-fix files and ordinary bug-fix controls.
+- The `e16_external_holdout__curated15_to_external_flask_requests` outputs freeze models on the curated `e12` corpus and score them unchanged on an external two-repository holdout.
 - The large-corpus builder is a reproducible discovery tool for follow-on studies, not a substitute for final substantive curation of a publication corpus.
 
 Additional procedural details are documented in `REPRODUCIBILITY.md`.

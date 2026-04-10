@@ -10,6 +10,7 @@ import re
 import subprocess
 from collections import Counter
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 import pandas as pd
@@ -344,14 +345,19 @@ def _get_commit_parents(repo_path: Path, commit: str) -> list[str]:
     return words[1:]
 
 
-def _get_commit_epoch(repo_path: Path, commit: str) -> int:
-    proc = _run_git(repo_path, ["show", "-s", "--format=%ct", commit])
+@lru_cache(maxsize=200_000)
+def _cached_commit_epoch(repo_path_str: str, commit: str) -> int:
+    proc = _run_git(Path(repo_path_str), ["show", "-s", "--format=%ct", commit])
     if proc.returncode != 0:
         return 2**63 - 1
     try:
         return int(proc.stdout.strip())
     except ValueError:
         return 2**63 - 1
+
+
+def _get_commit_epoch(repo_path: Path, commit: str) -> int:
+    return _cached_commit_epoch(str(repo_path), commit)
 
 
 def _list_source_files_at_commit(

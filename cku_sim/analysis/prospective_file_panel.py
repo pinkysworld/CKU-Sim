@@ -1185,6 +1185,70 @@ def evaluate_leave_one_repo_out(
     return predictions, fold_metrics_df, summary
 
 
+def evaluate_external_holdout(
+    train_dataset: pd.DataFrame,
+    holdout_dataset: pd.DataFrame,
+    model_specs: dict[str, dict[str, list[str]]] | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, object]]:
+    """Fit frozen models on one corpus and score them on an external holdout corpus."""
+    model_specs = model_specs or PROSPECTIVE_MODEL_SPECS
+    prediction_frames: list[pd.DataFrame] = []
+    repo_metric_rows: list[dict[str, object]] = []
+    summary: dict[str, object] = {
+        "n_train_files": int(len(train_dataset)),
+        "n_train_pairs": int(train_dataset["pair_id"].nunique()) if not train_dataset.empty else 0,
+        "n_train_events": (
+            int(train_dataset["event_observation_id"].nunique())
+            if not train_dataset.empty and "event_observation_id" in train_dataset
+            else 0
+        ),
+        "n_train_repos": int(train_dataset["repo"].nunique()) if not train_dataset.empty else 0,
+        "n_holdout_files": int(len(holdout_dataset)),
+        "n_holdout_pairs": (
+            int(holdout_dataset["pair_id"].nunique()) if not holdout_dataset.empty else 0
+        ),
+        "n_holdout_events": (
+            int(holdout_dataset["event_observation_id"].nunique())
+            if not holdout_dataset.empty and "event_observation_id" in holdout_dataset
+            else 0
+        ),
+        "n_holdout_repos": int(holdout_dataset["repo"].nunique()) if not holdout_dataset.empty else 0,
+        "models": {},
+    }
+    if train_dataset.empty or holdout_dataset.empty:
+        return pd.DataFrame(), pd.DataFrame(), summary
+
+    for model_name, spec in model_specs.items():
+        feature_cols = spec["numeric"] + spec["categorical"]
+        pipeline = _build_pipeline(spec["numeric"], spec["categorical"])
+        pipeline.fit(train_dataset[feature_cols], train_dataset["label"])
+        y_score = pipeline.predict_proba(holdout_dataset[feature_cols])[:, 1]
+
+        pred = holdout_dataset[
+            ["pair_id", "repo", "snapshot_tag", "event_id", "label", "kind", "file_path"]
+        ].copy()
+        pred["model"] = model_name
+        pred["score"] = y_score
+        prediction_frames.append(pred)
+
+        overall = _score_predictions(holdout_dataset["label"], y_score)
+        overall["pairwise_accuracy"] = pairwise_accuracy(pred, "score")
+        summary["models"][model_name] = overall
+
+        for repo, group in pred.groupby("repo"):
+            metrics = _score_predictions(group["label"], group["score"].to_numpy())
+            metrics["pairwise_accuracy"] = pairwise_accuracy(group, "score")
+            metrics["model"] = model_name
+            metrics["repo"] = str(repo)
+            metrics["n_files"] = int(len(group))
+            metrics["n_pairs"] = int(group["pair_id"].nunique())
+            repo_metric_rows.append(metrics)
+
+    predictions = pd.concat(prediction_frames, ignore_index=True) if prediction_frames else pd.DataFrame()
+    repo_metrics = pd.DataFrame(repo_metric_rows)
+    return predictions, repo_metrics, summary
+
+
 def fit_repo_fixed_effect_models(dataset: pd.DataFrame) -> dict[str, object]:
     if dataset.empty or dataset["repo"].nunique() < 2 or dataset["label"].nunique() < 2:
         return {}

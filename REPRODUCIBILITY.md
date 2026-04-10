@@ -78,8 +78,11 @@ python -m experiments.e12_prospective_file_panel --config experiments/config.for
 python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 365 --lookback-years 10 --results-subdir e12_prospective_file_panel__curated15_h365_l10_t5
 python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --severity-band high_critical --results-subdir e12_prospective_file_panel__curated15_h730_l10_t5__high_critical
 python -m experiments.e12_prospective_file_panel --config experiments/config.forward_panel_curated.yaml --max-tags 5 --min-tag-gap-days 365 --horizon-days 365 --lookback-years 10 --severity-band high_critical --results-subdir e12_prospective_file_panel__curated15_h365_l10_t5__high_critical
-python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5
+python -m experiments.e13_prospective_label_audit --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --audit-input audit_full.csv --sample-size 120 --sampling stratified --stratify-by ground_truth_source --results-subdir e13_prospective_label_audit__curated15_h730_l10_t5__stratified120
 python -m experiments.e14_prospective_robustness --config experiments/config.forward_panel_curated.yaml --runs e12_prospective_file_panel__curated15_h365_l10_t5,e12_prospective_file_panel__curated15_h365_l10_t5__high_critical,e12_prospective_file_panel__curated15_h730_l10_t5,e12_prospective_file_panel__curated15_h730_l10_t5__high_critical --results-subdir e14_prospective_robustness__curated15
+python -m experiments.e15_negative_control_strict --config experiments/config.yaml --repos libxml2,openssh,sqlite,jq,zlib,nginx --security-e06-subdir e06_file_case_control__expanded_advisory_event --max-bugfix-commits 200 --results-subdir e15_negative_control_strict__expanded_advisory__light6
+python -m experiments.e12_prospective_file_panel --config experiments/config.external_holdout.yaml --repos pallets-flask,psf-requests --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5
+python -m experiments.e16_external_holdout --config experiments/config.forward_panel_curated.yaml --train-e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5 --holdout-e12-subdir e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5 --results-subdir e16_external_holdout__curated15_to_external_flask_requests
 ```
 
 Notes:
@@ -96,6 +99,8 @@ Notes:
 - `e12` depends on the screened forward-panel corpus, sufficiently deep local Git histories with usable release tags, and future advisory events that can be resolved to fixing commits and files in those local histories.
 - `e13` depends on an existing `e12` audit sample and is intended to estimate label precision conservatively rather than to certify every event observation in the full panel.
 - `e14` depends on completed `e12` runs with comparable matching settings and summarizes horizon/severity sensitivity across those runs.
+- `e15` depends on an existing `e06` security dataset and on local history mining for ordinary bug-fix controls under tighter same-subsystem and same-suffix matching rules.
+- `e16` depends on a frozen training `e12` dataset and a separately generated external-holdout `e12` dataset built with the same prospective feature construction.
 
 Focused forward-panel notes:
 
@@ -106,8 +111,10 @@ Focused forward-panel notes:
 - The prospective `e12_prospective_file_panel__curated15_h730_l10_t5` run uses the same fully observed two-year horizon and ten-year lookback window, but samples up to five release tags per repository to retain intermediate release windows with non-trivial future-event density.
 - The `e12` prospective study also supports severity-restricted outcomes through `--severity-band high_critical`; this currently retains events with severity information mapped to high or critical labels from NVD or OSV metadata.
 - The one-year `e12_prospective_file_panel__curated15_h365_l10_t5` run provides a shorter-horizon sensitivity check using the same release-sampling and matching design.
-- The `e13_prospective_label_audit__curated15_h730_l10_t5` audit currently reviews a 40-observation sample from the main `e12` run and reports reviewed event-to-commit and file-touch precision.
+- The `e13_prospective_label_audit__curated15_h730_l10_t5__stratified120` audit reviews a 120-observation sample from the main `e12` run, stratified by ground-truth source combination, and reports reviewed event-to-commit and file-touch precision by source class.
 - The `e14_prospective_robustness__curated15` summary compares one-year versus two-year horizons and all-severity versus high/critical-severity versions of the same prospective file-level design.
+- The `e15_negative_control_strict__expanded_advisory__light6` run tightens the negative-control design by requiring same-subsystem matches and nearly always same-suffix matches between security-fix files and ordinary bug-fix controls.
+- The `e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5` plus `e16_external_holdout__curated15_to_external_flask_requests` outputs provide a frozen external holdout based on repositories that are outside the curated prospective training corpus.
 
 ## Ground-Truth Policy Tiers
 

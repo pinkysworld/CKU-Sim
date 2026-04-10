@@ -34,7 +34,11 @@ Current contents:
 - `data/results/e12_prospective_file_panel__curated15_h365_l10_t5__high_critical/`: one-year prospective panel restricted to high/critical-severity future events
 - `data/results/e12_prospective_file_panel__curated15_h730_l10_t5__high_critical/`: two-year prospective panel restricted to high/critical-severity future events
 - `data/results/e13_prospective_label_audit__curated15_h730_l10_t5/`: reviewed audit sample and audit summaries for the main prospective file-level panel
+- `data/results/e13_prospective_label_audit__curated15_h730_l10_t5__stratified120/`: larger source-stratified audit sample and review summaries for the main prospective file-level panel
 - `data/results/e14_prospective_robustness__curated15/`: side-by-side horizon/severity robustness summaries for the prospective file-level panel
+- `data/results/e15_negative_control_strict__expanded_advisory__light6/`: stricter same-subsystem security-versus-bugfix matched comparison on the lighter six-repository subset
+- `data/results/e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5/`: external-holdout prospective panel for Flask and Requests using the frozen prospective specification
+- `data/results/e16_external_holdout__curated15_to_external_flask_requests/`: frozen train/test evaluation from the curated prospective corpus to the external Flask/Requests holdout
 
 The file-level outputs correspond to the following event definitions:
 
@@ -53,8 +57,12 @@ The `e11_large_corpus__filtered` outputs document a reproducible GitHub discover
 
 The `e12` outputs are the forward-looking file-level analogue of the earlier matched case-control study. They use release snapshots as pre-event baselines, label future file involvement from advisory-linked fixing events, and compare future-case files against matched untouched controls from the same snapshot. The `e12_prospective_file_panel__curated15_h730_l10_t5` run is the densest completed specification and retains up to five sampled release tags per repository within the fully observed ten-year window. The `high_critical` variants restrict future events to observations with severity metadata mapped to high or critical labels.
 
-The `e13_prospective_label_audit__curated15_h730_l10_t5` outputs summarize a reviewed sample from the main `e12` run. They are intended to estimate label quality conservatively by separating event-to-commit review from file-touch review and by preserving ambiguous cases rather than forcing binary confirmation.
+The `e13_prospective_label_audit__curated15_h730_l10_t5` outputs summarize the original reviewed sample from the main `e12` run. The `e13_prospective_label_audit__curated15_h730_l10_t5__stratified120` outputs extend that audit to a 120-observation source-stratified sample, making it possible to distinguish stronger explicit/reference-backed labels from `osv_range`-only mappings while preserving ambiguous cases rather than forcing binary confirmation.
 
 The `e14_prospective_robustness__curated15` outputs provide a compact comparison across one-year versus two-year horizons and all-severity versus high/critical-severity outcome definitions.
+
+The `e15_negative_control_strict__expanded_advisory__light6` outputs tighten the negative-control design by requiring nearly exact subsystem and suffix alignment between security-fix files and ordinary bug-fix controls before comparing opacity.
+
+The `e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5` and `e16_external_holdout__curated15_to_external_flask_requests` outputs provide a small but fully external check in which models are frozen on the curated `e12` corpus and evaluated unchanged on Flask and Requests.
 
 Readers who wish to regenerate the results should consult `REPRODUCIBILITY.md`.

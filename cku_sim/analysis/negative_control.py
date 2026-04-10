@@ -22,6 +22,7 @@ from cku_sim.analysis.file_level_case_control import (
     extract_security_ids,
 )
 from cku_sim.analysis.predictive_validation import evaluate_leave_one_repo_out
+from cku_sim.analysis.prospective_file_panel import _history_features_for_file
 from cku_sim.core.config import CorpusEntry
 
 logger = logging.getLogger(__name__)
@@ -60,6 +61,18 @@ META_REFERENCE_EXCLUDE_RE = re.compile(
 )
 
 
+def _subsystem_key(path_str: str, *, depth: int = 2) -> str:
+    parts = Path(path_str).parts[:-1]
+    if not parts:
+        return "<root>"
+    return "/".join(parts[: max(1, depth)])
+
+
+def _top_level_key(path_str: str) -> str:
+    parts = Path(path_str).parts[:-1]
+    return parts[0] if parts else "<root>"
+
+
 def build_security_file_dataset(pairs_df: pd.DataFrame) -> pd.DataFrame:
     """Project experiment-6 pairs onto the security-fix file side only."""
     rows: list[dict[str, object]] = []
@@ -79,6 +92,9 @@ def build_security_file_dataset(pairs_df: pd.DataFrame) -> pd.DataFrame:
                 "security_ids": row.get("cve_ids", ""),
                 "security_file": security_file,
                 "security_suffix": Path(security_file).suffix.lower(),
+                "security_directory_depth": max(0, len(Path(security_file).parts) - 1),
+                "security_subsystem_key": _subsystem_key(security_file),
+                "security_top_level_key": _top_level_key(security_file),
                 "security_loc": float(row["case_loc"]),
                 "security_size_bytes": float(row["case_size_bytes"]),
                 "security_ci_gzip": float(row["case_ci_gzip"]),
@@ -90,6 +106,57 @@ def build_security_file_dataset(pairs_df: pd.DataFrame) -> pd.DataFrame:
         )
 
     return pd.DataFrame(rows)
+
+
+def augment_security_file_dataset(
+    security_df: pd.DataFrame,
+    repo_paths: dict[str, Path],
+) -> pd.DataFrame:
+    """Attach historical context for stricter security-vs-bugfix matching."""
+    if security_df.empty:
+        return security_df
+
+    augmented = security_df.copy()
+    history_cache_by_repo: dict[str, dict[tuple[str, str], list[dict[str, object]]]] = defaultdict(dict)
+    prior_touches_total: list[float] = []
+    prior_touches_365d: list[float] = []
+    total_churn: list[float] = []
+    churn_365d: list[float] = []
+    file_age_days: list[float] = []
+
+    for _, row in augmented.iterrows():
+        repo = str(row["repo"])
+        repo_path = repo_paths.get(repo)
+        parent = str(row.get("security_parent") or "")
+        file_path = str(row["security_file"])
+        if repo_path is None or not parent:
+            prior_touches_total.append(math.nan)
+            prior_touches_365d.append(math.nan)
+            total_churn.append(math.nan)
+            churn_365d.append(math.nan)
+            file_age_days.append(math.nan)
+            continue
+
+        epoch = _get_commit_epoch(repo_path, str(row["security_commit"]))
+        history = _history_features_for_file(
+            repo_path,
+            parent,
+            epoch,
+            file_path,
+            history_cache_by_repo[repo],
+        )
+        prior_touches_total.append(float(history["prior_touches_total"]))
+        prior_touches_365d.append(float(history["prior_touches_365d"]))
+        total_churn.append(float(history["total_churn"]))
+        churn_365d.append(float(history["churn_365d"]))
+        file_age_days.append(float(history["file_age_days"]))
+
+    augmented["security_prior_touches_total"] = prior_touches_total
+    augmented["security_prior_touches_365d"] = prior_touches_365d
+    augmented["security_total_churn"] = total_churn
+    augmented["security_churn_365d"] = churn_365d
+    augmented["security_file_age_days"] = file_age_days
+    return augmented
 
 
 def collect_ordinary_bugfix_candidates(
@@ -110,6 +177,7 @@ def collect_ordinary_bugfix_candidates(
         return pd.DataFrame()
 
     snapshot_file_cache: dict[str, dict[str, dict[str, object]]] = {}
+    history_cache: dict[tuple[str, str], list[dict[str, object]]] = {}
     rows: list[dict[str, object]] = []
     accepted_commits = 0
 
@@ -162,6 +230,13 @@ def collect_ordinary_bugfix_candidates(
             file_info = files_at_parent.get(path_str)
             if file_info is None:
                 continue
+            history = _history_features_for_file(
+                repo_path,
+                parent,
+                epoch,
+                path_str,
+                history_cache,
+            )
             rows.append(
                 {
                     "repo": entry.name,
@@ -171,6 +246,15 @@ def collect_ordinary_bugfix_candidates(
                     "bugfix_file": path_str,
                     "bugfix_suffix": str(file_info["suffix"]),
                     "bugfix_size_bytes": int(file_info["size"]),
+                    "bugfix_directory_depth": max(0, len(Path(path_str).parts) - 1),
+                    "bugfix_subsystem_key": _subsystem_key(path_str),
+                    "bugfix_top_level_key": _top_level_key(path_str),
+                    "bugfix_loc": int(file_info.get("loc", 0) or 0),
+                    "bugfix_prior_touches_total": int(history["prior_touches_total"]),
+                    "bugfix_prior_touches_365d": int(history["prior_touches_365d"]),
+                    "bugfix_total_churn": int(history["total_churn"]),
+                    "bugfix_churn_365d": int(history["churn_365d"]),
+                    "bugfix_file_age_days": float(history["file_age_days"]),
                     "bugfix_epoch": epoch,
                 }
             )
@@ -192,44 +276,79 @@ def _match_one_bugfix_candidate(
     used_bugfix_keys: set[tuple[str, str]],
     *,
     min_loc: int,
+    require_same_suffix: bool = False,
+    require_same_subsystem: bool = False,
+    max_log_loc_gap: float | None = None,
+    max_log_touch_gap: float | None = None,
+    max_directory_depth_gap: int | None = None,
 ) -> tuple[dict[str, object], object] | None:
     security_suffix = str(security_row["security_suffix"])
     security_size = float(security_row["security_size_bytes"])
     security_epoch = int(security_row["security_epoch"])
+    security_loc = float(security_row.get("security_loc", 0.0) or 0.0)
+    security_subsystem = str(security_row.get("security_subsystem_key", ""))
+    security_top_level = str(security_row.get("security_top_level_key", ""))
+    security_depth = int(security_row.get("security_directory_depth", 0) or 0)
+    security_touches = float(security_row.get("security_prior_touches_total", 0.0) or 0.0)
 
-    same_suffix = [
-        item
-        for item in bugfix_pool
-        if item["bugfix_suffix"] == security_suffix
-        and (item["bugfix_commit"], item["bugfix_file"]) not in used_bugfix_keys
-    ]
-    fallback = [
+    available = [
         item
         for item in bugfix_pool
         if (item["bugfix_commit"], item["bugfix_file"]) not in used_bugfix_keys
     ]
 
-    for pool in (same_suffix, fallback):
-        if not pool:
+    filtered: list[dict[str, object]] = []
+    for candidate in available:
+        same_suffix = candidate["bugfix_suffix"] == security_suffix
+        same_subsystem = str(candidate.get("bugfix_subsystem_key", "")) == security_subsystem
+        if require_same_suffix and not same_suffix:
             continue
-        ranked = sorted(
-            pool,
-            key=lambda item: (
-                abs(math.log1p(float(item["bugfix_size_bytes"])) - math.log1p(security_size)),
-                abs(int(item["bugfix_epoch"]) - security_epoch),
-                str(item["bugfix_file"]),
-            ),
+        if require_same_subsystem and not same_subsystem:
+            continue
+
+        loc_gap = abs(math.log1p(float(candidate.get("bugfix_loc", 0.0) or 0.0)) - math.log1p(security_loc))
+        touch_gap = abs(
+            math.log1p(float(candidate.get("bugfix_prior_touches_total", 0.0) or 0.0))
+            - math.log1p(security_touches)
         )
-        for candidate in ranked:
-            metrics = _get_metrics_for_snapshot_file(
-                repo_path,
-                str(candidate["bugfix_parent"]),
-                str(candidate["bugfix_file"]),
-                metrics_cache,
-            )
-            if metrics is None or metrics.total_loc < min_loc:
-                continue
-            return candidate, metrics
+        depth_gap = abs(int(candidate.get("bugfix_directory_depth", 0) or 0) - security_depth)
+        if max_log_loc_gap is not None and loc_gap > max_log_loc_gap:
+            continue
+        if max_log_touch_gap is not None and touch_gap > max_log_touch_gap:
+            continue
+        if max_directory_depth_gap is not None and depth_gap > max_directory_depth_gap:
+            continue
+        filtered.append(candidate)
+
+    ranked = sorted(
+        filtered or available,
+        key=lambda item: (
+            str(item.get("bugfix_subsystem_key", "")) != security_subsystem,
+            str(item.get("bugfix_top_level_key", "")) != security_top_level,
+            item["bugfix_suffix"] != security_suffix,
+            abs(
+                int(item.get("bugfix_directory_depth", 0) or 0) - security_depth
+            ),
+            abs(math.log1p(float(item.get("bugfix_loc", 0.0) or 0.0)) - math.log1p(security_loc)),
+            abs(
+                math.log1p(float(item.get("bugfix_prior_touches_total", 0.0) or 0.0))
+                - math.log1p(security_touches)
+            ),
+            abs(math.log1p(float(item["bugfix_size_bytes"])) - math.log1p(security_size)),
+            abs(int(item["bugfix_epoch"]) - security_epoch),
+            str(item["bugfix_file"]),
+        ),
+    )
+    for candidate in ranked:
+        metrics = _get_metrics_for_snapshot_file(
+            repo_path,
+            str(candidate["bugfix_parent"]),
+            str(candidate["bugfix_file"]),
+            metrics_cache,
+        )
+        if metrics is None or metrics.total_loc < min_loc:
+            continue
+        return candidate, metrics
 
     return None
 
@@ -240,6 +359,11 @@ def match_security_to_bugfix_pairs(
     repo_paths: dict[str, Path],
     *,
     min_loc: int = 20,
+    require_same_suffix: bool = False,
+    require_same_subsystem: bool = False,
+    max_log_loc_gap: float | None = None,
+    max_log_touch_gap: float | None = None,
+    max_directory_depth_gap: int | None = None,
 ) -> pd.DataFrame:
     """Match security-fix files to conservative ordinary bug-fix files."""
     if security_df.empty or bugfix_candidate_df.empty:
@@ -284,6 +408,11 @@ def match_security_to_bugfix_pairs(
                 metrics_cache,
                 used_bugfix_keys,
                 min_loc=min_loc,
+                require_same_suffix=require_same_suffix,
+                require_same_subsystem=require_same_subsystem,
+                max_log_loc_gap=max_log_loc_gap,
+                max_log_touch_gap=max_log_touch_gap,
+                max_directory_depth_gap=max_directory_depth_gap,
             )
             if match is None:
                 continue
@@ -305,6 +434,14 @@ def match_security_to_bugfix_pairs(
                     "security_file": security_dict["security_file"],
                     "security_suffix": security_dict["security_suffix"],
                     "security_size_bytes": security_dict["security_size_bytes"],
+                    "security_directory_depth": security_dict.get("security_directory_depth"),
+                    "security_subsystem_key": security_dict.get("security_subsystem_key"),
+                    "security_top_level_key": security_dict.get("security_top_level_key"),
+                    "security_prior_touches_total": security_dict.get("security_prior_touches_total"),
+                    "security_prior_touches_365d": security_dict.get("security_prior_touches_365d"),
+                    "security_total_churn": security_dict.get("security_total_churn"),
+                    "security_churn_365d": security_dict.get("security_churn_365d"),
+                    "security_file_age_days": security_dict.get("security_file_age_days"),
                     "security_loc": security_dict["security_loc"],
                     "security_composite": security_dict["security_composite"],
                     "security_ci_gzip": security_dict["security_ci_gzip"],
@@ -317,8 +454,16 @@ def match_security_to_bugfix_pairs(
                     "bugfix_epoch": bugfix_row["bugfix_epoch"],
                     "bugfix_file": bugfix_row["bugfix_file"],
                     "bugfix_suffix": bugfix_row["bugfix_suffix"],
+                    "bugfix_directory_depth": bugfix_row.get("bugfix_directory_depth"),
+                    "bugfix_subsystem_key": bugfix_row.get("bugfix_subsystem_key"),
+                    "bugfix_top_level_key": bugfix_row.get("bugfix_top_level_key"),
                     "bugfix_size_bytes": bugfix_metrics.total_bytes,
                     "bugfix_loc": bugfix_metrics.total_loc,
+                    "bugfix_prior_touches_total": bugfix_row.get("bugfix_prior_touches_total"),
+                    "bugfix_prior_touches_365d": bugfix_row.get("bugfix_prior_touches_365d"),
+                    "bugfix_total_churn": bugfix_row.get("bugfix_total_churn"),
+                    "bugfix_churn_365d": bugfix_row.get("bugfix_churn_365d"),
+                    "bugfix_file_age_days": bugfix_row.get("bugfix_file_age_days"),
                     "bugfix_composite": bugfix_metrics.composite_score,
                     "bugfix_ci_gzip": bugfix_metrics.ci_gzip,
                     "bugfix_entropy": bugfix_metrics.shannon_entropy,
@@ -328,6 +473,17 @@ def match_security_to_bugfix_pairs(
                         float(security_dict["security_loc"]) / bugfix_metrics.total_loc
                         if bugfix_metrics.total_loc
                         else math.nan
+                    ),
+                    "same_suffix_match": int(
+                        str(security_dict["security_suffix"]) == str(bugfix_row.get("bugfix_suffix"))
+                    ),
+                    "same_subsystem_match": int(
+                        str(security_dict.get("security_subsystem_key", ""))
+                        == str(bugfix_row.get("bugfix_subsystem_key", ""))
+                    ),
+                    "same_top_level_match": int(
+                        str(security_dict.get("security_top_level_key", ""))
+                        == str(bugfix_row.get("bugfix_top_level_key", ""))
                     ),
                     "delta_composite": (
                         float(security_dict["security_composite"]) - bugfix_metrics.composite_score
@@ -344,6 +500,10 @@ def match_security_to_bugfix_pairs(
                     ),
                     "delta_halstead": (
                         float(security_dict["security_halstead"]) - bugfix_metrics.halstead_volume
+                    ),
+                    "delta_log_prior_touches_total": (
+                        math.log1p(float(security_dict.get("security_prior_touches_total", 0.0) or 0.0))
+                        - math.log1p(float(bugfix_row.get("bugfix_prior_touches_total", 0.0) or 0.0))
                     ),
                 }
             )
@@ -379,6 +539,16 @@ def summarise_negative_control_pairs(pairs: pd.DataFrame) -> dict[str, object]:
         "mean_bugfix_loc": float(pairs["bugfix_loc"].mean()),
         "median_loc_ratio": float(pairs["loc_ratio"].median()),
     }
+    if "same_suffix_match" in pairs.columns:
+        summary["same_suffix_share"] = float(pairs["same_suffix_match"].mean())
+    if "same_subsystem_match" in pairs.columns:
+        summary["same_subsystem_share"] = float(pairs["same_subsystem_match"].mean())
+    if "same_top_level_match" in pairs.columns:
+        summary["same_top_level_share"] = float(pairs["same_top_level_match"].mean())
+    if "delta_log_prior_touches_total" in pairs.columns:
+        summary["median_delta_log_prior_touches_total"] = float(
+            pairs["delta_log_prior_touches_total"].median()
+        )
     if "security_ground_truth_policy" in pairs.columns:
         summary["security_ground_truth_policy"] = str(
             pairs["security_ground_truth_policy"].iloc[0]

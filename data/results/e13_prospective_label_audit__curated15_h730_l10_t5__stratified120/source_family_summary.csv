@@ -1,0 +1,8 @@
+source_family,n_reviewed,overall_accept,overall_ambiguous,overall_reject,event_accept,file_accept,case_file_touch_confirmed_rate
+explicit_only,24,21,3,0,24,21,1.0
+explicit_plus_range,40,35,5,0,40,35,1.0
+explicit_plus_reference,1,1,0,0,1,1,1.0
+explicit_plus_reference_plus_range,11,10,1,0,11,10,1.0
+range_only,23,0,23,0,0,20,1.0
+reference_only,3,2,1,0,3,2,1.0
+reference_plus_range,18,17,1,0,18,17,1.0

@@ -164,10 +164,23 @@ def main() -> None:
         return
 
     dataset = build_prospective_prediction_dataset(pairs_df)
-    predictions_df, fold_metrics_df, prediction_summary = evaluate_leave_one_repo_out(dataset)
+    if dataset["repo"].nunique() >= 2:
+        predictions_df, fold_metrics_df, prediction_summary = evaluate_leave_one_repo_out(dataset)
+    else:
+        predictions_df = pd.DataFrame()
+        fold_metrics_df = pd.DataFrame()
+        prediction_summary = {
+            "note": "Leave-one-repository-out evaluation requires at least two repositories."
+        }
     repo_summary_df = summarise_repo_pairs(pairs_df)
     pair_summary = summarise_prospective_pairs(pairs_df)
-    fixed_effects = fit_repo_fixed_effect_models(dataset)
+    fixed_effects = (
+        fit_repo_fixed_effect_models(dataset)
+        if dataset["repo"].nunique() >= 2
+        else {
+            "note": "Repository fixed-effects estimation requires at least two repositories."
+        }
+    )
     audit_sample_df = sample_audit_rows(
         audit_df,
         sample_size=args.audit_sample_size,

@@ -1,0 +1,10 @@
+ground_truth_source,n_reviewed,overall_accept,overall_ambiguous,overall_reject,event_accept,file_accept,case_file_touch_confirmed_rate
+explicit_id,24,21,3,0,24,21,1.0
+explicit_id+nvd_ref,1,1,0,0,1,1,1.0
+explicit_id+nvd_ref+osv_range+osv_ref,9,8,1,0,9,8,1.0
+explicit_id+osv_range,40,35,5,0,40,35,1.0
+explicit_id+osv_range+osv_ref,2,2,0,0,2,2,1.0
+nvd_ref,3,2,1,0,3,2,1.0
+nvd_ref+osv_range+osv_ref,14,14,0,0,14,14,1.0
+osv_range,23,0,23,0,0,20,1.0
+osv_range+osv_ref,4,3,1,0,4,3,1.0

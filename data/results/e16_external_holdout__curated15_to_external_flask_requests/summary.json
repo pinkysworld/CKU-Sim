@@ -1,0 +1,42 @@
+{
+  "n_train_files": 528,
+  "n_train_pairs": 264,
+  "n_train_events": 160,
+  "n_train_repos": 12,
+  "n_holdout_files": 8,
+  "n_holdout_pairs": 4,
+  "n_holdout_events": 3,
+  "n_holdout_repos": 2,
+  "models": {
+    "baseline_size": {
+      "roc_auc": 0.5,
+      "average_precision": 0.5666666666666667,
+      "brier_score": 0.25750608692121907,
+      "log_loss": 0.7082425905934077,
+      "pairwise_accuracy": 0.5
+    },
+    "baseline_history": {
+      "roc_auc": 0.4375,
+      "average_precision": 0.525,
+      "brier_score": 0.2526680165177727,
+      "log_loss": 0.6984850713060284,
+      "pairwise_accuracy": 0.5
+    },
+    "baseline_history_plus_structure": {
+      "roc_auc": 0.1875,
+      "average_precision": 0.4125,
+      "brier_score": 0.2567244736104082,
+      "log_loss": 0.7066157881604039,
+      "pairwise_accuracy": 0.25
+    },
+    "baseline_plus_composite": {
+      "roc_auc": 0.4375,
+      "average_precision": 0.5011904761904762,
+      "brier_score": 0.27565848358478684,
+      "log_loss": 0.7454676375546999,
+      "pairwise_accuracy": 0.5
+    }
+  },
+  "train_e12_subdir": "e12_prospective_file_panel__curated15_h730_l10_t5",
+  "holdout_e12_subdir": "e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5"
+}

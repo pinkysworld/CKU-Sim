@@ -1,0 +1,137 @@
+{
+  "n_reviewed": 120,
+  "overall_review": {
+    "accept": 86,
+    "ambiguous": 34,
+    "reject": 0
+  },
+  "event_commit_review": {
+    "accept": 97,
+    "ambiguous": 23,
+    "reject": 0
+  },
+  "file_review": {
+    "accept": 106,
+    "ambiguous": 14,
+    "reject": 0
+  },
+  "overall_accept_rate": 0.7166666666666667,
+  "overall_non_reject_rate": 1.0,
+  "event_commit_accept_rate": 0.8083333333333333,
+  "event_commit_non_reject_rate": 1.0,
+  "file_accept_rate": 0.8833333333333333,
+  "file_non_reject_rate": 1.0,
+  "case_file_touch_confirmed_rate": 1.0,
+  "source_breakdown": {
+    "explicit_id+osv_range": 40,
+    "explicit_id": 24,
+    "osv_range": 23,
+    "nvd_ref+osv_range+osv_ref": 14,
+    "explicit_id+nvd_ref+osv_range+osv_ref": 9,
+    "osv_range+osv_ref": 4,
+    "nvd_ref": 3,
+    "explicit_id+osv_range+osv_ref": 2,
+    "explicit_id+nvd_ref": 1
+  },
+  "source_family_breakdown": {
+    "explicit_plus_range": 40,
+    "explicit_only": 24,
+    "range_only": 23,
+    "reference_plus_range": 18,
+    "explicit_plus_reference_plus_range": 11,
+    "reference_only": 3,
+    "explicit_plus_reference": 1
+  },
+  "overall_by_source": [
+    {
+      "ground_truth_source": "explicit_id",
+      "accept": 21,
+      "ambiguous": 3
+    },
+    {
+      "ground_truth_source": "explicit_id+nvd_ref",
+      "accept": 1,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "explicit_id+nvd_ref+osv_range+osv_ref",
+      "accept": 8,
+      "ambiguous": 1
+    },
+    {
+      "ground_truth_source": "explicit_id+osv_range",
+      "accept": 35,
+      "ambiguous": 5
+    },
+    {
+      "ground_truth_source": "explicit_id+osv_range+osv_ref",
+      "accept": 2,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "nvd_ref",
+      "accept": 2,
+      "ambiguous": 1
+    },
+    {
+      "ground_truth_source": "nvd_ref+osv_range+osv_ref",
+      "accept": 14,
+      "ambiguous": 0
+    },
+    {
+      "ground_truth_source": "osv_range",
+      "accept": 0,
+      "ambiguous": 23
+    },
+    {
+      "ground_truth_source": "osv_range+osv_ref",
+      "accept": 3,
+      "ambiguous": 1
+    }
+  ],
+  "overall_by_source_family": [
+    {
+      "source_family": "explicit_only",
+      "accept": 21,
+      "ambiguous": 3
+    },
+    {
+      "source_family": "explicit_plus_range",
+      "accept": 35,
+      "ambiguous": 5
+    },
+    {
+      "source_family": "explicit_plus_reference",
+      "accept": 1,
+      "ambiguous": 0
+    },
+    {
+      "source_family": "explicit_plus_reference_plus_range",
+      "accept": 10,
+      "ambiguous": 1
+    },
+    {
+      "source_family": "range_only",
+      "accept": 0,
+      "ambiguous": 23
+    },
+    {
+      "source_family": "reference_only",
+      "accept": 2,
+      "ambiguous": 1
+    },
+    {
+      "source_family": "reference_plus_range",
+      "accept": 17,
+      "ambiguous": 1
+    }
+  ],
+  "sampling": {
+    "strategy": "stratified",
+    "audit_input": "audit_full.csv",
+    "requested_sample_size": 120,
+    "realised_sample_size": 120,
+    "stratify_by": "ground_truth_source",
+    "random_seed": 42
+  }
+}

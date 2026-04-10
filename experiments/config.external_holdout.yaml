@@ -1,0 +1,107 @@
+# External holdout configuration for frozen prospective validation.
+
+data_dir: "data"
+
+nvd_api_key: null
+nvd_rate_limit: 6.0
+osv_rate_limit: 0.1
+osv_query_batch_size: 100
+
+compression_algorithms:
+  - gzip
+  - lzma
+  - zstd
+
+composite_weights:
+  compressibility: 0.35
+  entropy: 0.25
+  cyclomatic_density: 0.25
+  halstead_volume: 0.15
+
+monte_carlo_runs: 10000
+random_seed: 42
+portfolio_size: 100
+
+corpus:
+  - name: fastapi-fastapi
+    git_url: https://github.com/fastapi/fastapi.git
+    category: expanded
+    full_name: fastapi/fastapi
+    primary_language: Python
+    stars: 96996
+    source_extensions:
+      - .py
+
+  - name: scrapy-scrapy
+    git_url: https://github.com/scrapy/scrapy.git
+    category: expanded
+    full_name: scrapy/scrapy
+    primary_language: Python
+    stars: 56672
+    source_extensions:
+      - .py
+
+  - name: prometheus-prometheus
+    git_url: https://github.com/prometheus/prometheus.git
+    category: expanded
+    full_name: prometheus/prometheus
+    primary_language: Go
+    stars: 60535
+    source_extensions:
+      - .go
+
+  - name: caddyserver-caddy
+    git_url: https://github.com/caddyserver/caddy.git
+    category: expanded
+    full_name: caddyserver/caddy
+    primary_language: Go
+    stars: 65824
+    source_extensions:
+      - .go
+
+  - name: spring-projects-spring-framework
+    git_url: https://github.com/spring-projects/spring-framework.git
+    category: expanded
+    full_name: spring-projects/spring-framework
+    primary_language: Java
+    stars: 59771
+    source_extensions:
+      - .java
+
+  - name: python-cpython
+    git_url: https://github.com/python/cpython.git
+    category: expanded
+    full_name: python/cpython
+    primary_language: Python
+    stars: 68213
+    source_extensions:
+      - .py
+      - .c
+      - .h
+
+  - name: django-django
+    git_url: https://github.com/django/django.git
+    category: expanded
+    full_name: django/django
+    primary_language: Python
+    stars: 87222
+    source_extensions:
+      - .py
+
+  - name: pallets-flask
+    git_url: https://github.com/pallets/flask.git
+    category: expanded
+    full_name: pallets/flask
+    primary_language: Python
+    stars: 71390
+    source_extensions:
+      - .py
+
+  - name: psf-requests
+    git_url: https://github.com/psf/requests.git
+    category: expanded
+    full_name: psf/requests
+    primary_language: Python
+    stars: 53871
+    source_extensions:
+      - .py
