@@ -85,6 +85,7 @@ python -m experiments.e15_negative_control_strict --config experiments/config.ya
 python -m experiments.e17_bugfix_control_audit --config experiments/config.yaml --e15-subdir e15_negative_control_strict__expanded_advisory__light6 --results-subdir e17_bugfix_control_audit__e15_light6
 python -m experiments.e12_prospective_file_panel --config experiments/config.external_holdout.yaml --repos django-django,pallets-flask,psf-requests,fastapi-fastapi,scrapy-scrapy --ground-truth-policy supported_advisory_plus_explicit --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__external_python5_h730_l10_t5__supported
 python -m experiments.e16_external_holdout --config experiments/config.forward_panel_curated.yaml --train-e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5__supported --holdout-e12-subdir e12_prospective_file_panel__external_python5_h730_l10_t5__supported --results-subdir e16_external_holdout__supported_to_external_python5
+python -m experiments.e18_quantification_limits --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5__supported --results-subdir e18_quantification_limits__curated15_h730_l10_t5__supported --n-bootstrap 1000
 ```
 
 Notes:
@@ -104,6 +105,7 @@ Notes:
 - `e15` depends on an existing `e06` security dataset and on local history mining for ordinary bug-fix controls under tighter same-subsystem and same-suffix matching rules.
 - `e16` depends on a frozen training `e12` dataset and a separately generated external-holdout `e12` dataset built with the same prospective feature construction.
 - `e17` depends on an existing `e15` strict negative-control run and screens the matched ordinary bug-fix controls for residual security-related message signals.
+- `e18` depends on an existing `e12` prospective panel that already includes leave-one-repository-out held-out predictions for each model specification.
 
 Focused forward-panel notes:
 
@@ -120,6 +122,7 @@ Focused forward-panel notes:
 - The `e15_negative_control_strict__expanded_advisory__light6` run tightens the negative-control design by requiring same-subsystem matches and nearly always same-suffix matches between security-fix files and ordinary bug-fix controls.
 - The `e12_prospective_file_panel__external_python5_h730_l10_t5__supported` plus `e16_external_holdout__supported_to_external_python5` outputs provide a frozen external holdout based on screened repositories that are outside the curated prospective training corpus.
 - The `e17_bugfix_control_audit__e15_light6` audit screens the ordinary bug-fix controls used in the strict negative-control comparison.
+- The `e18_quantification_limits__curated15_h730_l10_t5__supported` diagnostics use the supported-source `e12` run as input and summarize calibration, forecast error, and cross-model score dispersion by opacity quartile with cluster-bootstrap high-versus-low comparisons.
 
 ## Ground-Truth Policy Tiers
 

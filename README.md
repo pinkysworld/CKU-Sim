@@ -8,7 +8,7 @@ The repository implements a measurement and simulation workflow for structural o
 
 ## Scope
 
-The codebase supports seventeen experiment families:
+The codebase supports eighteen experiment families:
 
 1. Synthetic opacity separation.
 2. Structural opacity measurement across a curated software corpus.
@@ -27,6 +27,7 @@ The codebase supports seventeen experiment families:
 15. Strict negative-control comparison between security-fix files and tightly matched ordinary bug-fix files.
 16. Frozen external-holdout validation using an out-of-corpus prospective file-level panel.
 17. Screening audit for the ordinary bug-fix controls used in the strict negative-control comparison.
+18. Calibration and cross-model disagreement diagnostics for the prospective file-level panel.
 
 ## Repository Contents
 
@@ -91,6 +92,7 @@ python -m experiments.e15_negative_control_strict --config experiments/config.ya
 python -m experiments.e17_bugfix_control_audit --config experiments/config.yaml --e15-subdir e15_negative_control_strict__expanded_advisory__light6 --results-subdir e17_bugfix_control_audit__e15_light6
 python -m experiments.e12_prospective_file_panel --config experiments/config.external_holdout.yaml --repos django-django,pallets-flask,psf-requests,fastapi-fastapi,scrapy-scrapy --ground-truth-policy supported_advisory_plus_explicit --max-tags 5 --min-tag-gap-days 365 --horizon-days 730 --lookback-years 10 --results-subdir e12_prospective_file_panel__external_python5_h730_l10_t5__supported
 python -m experiments.e16_external_holdout --config experiments/config.forward_panel_curated.yaml --train-e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5__supported --holdout-e12-subdir e12_prospective_file_panel__external_python5_h730_l10_t5__supported --results-subdir e16_external_holdout__supported_to_external_python5
+python -m experiments.e18_quantification_limits --config experiments/config.forward_panel_curated.yaml --e12-subdir e12_prospective_file_panel__curated15_h730_l10_t5__supported --results-subdir e18_quantification_limits__curated15_h730_l10_t5__supported --n-bootstrap 1000
 ```
 
 For the file-level analyses, the event-definition variants are:
@@ -142,6 +144,7 @@ The repository ships with generated outputs under `data/results/`:
 - `e16_external_holdout__curated15_to_external_flask_requests`: frozen train/test validation from the curated prospective panel to the external Flask/Requests holdout.
 - `e16_external_holdout__supported_to_external_python5`: frozen train/test validation from the supported-source prospective panel to the screened external Python holdout.
 - `e17_bugfix_control_audit__e15_light6`: screening audit for the ordinary bug-fix controls used in the strict negative-control run.
+- `e18_quantification_limits__curated15_h730_l10_t5__supported`: calibration, forecast-error, and cross-model disagreement diagnostics for the supported-source prospective panel.
 
 ## Reproducibility Notes
 
@@ -166,6 +169,7 @@ The repository ships with generated outputs under `data/results/`:
 - The strict `e15_negative_control_strict__expanded_advisory__light6` design requires same-subsystem and almost always same-suffix matches between security-fix files and ordinary bug-fix controls.
 - The `e16_external_holdout__curated15_to_external_flask_requests` outputs freeze models on the curated `e12` corpus and score them unchanged on an external two-repository holdout.
 - The `e17_bugfix_control_audit__e15_light6` outputs screen the ordinary bug-fix controls used in the strict negative-control analysis for residual security-related message signals.
+- The `e18_quantification_limits__curated15_h730_l10_t5__supported` outputs merge the supported-source `e12` held-out predictions with file-level opacity strata in order to compare calibration, forecast error, and cross-model score dispersion across low- and high-opacity quartiles.
 - The large-corpus builder is a reproducible discovery tool for follow-on studies, not a substitute for final substantive curation of a publication corpus.
 
 Additional procedural details are documented in `REPRODUCIBILITY.md`.

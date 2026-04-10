@@ -1,0 +1,626 @@
+repo,bugfix_commit,bugfix_subject,bugfix_file,matched_security_event_id,matched_security_commit,matched_security_file,bugfix_file_in_changed_files,changed_source_files_count,changed_source_files_sample,commit_message_full,has_security_ids,has_security_keyword_signal,has_security_adjacent_signal,review_decision,review_notes
+jq,0673dee1b38db5d49ae3f8cda0ba53fa4021c3ba,Fix destructuring alternation,src/execute.c,CVE-2024-23337,de21386681c0df0104a99d9d09db23a9b2a78b1e,src/jv.c,1,3,src/compile.c;src/execute.c;src/opcode_list.h,"Fix destructuring alternation
+
+Attempting to use the existing FORK_OPT opcode resulted in difficulty
+knowing when to pop an error message off the stack and when not to. This
+commit makes DESTRUCTURE_ALT a real opcode that is identical to
+FORK_OPT, except for never pushing the error message onto the stack when
+continuing from an error backtrack.
+
+Some small changes were necessary to the DUP/POP behavior surrounding
+destructuring to accomodate this.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,0f80921268edcc3d502e6d84612ba71fed6b0947,Fix constant folding of division and reminder with zero divisor,src/compile.c,CVE-2024-53427,a09a4dfd55e6c24d04b35062ccfe4509748b1dd3,src/jv.c,1,4,src/builtin.c;src/compile.c;src/compile.h;src/parser.c,"Fix constant folding of division and reminder with zero divisor
+
+Previously constant folding of zero division (e.x. 1/0) produces a
+compile error. This was incorrectly implemented by checking if the
+division result is infinite, so produces wrong results compared to the
+query where no constant folding is processed (e.x. 1e308/0.1). This
+patch delays the operation when the divisor is zero. This makes the
+results more consistent, but changes the exit code on zero division from
+3 to 5. Also 0/0 now produces the zero division error, not NaN.
+
+This patch also fixes the modulo operation. Previously constant folding
+logic does not take care of the % operator, but now it folds if the both
+dividend and divisor are safe numbers to cast to the integer type, and
+the divisor is not zero. This patch also fixes some code that relies on
+undefined cast behaviors in C. The modulo operation produces NaN if
+either the dividend or divisor is NaN.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,34182cca7babec086bbc93dec209275be896ca9e,Fix Windows build for 1.7 release (pthread stuff),src/jv_dtoa_tsd.c,OSV-2024-330,6ce6e7c71355a0b6006e9e3371364f6945da5a29,src/decNumber/decNumber.c,1,3,src/jv.c;src/jv_dtoa_tsd.c;src/jv_thread.h,Fix Windows build for 1.7 release (pthread stuff),0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,4e3088f1888f367ce744d830423848d15a03f5d0,Fix behavior of `--slurp --stream` when input has no trailing newline character (#3279),src/util.c,CVE-2024-23337,de21386681c0df0104a99d9d09db23a9b2a78b1e,src/jv_aux.c,1,1,src/util.c,"Fix behavior of `--slurp --stream` when input has no trailing newline character (#3279)
+
+This commit fixes a strange behavior of the combination of `--slurp` and
+`--stream` flags when the input has no trailing newline character.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,695830c453113ea4cf6b62c76046945ac24b0296,Fix year 2038 problem on 32-bit platforms (fix #3369) (#3407),src/builtin.c,CVE-2025-49014,499c91bca9d4d027833bc62787d1bb075c03680e,src/builtin.c,1,1,src/builtin.c,Fix year 2038 problem on 32-bit platforms (fix #3369) (#3407),0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,750dbe723b29b2023b83489af9683f4fe8a40cbe,Fix memory leaks and double frees (#3487),src/execute.c,GHSA-GF4G-95WJ-4Q4R,3985b80ce50bd75c6eb5a97cb3348c3f835ca8e0,src/execute.c,1,6,src/execute.c;src/jv.c;src/jv_aux.c;src/jv_file.c;src/linker.c;src/main.c,Fix memory leaks and double frees (#3487),0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,8001955fb76f784480fba3300fea602012ee9446,Fix memory leak in libm cfunctions,src/builtin.c,GHSA-F946-J5J2-4W5M,5e159b34b179417e3e0404108190a2ac7d65611c,src/main.c,1,1,src/builtin.c,Fix memory leak in libm cfunctions,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,8537b93a4301ecac98fb7dad92bba9cfd17a1f37,Fix block flipping in block_drop_unreferenced,src/compile.c,CVE-2023-50268,c9a51565214eece8f1053089739aea73145bfd6b,src/jv.c,1,1,src/compile.c,"Fix block flipping in block_drop_unreferenced
+
+Since 605bfb3, block_drop_unreferenced actually reverses the order of
+instructions in the block it's run against. This bug was hidden by the
+fact that normally it's run *twice* against the main program, flipping
+it back, and that order of function definitionss doesn't really matter
+after symbol resolution.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,860af44fee7dcea8797daeb836a9b7c971c67e65,Fix typos (#3173),src/jv.c,CVE-2023-50246,71c2ab509a8628dbbad4bc7b3f98a64aa90d3297,src/jv.c,1,1,src/jv.c,Fix typos (#3173),0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,a03ae02f4489e35cc874bb529570092414eee729,Fix memory leak,src/execute.c,OSV-2023-1329,b86ff49f46a4a37e5a8e75a140cb5fd6e1331384,src/jv.c,1,1,src/execute.c,Fix memory leak,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,a8ce2ff09af51b39be0d76091e6117caccd1b5c0,Avoid zero-length `calloc` (#3280),src/jv_aux.c,OSV-2024-330,6ce6e7c71355a0b6006e9e3371364f6945da5a29,src/util.c,1,5,src/builtin.c;src/compile.c;src/jv_alloc.c;src/jv_alloc.h;src/jv_aux.c,"Avoid zero-length `calloc` (#3280)
+
+Using `calloc` function with a count of zero elements is implementation
+defined and it may cause allocation errors on some platforms (ref #3277).
+This commit fixes `jv_mem_calloc` callers to avoid undefined behavior.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,cec6b0f34603edc5cd12db1f63dacdf547b4bb4a,Fix crashes and resource leaks in `jq_testsuite` (#3509),src/jq_test.c,GHSA-GF4G-95WJ-4Q4R,3985b80ce50bd75c6eb5a97cb3348c3f835ca8e0,src/jq_test.c,1,1,src/jq_test.c,"Fix crashes and resource leaks in `jq_testsuite` (#3509)
+
+- Fix segfault when --skip/--take is the last argument.
+- Fix FILE handle leak: opened test files were never closed.
+- Support running multiple test files in one invocation.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,dd4cec664cd2a45921189fab2a938a4966191a31,fix memory leak,src/execute.c,OSV-2025-363,c6e041699d8cd31b97375a2596217aff2cfca85b,src/jv.c,1,1,src/execute.c,fix memory leak,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,df95871dd7415627bda6d70ce0569d0a4fbc22c6,"Fix leak on too-large programs, OSS Fuzz issue 61349",src/compile.c,CVE-2025-48060,c6e041699d8cd31b97375a2596217aff2cfca85b,src/jv.c,1,1,src/compile.c,"Fix leak on too-large programs, OSS Fuzz issue 61349
+
+A very large program can cause these leaks:
+
+  ==758838== 7,820 (16 direct, 7,804 indirect) bytes in 2 blocks are definitely lost in loss record 17 of 28
+  ==758838==    at 0x4848A23: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+  ==758838==    by 0x125D30: jv_mem_calloc (jv_alloc.c:153)
+  ==758838==    by 0x162ADE: compile (compile.c:1286)
+  ==758838==    by 0x162D4B: compile (compile.c:1304)
+  ==758838==    by 0x163697: block_compile (compile.c:1381)
+  ==758838==    by 0x11B5CA: jq_compile_args (execute.c:1245)
+  ==758838==    by 0x115E20: main (main.c:691)
+  ==758838==
+  ==758838== 1,674,694 (103,576 direct, 1,571,118 indirect) bytes in 1,177 blocks are definitely lost in loss record 28 of 28
+  ==758838==    at 0x4843839: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+  ==758838==    by 0x125CD0: jv_mem_alloc (jv_alloc.c:141)
+  ==758838==    by 0x162B19: compile (compile.c:1289)
+  ==758838==    by 0x163697: block_compile (compile.c:1381)
+  ==758838==    by 0x11B5CA: jq_compile_args (execute.c:1245)
+  ==758838==    by 0x115E20: main (main.c:691)
+
+This commit fixes that.
+
+Fixes https://bugs.chromium.org/p/oss-fuzz/issues/detail?id=61349",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+jq,fa3733cc4c001106847d2591f00abd401ce3e940,fix typos,src/decNumber/decNumberLocal.h,OSV-2024-330,6ce6e7c71355a0b6006e9e3371364f6945da5a29,src/decNumber/decBasic.c,1,2,src/builtin.c;src/decNumber/decNumberLocal.h,fix typos,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,041789d9ec5a0f592e200bcb7313d88ff14707e4,malloc-fail: Fix null deref in htmlnamePush,HTMLparser.c,CVE-2016-5131,9ab01a277d71f54d3143c2cf333c5c2e9aaedd9e,xpath.c,1,1,HTMLparser.c,"malloc-fail: Fix null deref in htmlnamePush
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,08a6a0848e3f440aa946fa8a6135d42339fedc61,Fix previous commit,catalog.c,CVE-2022-40304,1b41ec4e9433b05bb0376be4725804c54ef1d80b,entities.c,1,1,catalog.c,Fix previous commit,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,0a890066aefe4f28af086a77bd5de000ecc1ac74,Fix initGenericErrorDefaultFunc(NULL),include/libxml/xmlerror.h,CVE-2008-3281,4bf899bf1b719d692be407b89f6610103f13bd5d,include/libxml/parser.h,1,1,include/libxml/xmlerror.h,"Fix initGenericErrorDefaultFunc(NULL)
+
+Calling initGenericErrorDefaultFunc(NULL) currently yields to
+
+/usr/include/libxml2/libxml/xmlerror.h:23:45: error: invalid use of void expression
+   23 |     xmlSetGenericErrorFunc(NULL, (h) ? *(h) : NULL)
+
+Indeed, even if h is nul, the compiler will try to give a type to *(h),
+which can't work.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,0bac84b1bd6172000eb0e5d3543457f6eb6ef109,Add missing NULL checks to public API functions,schematron.c,CVE-2025-6170,069bcda17d8194e9582c64dd4bc9dac99b015810,shell.c,1,4,parser.c;schematron.c;xmlreader.c;xpath.c,Add missing NULL checks to public API functions,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,0bef170486223f5da754b2104773cc332a079ada,c14n: Fix memory leak after malloc failure,c14n.c,CVE-2023-29469,09a2dd453007f9c7205274623acdd73747c22d64,dict.c,1,1,c14n.c,c14n: Fix memory leak after malloc failure,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,0c56eb8215bea9e8e4aa934e45c677e6e132cf68,tree: Restore return value of xmlNodeListGetString with NULL list,tree.c,CVE-2014-0191,dd8367da17c2948981a51e52c8a6beb445edf825,parser.c,1,4,fuzz/api.c;tree.c;valid.c;xmlreader.c,"tree: Restore return value of xmlNodeListGetString with NULL list
+
+When passing a NULL list to xmlNodeListGetString or
+xmlNodeListGetRawString, return NULL instead of """" to match the old
+behavior.
+
+Fixes #783.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,1a865567d4910a4d4a0ea476aadc15d3e8ec9d27,Remove redundant NULL check on cur,tree.c,CVE-2017-9049,e26630548e7d138d2c560844c43820b6767251e3,parser.c,1,1,tree.c,"Remove redundant NULL check on cur
+
+This variable is already NULL checked in the previous if condition.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,1aabc9db40dc5ec1f8f22c09e74c63dda53f7ed6,malloc-fail: Fix null deref in xmlBufResize,buf.c,CVE-2018-14567,2240fbf5912054af025fb6e01e26375100275e74,xzlib.c,1,1,buf.c,"malloc-fail: Fix null deref in xmlBufResize
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,1e1731a43d2950b6717a5bc0d3bb6efe03595c47,valid: Add NULL check in xmlCtxtValidateDtd,valid.c,CVE-2025-32415,487ee1d8711c6415218b373ef455fcd969d12399,xmlschemas.c,1,1,valid.c,valid: Add NULL check in xmlCtxtValidateDtd,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,1e6b17b8348f9b8d485febaf410d2c419d254924,parser: Fix regression parsing standalone declarations,testparser.c,CVE-2015-8035,f0709e3ca8f8947f2d91ed34e92e38a4c23eae63,xzlib.c,1,2,parser.c;testparser.c,"parser: Fix regression parsing standalone declarations
+
+Fix parsing of standalone declarations if an encoding was provided.
+
+Fixes #661.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,250faf3c832d998baa559ca1a1c61935235aba20,parser: Fix regression in xmlParserNodeInfo accounting,SAX2.c,CVE-2017-9048,932cc9896ab41475d4aa429c27d9afd175959d74,valid.c,1,2,SAX2.c;parser.c,"parser: Fix regression in xmlParserNodeInfo accounting
+
+Commit 62150ed2 broke begin_pos and begin_line when extra node info was
+recorded.
+
+Fixes #523.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,276652006218c281527b30ae56d00af4f80f7304,Remove redundant NULL check on cur,tree.c,CVE-2017-9050,e26630548e7d138d2c560844c43820b6767251e3,parser.c,1,1,tree.c,"Remove redundant NULL check on cur
+
+cur = node, and node cannot be NULL as it is checked at the start of the
+function.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,2e55fbdebab606a5b326baa6661dba5acbbbed7d,Fix xmlRemoveEntity removing from wrong hash table,tree.c,CVE-2015-7500,f1063fdbe7fa66332bbb76874101c2a7b51b519f,parser.c,1,2,testparser.c;tree.c,"Fix xmlRemoveEntity removing from wrong hash table
+
+`xmlRemoveEntity` looked up parameter entities in `pentities` but then
+incorrectly removed from `entities`, leaving the parameter entity
+orphaned in `pentities` and potentially corrupting a same-named
+general entity.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,31844c74df39c3b88735ef884c33c41da9d52795,malloc-fail: Fix null deref in xmlSchemaParseUnion,xmlschemas.c,CVE-2024-34459,2876ac5392a4e891b81e40e592c3ac6cb46016ce,xmllint.c,1,1,xmlschemas.c,"malloc-fail: Fix null deref in xmlSchemaParseUnion
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,359083591e997470f34501b48c7e78b09f6090b1,Fix xmlRemoveEntity removing from wrong hash table,testparser.c,CVE-2025-49795,499bcb78ab389f60c2fd634ce410d4bb85c18765,schematron.c,1,2,testparser.c;tree.c,"Fix xmlRemoveEntity removing from wrong hash table
+
+`xmlRemoveEntity` looked up parameter entities in `pentities` but then
+incorrectly removed from `entities`, leaving the parameter entity
+orphaned in `pentities` and potentially corrupting a same-named
+general entity.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,3a95572408151b5dfd9049e8b13871a941e2a7f7,tree: Restore return value of xmlNodeListGetString with NULL list,tree.c,CVE-2017-16931,e26630548e7d138d2c560844c43820b6767251e3,parser.c,1,4,fuzz/api.c;tree.c;valid.c;xmlreader.c,"tree: Restore return value of xmlNodeListGetString with NULL list
+
+When passing a NULL list to xmlNodeListGetString or
+xmlNodeListGetRawString, return NULL instead of """" to match the old
+behavior.
+
+Fixes #783.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,3ab040c203afa8de1e8ac3561f65e93da7ed5912,Fix unidiomatic use of vsnprintf().,python/libxml.c,CVE-2025-32414,8d415b8911be26b12b85497f7cc57143b5321787,python/libxml.c,1,1,python/libxml.c,"Fix unidiomatic use of vsnprintf().
+
+* Don't terminate an already-terminated buffer.
+* Consistently use 1024-byte buffers.
+* While here, consistently use ap for a va_list.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,44947afba0ded433c6f4ffc10ee646c4b267f2b7,malloc-fail: Fix null deref after xmlPointerListAddSize,xpath.c,CVE-2008-4225,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,parser.c,1,1,xpath.c,"malloc-fail: Fix null deref after xmlPointerListAddSize
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,49b54d7e2b0a3845d7affbf46be0fc0f1abf58f8,parser: Fix null deref in xmlStringDecodeEntitiesInt,parser.c,CVE-2022-40303,c846986356fc149915a74972bf198abc266bc2c0,parser.c,1,1,parser.c,"parser: Fix null deref in xmlStringDecodeEntitiesInt
+
+Short-lived regression.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,4c6922f763ad958c48ff66f82823ae21f2e92ee6,schemas: Fix null-pointer-deref in xmlSchemaCheckCOSSTDerivedOK,xmlschemas.c,CVE-2015-8242,8fb4a770075628d6441fb17a1e435100e2f3b1a2,HTMLparser.c,1,1,xmlschemas.c,"schemas: Fix null-pointer-deref in xmlSchemaCheckCOSSTDerivedOK
+
+Found by OSS-Fuzz.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,4fec0889e0cd406710f96f97a566495cb8178f3b,parser: Fix memory leak in xmlInputSetEncodingHandler,parserInternals.c,CVE-2025-24928,055b382541c8b8ba12d8f0d709db7030e10e8135,valid.c,1,1,parserInternals.c,"parser: Fix memory leak in xmlInputSetEncodingHandler
+
+Short-lived regression.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,577e2516d0ed3669c7e9879ba9f04214658bfd1b,valid: Check for NULL node->name in xmlSnprintfElements,valid.c,CVE-2024-56171,a6bf2cb76cc672c1fd1959e3793e43883893d94e,xmlschemas.c,1,1,valid.c,"valid: Check for NULL node->name in xmlSnprintfElements
+
+Unfortunately, we can have NULL element names if xmlSetTreeDoc fails.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,57b92cabd2f3018212ddc1475df66e9f9cf643c3,catalog: Fix regression in xmlCatalogAdd,catalog.c,CVE-2008-3281,4bf899bf1b719d692be407b89f6610103f13bd5d,parserInternals.c,1,1,catalog.c,"catalog: Fix regression in xmlCatalogAdd
+
+Don't load system catalog.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,58d7a3b72516b1b16f5d72335112c9d661ede7d8,tree: Fix xmlTextMerge with NULL args,tree.c,CVE-2016-3705,8f30bdff69edac9075f4663ce3b56b0c52d48ce6,parser.c,1,2,fuzz/api.c;tree.c,"tree: Fix xmlTextMerge with NULL args
+
+Restore pre-2.13 behavior. Fixes #875.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,5bd6b44d139758652a259ee8cead6d8c61692fe3,Fix initGenericErrorDefaultFunc(NULL),include/libxml/xmlerror.h,CVE-2015-1819,213f1fe0d76d30eaed6e5853057defc43e6df2c9,include/libxml/tree.h,1,1,include/libxml/xmlerror.h,"Fix initGenericErrorDefaultFunc(NULL)
+
+Calling initGenericErrorDefaultFunc(NULL) currently yields to
+
+/usr/include/libxml2/libxml/xmlerror.h:23:45: error: invalid use of void expression
+   23 |     xmlSetGenericErrorFunc(NULL, (h) ? *(h) : NULL)
+
+Indeed, even if h is nul, the compiler will try to give a type to *(h),
+which can't work.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,64b76f8163d3608f9881b4de23dcc06530ba9323,xmllint: Fix memory leak with --pattern --stream,xmllint.c,CVE-2023-28484,647e072ea0a2f12687fa05c172f4c4713fdb0c4f,xmlschemas.c,1,1,xmllint.c,"xmllint: Fix memory leak with --pattern --stream
+
+Fixes #499.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,6e1e22dc5f9f53fa8585b856662825d673938965,malloc-fail: Fix null-deref in xmlPatPushState,pattern.c,CVE-2017-16931,e26630548e7d138d2c560844c43820b6767251e3,runtest.c,1,1,pattern.c,malloc-fail: Fix null-deref in xmlPatPushState,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,6f9604f0e3e52e96881ab3b662f35fbe04cd49ac,malloc-fail: Fix memory leak in xmlXPathCacheNewNodeSet,xpath.c,CVE-2008-4226,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,parser.c,1,1,xpath.c,"malloc-fail: Fix memory leak in xmlXPathCacheNewNodeSet
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,702f2e463c1a81fb664eb9b4db1b78292d451fb9,malloc-fail: Fix memory leak in xmlNewNodeEatName,tree.c,CVE-2025-7425,f1e1f13b766eb580a8dcc0c4e7a447346dfd862e,tree.c,1,1,tree.c,malloc-fail: Fix memory leak in xmlNewNodeEatName,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,75693281389aab047b424d46df944b35ab4a3263,malloc-fail: Fix memory leak in xmlCompileAttributeTest,pattern.c,CVE-2025-49794,71e1e8af5ee46dad1b57bb96cfbf1c3ad21fbd7b,schematron.c,1,1,pattern.c,"malloc-fail: Fix memory leak in xmlCompileAttributeTest
+
+Found by OSS-Fuzz, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,7c5daa376343738a4bd85474386c976d3839f114,tree: Ignore namespace with NULL href in xmlSearchNs,tree.c,CVE-2017-16932,899a5d9f0ed13b8e32449a08a361e0de127dd961,parser.c,1,1,tree.c,"tree: Ignore namespace with NULL href in xmlSearchNs
+
+Some users set href to NULL to unset a namespace without deleting it.
+
+Also change the duplicate check in xmlNewNs which must agree with
+xmlSearchNs.
+
+Short-lived regression from f960c60d.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,7d97290a0e93bf78b8e5b9dc390c27a82f0443de,save: Fix xmlSave with NULL encoding,testparser.c,CVE-2022-29824,2554a2408e09f13652049e5ffb0d26196b02ebab,buf.c,1,2,testparser.c;xmlsave.c,"save: Fix xmlSave with NULL encoding
+
+Regressed with cc45f618.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,8318b5a63465f5805cf3e9ebad794f4db40b5aae,parser: Fix NULL checks for output arguments,parser.c,CVE-2024-40896,de28e6ed3a7f18d3188dd18ac5b854b21e05d33a,parser.c,1,2,entities.c;parser.c,parser: Fix NULL checks for output arguments,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,8583b9f1cdb966315b3caae328f5d9f2c8b65292,malloc-fail: Fix null deref in xmlXPathTranslateFunction,xpath.c,CVE-2009-2414,489f9671e71cc44a97b23111b3126ac8a1e21a59,parser.c,1,1,xpath.c,"malloc-fail: Fix null deref in xmlXPathTranslateFunction
+
+Short-lived regression.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,85bc313e7996c06d52b6f6f5c6a467ff3a148e75,malloc-fail: Fix memory leak after calling valuePush,xpath.c,CVE-2008-3281,4bf899bf1b719d692be407b89f6610103f13bd5d,parser.c,1,1,xpath.c,"malloc-fail: Fix memory leak after calling valuePush
+
+Destroy the object in valuePush if the function fails. This is somewhat
+dangerous but matches the expectations of users.
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,873c17116598cfc8fc2eb3a6fe7b9ac43306cc53,Avoid EDG -Wignored-qualifiers warnings on wrong 'const *' to '* const' conversions,c14n.c,CVE-2025-49796,71e1e8af5ee46dad1b57bb96cfbf1c3ad21fbd7b,schematron.c,1,1,c14n.c,Avoid EDG -Wignored-qualifiers warnings on wrong 'const *' to '* const' conversions,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,8c5e54d5bd042e7ac7ffd257f724477c332c535b,Fix C14N type confusion,c14n.c,CVE-2016-4658,c1d1f7121194036608bf555f08d3062a36fd344b,xpointer.c,1,1,c14n.c,"Fix C14N type confusion
+
+Do not try to get nsDef with xmlDoc
+
+Fix https://gitlab.gnome.org/GNOME/libxml2/-/issues/1016",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,936e3d529a6fc17d552f4b6544ba8e51646069df,save: Fix xmlSave with NULL encoding,testparser.c,CVE-2018-9251,2240fbf5912054af025fb6e01e26375100275e74,xzlib.c,1,2,testparser.c;xmlsave.c,"save: Fix xmlSave with NULL encoding
+
+Regressed with cc45f618.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,97086fd76b21fee6e41c13921c450411442d9da6,malloc-fail: Fix memory leak in xmlParserInputBufferCreateMem,xmlIO.c,CVE-2022-23308,652dd12a858989b14eed4e84e453059cd3ba340e,valid.c,1,1,xmlIO.c,"malloc-fail: Fix memory leak in xmlParserInputBufferCreateMem
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,98194640b80a8d04b5af22b077ffd8368a9568cf,Fix memory leak of prefix in xmlTextWriterStartElementNS(),xmlwriter.c,CVE-2008-3281,4bf899bf1b719d692be407b89f6610103f13bd5d,entities.c,1,1,xmlwriter.c,Fix memory leak of prefix in xmlTextWriterStartElementNS(),0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,a846719b9cd548d3e7e09475e3f33d8ef4101412,pattern: Fix memory leak xmlCompileStepPattern,pattern.c,CVE-2017-9049,e26630548e7d138d2c560844c43820b6767251e3,runtest.c,1,1,pattern.c,pattern: Fix memory leak xmlCompileStepPattern,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,aef1ff4372e080f9287209a4cdc8d13a275fccaa,"string: Fix xmlStrncatNew(NULL, """")",xmlstring.c,CVE-2015-7497,6360a31a84efe69d155ed96306b9a931a40beab9,dict.c,1,1,xmlstring.c,"string: Fix xmlStrncatNew(NULL, """")
+
+This should return """" not NULL.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,afc7e3a7f41e2e29ac36d4d7cbd0c0755558fa5d,malloc-fail: Fix memory leak in xmlParseReference,parser.c,CVE-2021-3541,8598060bacada41a0eb09d95c97744ff4e428f8e,parser.c,1,1,parser.c,"malloc-fail: Fix memory leak in xmlParseReference
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,b45927095e0c857b68a96466e3075d60a6a5dd9e,malloc-fail: Fix memory leak in xmlStringGetNodeList,tree.c,CVE-2018-14404,a436374994c47b12d5de1b8b1d191a098fa23594,xpath.c,1,1,tree.c,"malloc-fail: Fix memory leak in xmlStringGetNodeList
+
+Also make sure to return NULL on error instead of a partial node list.
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,b55ee729dea1122a1f2942b83f7f3b21116f873b,html: Regression test for #696,testparser.c,CVE-2015-1819,213f1fe0d76d30eaed6e5853057defc43e6df2c9,buf.c,1,1,testparser.c,"html: Regression test for #696
+
+This was already fixed in the master branch, so we only add a test.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,bc7740b3c30e1517dcf53a084766c74d25db222f,malloc-fail: Fix memory leak in xmlCopyPropList,tree.c,CVE-2022-29824,2554a2408e09f13652049e5ffb0d26196b02ebab,tree.c,1,1,tree.c,"malloc-fail: Fix memory leak in xmlCopyPropList
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,bd6fa2c1d5c163ab94edaf2e62d18cdfee33f913,malloc-fail: Fix memory leak in xmlXPathRegisterNs,xpath.c,CVE-2009-2416,489f9671e71cc44a97b23111b3126ac8a1e21a59,parser.c,1,1,xpath.c,"malloc-fail: Fix memory leak in xmlXPathRegisterNs
+
+Found by OSS-Fuzz.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,c537ccf0aea640e625abce653d5890afc934b340,Fixed compilation error on GCC versions prior to 4.5,include/libxml/xmlexports.h,CVE-2008-3281,4bf899bf1b719d692be407b89f6610103f13bd5d,include/libxml/entities.h,1,1,include/libxml/xmlexports.h,"Fixed compilation error on GCC versions prior to 4.5
+
+The deprecated attribute started accepting an optional string argument
+in GCC version 4.5. Compiling libxml2 with GCC versions prior to that
+would cause compilation errors such as:
+```
+./include/libxml/xmlmemory.h:134: error: wrong number of arguments specified for 'deprecated' attribute
+```
+
+Now the string argument is omitted for older versions of GCC.
+
+Signed-off-by: Lars Erik Wik <lars.erik.wik@northern.tech>",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,c6167cf3b9acf4b050e0b73c30019ab60d8e3393,fix to issue 227 adding xpath0 to xmllint,xmllint.c,CVE-2008-4225,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,tree.c,1,1,xmllint.c,fix to issue 227 adding xpath0 to xmllint,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,ca6a8cf94672e6f3c48c08d6af2201599788fc17,runtest: Add test for Memory leak in xmlInputFromFd,runtest.c,CVE-2008-4225,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,SAX2.c,1,1,runtest.c,"runtest: Add test for Memory leak in xmlInputFromFd
+
+See https://gitlab.gnome.org/GNOME/libxml2/-/issues/1075",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,cb4334b7abf265f55d1a41f435fedd67494eeb18,malloc-fail: Fix memory leak in xmlSAX2StartElementNs,SAX2.c,CVE-2017-5969,94691dc884d1a8ada39f073408b4bb92fe7fe882,valid.c,1,1,SAX2.c,"malloc-fail: Fix memory leak in xmlSAX2StartElementNs
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,cdfb54ff7ba3e881afbef10f90a56beaf3063034,Fix typos,encoding.c,CVE-2024-25062,92721970884fcc13305cb8e23cdc5f0dd7667c2c,xmlreader.c,1,2,encoding.c;example/icu.c,Fix typos,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,d936c4503c7429967586376c68964ce928b94859,fix to issue 227 adding xpath0 to xmllint,xmllint.c,CVE-2008-4226,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,tree.c,1,1,xmllint.c,fix to issue 227 adding xpath0 to xmllint,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,dd4c0f62fa1fd9650aae6b718dd9964a4ffa69b9,tree: Fix xmlTextMerge with NULL args,tree.c,CVE-2014-3660,be2a7edaf289c5da74a4f9ed3a0b6c733e775230,parser.c,1,2,fuzz/api.c;tree.c,"tree: Fix xmlTextMerge with NULL args
+
+Restore pre-2.13 behavior. Fixes #875.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,f0a703dac85ad9398f208d3237ca19c483368834,dict: Fix null-deref with empty subdict,dict.c,CVE-2017-9050,e26630548e7d138d2c560844c43820b6767251e3,runtest.c,1,1,dict.c,"dict: Fix null-deref with empty subdict
+
+Short lived regression found by OSS-Fuzz.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,f879a0177b9f2c5f85b0bb6d30385e36c2f6e281,Fix C14N type confusion,c14n.c,CVE-2016-5131,9ab01a277d71f54d3143c2cf333c5c2e9aaedd9e,xpointer.c,1,1,c14n.c,"Fix C14N type confusion
+
+Do not try to get nsDef with xmlDoc
+
+Fix https://gitlab.gnome.org/GNOME/libxml2/-/issues/1016",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,fc256953d29698ba5918c32d14fc69ea69d7e64e,malloc-fail: Fix memory leak in htmlCreateMemoryParserCtxt,HTMLparser.c,CVE-2025-7425,f1e1f13b766eb580a8dcc0c4e7a447346dfd862e,valid.c,1,1,HTMLparser.c,"malloc-fail: Fix memory leak in htmlCreateMemoryParserCtxt
+
+Found with libFuzzer, see #344.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,fc72e0833a4e5724aef604e2fd9adb1014cb4844,Fix compilation with uclibc,encoding.c,CVE-2008-4226,1dc9feb00fd3bce5967304dcb388ea3ba7e964e6,SAX2.c,1,1,encoding.c,"Fix compilation with uclibc
+
+The patch fixes the following errors and warnings raised by the
+compilation of the library with uClibc:
+
+encoding.c: In function ‘xmlEncInputChunk’:
+encoding.c:2209:32: warning: comparison between pointer and integer
+ 2209 |     else if (handler->iconv_in != NULL) {
+      |                                ^~
+encoding.c: In function ‘xmlEncOutputChunk’:
+encoding.c:2269:33: warning: comparison between pointer and integer
+ 2269 |     else if (handler->iconv_out != NULL) {
+      |                                 ^~
+encoding.c: In function ‘xmlCharEncCloseFunc’:
+encoding.c:2681:29: warning: comparison between pointer and integer
+ 2681 |     if ((handler->iconv_out != NULL) || (handler->iconv_in != NULL)) {
+      |                             ^~
+encoding.c:2681:60: warning: comparison between pointer and integer
+ 2681 |     if ((handler->iconv_out != NULL) || (handler->iconv_in != NULL)) {
+      |                                                            ^~
+encoding.c:2683:32: warning: comparison between pointer and integer
+ 2683 |         if (handler->iconv_out != NULL) {
+      |                                ^~
+encoding.c:2686:32: error: assignment to ‘iconv_t’ {aka ‘long int’} from ‘void *’ makes integer from pointer without a cast [-Wint-conversion]
+ 2686 |             handler->iconv_out = NULL;
+      |                                ^
+encoding.c:2688:31: warning: comparison between pointer and integer
+ 2688 |         if (handler->iconv_in != NULL) {
+      |                               ^~
+encoding.c:2691:31: error: assignment to ‘iconv_t’ {aka ‘long int’} from ‘void *’ makes integer from pointer without a cast [-Wint-conversion]
+ 2691 |             handler->iconv_in = NULL;
+      |                               ^
+make[4]: *** [Makefile:1147: libxml2_la-encoding.lo] Error 1
+
+Signed-off-by: Dario Binacchi <dario.binacchi@amarulasolutions.com>",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+libxml2,fe7f835f32757632edff0052d74063e97229d2c4,Fix C4296 warning: Resolve comparison of unsigned int with 0,xmlschemastypes.c,CVE-2015-1819,213f1fe0d76d30eaed6e5853057defc43e6df2c9,xmlreader.c,1,1,xmlschemastypes.c,Fix C4296 warning: Resolve comparison of unsigned int with 0,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,10bda6e11b91fe67c4489ab5e0347355fa6091cb,Fixed includes in quic headers.,src/event/ngx_event_quic.h,CVE-2009-3555,70bd187c4c386d82d6e4d180e0db84f361d1be02,src/event/ngx_event_openssl.h,1,3,src/event/ngx_event_quic.h;src/event/ngx_event_quic_protection.h;src/event/ngx_event_quic_transport.h,Fixed includes in quic headers.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,41d8ea8c8d268555d3cbd8dd2ab32dcc06658209,Fixed handling of unix sockets in $binary_remote_addr.,src/stream/ngx_stream_variables.c,CVE-2014-3616,ecfab06cb20959219c9aadc2ef59507488e4fa99,src/stream/ngx_stream_ssl_module.c,1,2,src/http/ngx_http_variables.c;src/stream/ngx_stream_variables.c,"Fixed handling of unix sockets in $binary_remote_addr.
+
+Previously, unix sockets were treated as AF_INET ones, and this may
+result in buffer overread on Linux, where unbound unix sockets have
+2-byte addresses.
+
+Note that it is not correct to use just sun_path as a binary representation
+for unix sockets.  This will result in an empty string for unbound unix
+sockets, and thus behaviour of limit_req and limit_conn will change when
+switching from $remote_addr to $binary_remote_addr.  As such, normal text
+representation is used.
+
+Reported by Stephan Dollberg.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,53bea399a006054350e9068b3a23f3dea89b1c0e,Fixed reference to time parsing code after 8b6fa4842133.,src/core/ngx_times.c,CVE-2017-20005,0206ebe76f748bb39d9de4dd4b3fce777fdfdccf,src/core/ngx_times.c,1,1,src/core/ngx_times.c,Fixed reference to time parsing code after 8b6fa4842133.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,6299f5e9149483251bbbcc8ad26cf29b6109e75c,"Avoid left-shifting integers into the sign bit, which is undefined.",src/http/modules/ngx_http_log_module.c,CVE-2014-3616,ecfab06cb20959219c9aadc2ef59507488e4fa99,src/http/modules/ngx_http_ssl_module.c,1,4,src/core/ngx_string.c;src/http/modules/ngx_http_log_module.c;src/http/modules/ngx_http_userid_filter_module.c;src/http/ngx_http_parse.c,"Avoid left-shifting integers into the sign bit, which is undefined.
+
+Found with UndefinedBehaviorSanitizer.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,63572fce5577dd5ec68bb1204d20cdb946cd6418,Fixed SSL logging with lingering close.,src/event/ngx_event_openssl.h,CVE-2014-3616,ecfab06cb20959219c9aadc2ef59507488e4fa99,src/event/ngx_event_openssl.h,1,3,src/event/ngx_event_openssl.c;src/event/ngx_event_openssl.h;src/http/ngx_http_request.c,"Fixed SSL logging with lingering close.
+
+Recent fixes to SSL shutdown with lingering close (554c6ae25ffc, 1.19.5)
+broke logging of SSL variables.  To make sure logging of SSL variables
+works properly, avoid freeing c->ssl when doing an SSL shutdown before
+lingering close.
+
+Reported by Reinis Rozitis
+(http://mailman.nginx.org/pipermail/nginx/2021-May/060670.html).",0,0,1,ambiguous,"Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+nginx,7250a7688da4ee9ad1a88fd1489bbb19ec2020ce,QUIC: fixed memory leak in ngx_quic_send_frames().,src/event/ngx_event_quic.c,CVE-2014-3616,ecfab06cb20959219c9aadc2ef59507488e4fa99,src/event/ngx_event_openssl.c,1,1,src/event/ngx_event_quic.c,"QUIC: fixed memory leak in ngx_quic_send_frames().
+
+The function did not free passed frames in case of error.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,b32cb6b61079d2eff69c89e0e718a79258507717,Fixed worker_shutdown_timeout in various cases.,src/mail/ngx_mail_proxy_module.c,CVE-2014-3616,ecfab06cb20959219c9aadc2ef59507488e4fa99,src/mail/ngx_mail_ssl_module.c,1,3,src/http/ngx_http_request.c;src/mail/ngx_mail_proxy_module.c;src/stream/ngx_stream_proxy_module.c,"Fixed worker_shutdown_timeout in various cases.
+
+The ngx_http_upstream_process_upgraded() did not handle c->close request,
+and upgraded connections do not use the write filter.  As a result,
+worker_shutdown_timeout did not affect upgraded connections (ticket #1419).
+Fix is to handle c->close in the ngx_http_request_handler() function, thus
+covering most of the possible cases in http handling.
+
+Additionally, mail proxying did not handle neither c->close nor c->error,
+and thus worker_shutdown_timeout did not work for mail connections.  Fix is
+to add c->close handling to ngx_mail_proxy_handler().
+
+Also, added explicit handling of c->close to stream proxy,
+ngx_stream_proxy_process_connection().  This improves worker_shutdown_timeout
+handling in stream, it will no longer wait for some data being transferred
+in a connection before closing it, and will also provide appropriate
+logging at the ""info"" level.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,f5036584840df54c066af8452fcc75b6af7ded97,Fixed memory leak with reordered stream frames.,src/event/ngx_event_quic.c,CVE-2010-4180,3e3ee60b99f41cdc15f3651f0a917217977157c1,src/event/ngx_event_openssl.c,1,1,src/event/ngx_event_quic.c,Fixed memory leak with reordered stream frames.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+nginx,f540602ad217bce65d311546337200e915cf2676,Fixed build with OpenSSL using old callbacks API.,src/event/ngx_event_quic.c,CVE-2009-3555,70bd187c4c386d82d6e4d180e0db84f361d1be02,src/event/ngx_event_openssl.c,1,1,src/event/ngx_event_quic.c,Fixed build with OpenSSL using old callbacks API.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,07f2c7f34951c04d2cd796ac6c80e47c56c4969e,upstream: fix memory leak in error path; bz#3074 patch from,sftp-client.c,CVE-2006-0225,3eec6b73a2c446225fce546d61d83cfc695fbaa0,scp.c,1,1,sftp-client.c,"upstream: fix memory leak in error path; bz#3074 patch from
+
+krishnaiah.bommu@intel.com, ok dtucker
+
+OpenBSD-Commit-ID: d031853f3ecf47b35a0669588f4d9d8e3b307b3c",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,0f5d19e6fe4b58a89e6dc8c71a2aae30365d193e,fix utmpx ifdef,loginrec.c,CVE-2015-6563,d4697fe9a28dab7255c60433e4dd23cf7fce8a8b,monitor_wrap.c,1,1,loginrec.c,"fix utmpx ifdef
+
+02e16ad95fb1f56ab004b01a10aab89f7103c55d did a copy-paste for
+utmpx, but forgot to change the ifdef appropriately",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,10dce8ff68ef615362cfcab0c0cc33ce524e7682,upstream: unbreak; missing NULL check,readpass.c,CVE-2006-0225,3eec6b73a2c446225fce546d61d83cfc695fbaa0,misc.c,1,1,readpass.c,"upstream: unbreak; missing NULL check
+
+OpenBSD-Commit-ID: 6613dfab488123f454d348ef496824476b8c11c0",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,14beca57ac92d62830c42444c26ba861812dc837,upstream: backout 1.293 fix kex mem-leak in ssh_packet_close at markus,packet.c,CVE-2021-28041,e04fd6dde16de1cdc5a4d9946397ff60d96568db,ssh-agent.c,1,1,packet.c,"upstream: backout 1.293 fix kex mem-leak in ssh_packet_close at markus
+
+request
+
+the change introduced a NULL deref in sshpkt_vfatal() (uses of ssh->kex after
+calling ssh_packet_clear_keys())
+
+OpenBSD-Commit-ID: 9c9a6721411461b0b1c28dc00930d7251a798484",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,1c1124dc901fca1ea2cb762044b8f1a5793a2bed,upstream: don't leak arg2 on parse_pubkey_algos error path; ok,readconf.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,sshconnect.c,1,1,readconf.c,"upstream: don't leak arg2 on parse_pubkey_algos error path; ok
+
+dtucker@
+
+OpenBSD-Commit-ID: 7d0270ad3dd102412ca76add2b3760518abdef75",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,1ff38f34b4c4545eb28106629cafa1e0496bc726,Fix memory leak in error path.,auth-pam.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,sshkey.c,1,1,auth-pam.c,"Fix memory leak in error path.
+
+*info is allocated via xstrdup but was leaked in the PAM_AUTH_ERR path.
+From github PR#266.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,23490a6c970ea1d03581a3b4208f2eb7a675f453,fix previous test,ssh-pkcs11.c,CVE-2022-42703,195313dfe10a23c82e9d56d5fdd2f59beee1bdcf,sandbox-seccomp-filter.c,1,1,ssh-pkcs11.c,fix previous test,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,2519110659a1efac6c976895a86659d1b341c91b,upstream: match_user() shouldn't be called with user==NULL unless,match.c,CVE-2020-29368,195313dfe10a23c82e9d56d5fdd2f59beee1bdcf,sandbox-seccomp-filter.c,1,1,match.c,"upstream: match_user() shouldn't be called with user==NULL unless
+
+host and ipaddr are also NULL
+
+OpenBSD-Commit-ID: fa3518346c21483e9e01a2e4b9436ae501daf8ea",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,29fb6f6d46b67770084b4f12bcf8a01bd535041b,upstream: Fix proxy multiplexing (-O proxy) bug,nchan.c,CVE-2006-0225,3eec6b73a2c446225fce546d61d83cfc695fbaa0,sftp.c,1,4,channels.c;channels.h;mux.c;nchan.c,"upstream: Fix proxy multiplexing (-O proxy) bug
+
+If a mux started with ControlPersist then later has a forwarding added using
+mux proxy connection and the forwarding was used, then when the mux proxy
+session terminates, the mux master process will send a channel close to the
+server with a bad channel ID and crash the connection.
+
+This was caused by my stupidly reusing c->remote_id for mux channel
+associations when I should have just added another member to struct channel.
+
+ok markus@
+
+OpenBSD-Commit-ID: c9f474e0124e3fe456c5e43749b97d75e65b82b2",0,0,1,ambiguous,"Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+openssh,31f1ee54968ad84eb32375e4412e0318766b586b,upstream: initialize cname in case ai_canonname is NULL or too,ssh.c,CVE-2025-32728,fc86875e6acb36401dfc1dfb6b628a9d1460f367,session.c,1,1,ssh.c,"upstream: initialize cname in case ai_canonname is NULL or too
+
+long; ok djm
+
+OpenBSD-Commit-ID: c27984636fdb1035d1642283664193e91aab6e37",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,416287d45fcde0a8e66eee8b99aa73bd58607588,Fix sshbuf_new error path in skey.,monitor_wrap.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,auth2-pubkey.c,1,1,monitor_wrap.c,Fix sshbuf_new error path in skey.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,58c819096a2167983e55ae686486ce317b69b2d1,upstream: Prevent possible null pointer deref of ip_str in debug.,clientloop.c,CVE-2023-51384,881d9c6af9da4257c69c327c4e2f1508b2fa754b,ssh-agent.c,1,1,clientloop.c,"upstream: Prevent possible null pointer deref of ip_str in debug.
+
+OpenBSD-Commit-ID: 37b252e2e6f690efed6682437ef75734dbc8addf",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,599f01142a376645b15cbc9349d7e8975e1cf245,"fix merge botch that left "",,"" in KEX algs",myproposal.h,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,sshkey.h,1,1,myproposal.h,"fix merge botch that left "",,"" in KEX algs",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,5ef4b0fdcc7a239577a754829b50022b91ab4712,avoid FreeBSD RCS Id in comment,auth-pam.c,CVE-2016-8858,ec165c392ca54317dbe3064a8c200de6531e89ad,kex.c,1,1,auth-pam.c,"avoid FreeBSD RCS Id in comment
+
+Change old $FreeBSD version string in comment so it doesn't
+become an RCS ident downstream; requested by des AT des.no",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,5f25afe5216ba7f8921e04f79aa4ca0624eca820,upstream: fix null-deref on calloc failure; ok djm,auth-options.c,CVE-2016-6210,9286875a73b2de7736b5e50692739d314cd8d9dc,auth-passwd.c,1,1,auth-options.c,"upstream: fix null-deref on calloc failure; ok djm
+
+OpenBSD-Commit-ID: a313519579b392076b7831ec022dfdefbec8724a",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,67b7c784769c74fd4d6b147d91e17e1ac1a8a96d,"upstream: Check sshauthopt_new() for NULL. bz#3425, from",auth.c,CVE-2021-41617,bf944e3794eff5413f2df1ef37cddf96918c6bde,misc.c,1,1,auth.c,"upstream: Check sshauthopt_new() for NULL. bz#3425, from
+
+tessgauthier at microsoft.com.  ok djm@
+
+OpenBSD-Commit-ID: af0315bc3e44aa406daa7e0ae7c2d719a974483f",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,6c2039286f503e2012a58a1d109e389016e7a99b,fix merge both that broke --without-ssh1 compile,ssh-agent.c,CVE-2018-20685,6010c0303a422a9c5fa8860c061bf7105eb7f8b2,scp.c,1,1,ssh-agent.c,fix merge both that broke --without-ssh1 compile,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,6c31ba10e97b6953c4f325f526f3e846dfea647a,upstream: Don't leak the strings allocated by order_hostkeyalgs(),sshconnect2.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,ssh-agent.c,1,2,sshconnect2.c;sshd.c,"upstream: Don't leak the strings allocated by order_hostkeyalgs()
+
+and list_hostkey_types() that are passed to compat_pkalg_proposal(). Part of
+github PR#324 from ZoltanFridrich, ok djm@
+
+This is a roll-forward of the previous rollback now that the required
+changes in compat.c have been done.
+
+OpenBSD-Commit-ID: c7cd93730b3b9f53cdad3ae32462922834ef73eb",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,7a7fdca78de4b4774950be056099e579ef595414,upstream: fix NULL-deref crash in PKCS#11 code when attempting,ssh-pkcs11.c,CVE-2020-29374,195313dfe10a23c82e9d56d5fdd2f59beee1bdcf,sandbox-seccomp-filter.c,1,1,ssh-pkcs11.c,"upstream: fix NULL-deref crash in PKCS#11 code when attempting
+
+login to a token requiring a PIN; reported by benno@ fix mostly by markus@
+
+OpenBSD-Commit-ID: 438d0b114b1b4ba25a9869733db1921209aa9a31",0,0,1,ambiguous,"Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+openssh,7d25b37fb2a5ff4dadabcbdac6087a97479434f5,fix possible NULL deref when built without FIDO,ssh-sk.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,sshsig.c,1,1,ssh-sk.c,"fix possible NULL deref when built without FIDO
+
+Analysis/fix from kircher in bz3443; ok dtucker@",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,803e22eabd3ba75485eedd8b7b44d6ace79f2052,upstream: fix regression in OpenSSH 9.4 (mux.c r1.99) that caused,kex.c,CVE-2015-6563,d4697fe9a28dab7255c60433e4dd23cf7fce8a8b,monitor.c,1,4,kex.c;misc.c;misc.h;mux.c,"upstream: fix regression in OpenSSH 9.4 (mux.c r1.99) that caused
+
+multiplexed sessions to ignore SIGINT under some circumstances. Reported by /
+feedback naddy@, ok dtucker@
+
+OpenBSD-Commit-ID: 4d5c6c894664f50149153fd4764f21f43e7d7e5a",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,945bf52c3c815d95b1e842ebf6c910c3524bd5bb,Fix a couple of mysig_t leftovers.,openbsd-compat/bsd-openpty.c,CVE-2016-6210,9286875a73b2de7736b5e50692739d314cd8d9dc,openbsd-compat/xcrypt.c,1,3,auth-pam.c;entropy.c;openbsd-compat/bsd-openpty.c,Fix a couple of mysig_t leftovers.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,97370f6c2c3b825f8c577b7e6c00b1a98d30a6cf,Fix building w/out ECC.,ssh-pkcs11.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,auth2-hostbased.c,1,3,kexecdh.c;ssh-pkcs11-helper.c;ssh-pkcs11.c,"Fix building w/out ECC.
+
+Ifdef out ECC specific code so that that it'll build against an OpenSSL
+configured w/out ECC.  With & ok djm@",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,a393759f9693a08a7fba18d4824b74f2dda1fe3d,Fix ut_type for btmp records,loginrec.c,CVE-2023-25136,486c4dc3b83b4b67d663fb0fa62bc24138ec3946,compat.c,1,2,loginrec.c;loginrec.h,"Fix ut_type for btmp records
+
+According to man utmp ut_type is supposed to be only switched from
+LOGIN_PROCESS to USER_PROCESS after succesfull authentication and this
+is how sshd behaved before 671c44078.
+
+Fixes: 671c44078 (""use construct_utmp to construct btmp records"")
+Signed-off-by: Artem Savkov <artem.savkov@gmail.com>",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,ad38ec5f1b6768944d64ed7709da8706538b5509,upstream: fix leak on error path; Coverity CID 481976,misc-agent.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,auth2-pubkeyfile.c,1,1,misc-agent.c,"upstream: fix leak on error path; Coverity CID 481976
+
+OpenBSD-Commit-ID: 963dba2c804e2fd8efea2256092899874d0dbc7b",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,bcf7c05a473f92a35f4f3b561fd7a1e339e0a30f,Fix header name and move return outside of ifdef.,sshkey.c,CVE-2020-14871,fcf429a4c69d30d8725612a55b37181594da8ddf,auth-pam.c,1,1,sshkey.c,"Fix header name and move return outside of ifdef.
+
+Fixes from Mike Frysinger via Github PR#597.",0,0,1,ambiguous,"Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+openssh,bdaf65ae51d62c6cb676bd341cc34217c1b24920,fix state confusion between PAM and privsep code,auth-pam.h,CVE-2006-0225,3eec6b73a2c446225fce546d61d83cfc695fbaa0,misc.h,1,3,auth-pam.c;auth-pam.h;monitor.c,"fix state confusion between PAM and privsep code
+
+Commits b9a6dd4d6 and df2b28163 introduced a potential desynchronisation
+between the PAM code and the sshd-session monitor that could result in
+authentication bypass if the unprivileged sshd-auth process had been
+compromised.
+
+Reported by Ben Edelman of NIST. Only git HEAD is affected, these
+changes have not yet been included in an OpenSSH release.",0,0,1,ambiguous,"Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+openssh,c3da05d95922f5550bcc7815e799474d6a160175,upstream: Plug potential mem leak in process_put.,sftp.c,CVE-2008-1483,5f5cd746f357a87637a6a91605a44e1ed9a6dab1,channels.c,1,1,sftp.c,"upstream: Plug potential mem leak in process_put.
+
+It allocates abs_dst inside a loop but only frees it on exit, so free
+inside the loop if necessary.  Coverity CID 291837, ok djm@
+
+OpenBSD-Commit-ID: a01616503a185519b16f00dde25d34ceaf4ae1a3",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,c47e1c9c7911f38b2fc2fb01b1f6ae3a3121a838,upstream: fix memory leak in mux proxy mode when requesting forwarding.,channels.c,CVE-2015-8325,85bdcd7c92fe7ff133bbc4e10a65c91810f88755,session.c,1,1,channels.c,"upstream: fix memory leak in mux proxy mode when requesting forwarding.
+
+found by RASU JSC, reported by Maks Mishin in GHPR#467
+
+OpenBSD-Commit-ID: 97d96a166b1ad4b8d229864a553e3e56d3116860",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,e3fa20e2e58fdc88a0e842358778f2de448b771b,avoid -Wsign-compare warning in argv copying,sshd.c,CVE-2024-7594,5166b6cbf2b6103117a79f90a68068e89e02bf66,ssh-keygen.c,1,1,sshd.c,avoid -Wsign-compare warning in argv copying,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,ea9af2921cb6af8e65341531db3a7351917f0a92,upstream: fix crash at exit (visible via ssh-keygen -D) when,ssh-pkcs11.c,CVE-2016-6515,fcd135c9df440bcd2d5870405ad3311743d78d97,auth-passwd.c,1,1,ssh-pkcs11.c,"upstream: fix crash at exit (visible via ssh-keygen -D) when
+
+multiple keys loaded. ok markus deraadt dtucker
+
+OpenBSD-Commit-ID: baa9763ec69d162108dafd962792ec5610ff45c9",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,f59a94e22e46db2c23eddeb871aa9e8d93ab0016,upstream: don't dereference NULL pointer when hashing jumphost,ssh.c,CVE-2023-51385,7ef3787c84b6b524501211b11a26c742f829af1a,ssh.c,1,1,ssh.c,"upstream: don't dereference NULL pointer when hashing jumphost
+
+OpenBSD-Commit-ID: 251c0263e1759a921341c7efe7f1d4c73e1c70f4",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+openssh,f85b118d2150847cc333895296bc230e367be6b5,upstream: Pass a NULL instead of zeroed out va_list from,misc.c,CVE-2015-6564,5e75f5198769056089fb06c4d738ab0e5abc66f7,monitor.c,1,1,misc.c,"upstream: Pass a NULL instead of zeroed out va_list from
+
+dollar_expand.  The original intent was in case there's some platform where
+va_list is not a pointer equivalent, but on i386 this chokes on the memset.
+This unbreaks that build, but will require further consideration.
+
+OpenBSD-Commit-ID: 7b90afcd8e1137a1d863204060052aef415baaf7",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,15357aaf10261b1c71b8e0197c75e9030c86ef1a,Fix the initialization of the sqlite3Api&#91;&#93; constant to conform with the previous check-in.,src/loadext.c,CVE-2019-19242,57f7ece78410a8aae86aa4625fb7556897db384c,src/wherecode.c,1,1,src/loadext.c,"Fix the initialization of the sqlite3Api&#91;&#93; constant to conform
+with the previous check-in.
+
+FossilOrigin-Name: 0a31a740843404958f61798aa17f94b5162bcf467c1c863d745346a316160d13",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,1be5689087a8095183f53df4592dfdc71cc90b89,Avoid returning SQLITE_ERROR_RETRY if collation sequences associated with the table's PK cannot be found when creating an index. Possible fix for [forum:aa61ab56ad | forum post aa61ab56ad].,src/main.c,CVE-2019-19603,527cbd4a104cb93bf3994b3dd3619a6299a78b13,src/build.c,1,2,src/build.c;src/main.c,"Avoid returning SQLITE_ERROR_RETRY if collation sequences associated with the table's PK cannot be found when creating an index. Possible fix for [forum:aa61ab56ad | forum post aa61ab56ad].
+
+FossilOrigin-Name: ac649e5b9ca9b8f7729defa8d646df8c0cb57977a5eedcfa2cf1147d109a17f1",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,2953e950c8c8f62dc5710be3279b411b0cac5808,Fix display of P4_INDEX values in EXPLAIN output.,src/vdbeaux.c,CVE-2019-19926,8428b3b437569338a9d1e10c4cd8154acbe33089,src/select.c,1,1,src/vdbeaux.c,"Fix display of P4_INDEX values in EXPLAIN output.
+
+FossilOrigin-Name: e717017f0213441da2ef8a9e1f1e88ebfdefa26fc4773711968417c0bd6ebe5f",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,31d4e56b297266828938dffda1eff6575a5614e3,Fix a harmless compiler warning from MSVC.,src/util.c,CVE-2019-19646,ebd70eedd5d6e6a890a670b5ee874a5eae86b4dd,src/pragma.c,1,1,src/util.c,"Fix a harmless compiler warning from MSVC.
+
+FossilOrigin-Name: 12f3a6d0aaff8818c427d79e2b9394328625b3a60ccaa7b628d064084c65cfaf",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,323199b57eb046cd9d16bfc4909caeebe70915f7,Fix a memory leak in the fileio extension on windows.  Other changes to makefiles and similar to get zipfile testing working on Windows.,ext/misc/fileio.c,CVE-2019-19959,d8f2d46cbc9925e034a68aaaf60aad788d9373c1,ext/misc/zipfile.c,1,1,ext/misc/fileio.c,"Fix a memory leak in the fileio extension on windows.  Other changes to
+makefiles and similar to get zipfile testing working on Windows.
+
+FossilOrigin-Name: 121b327f1f3941a9a44ab2d98e60f6e25b928ca9b54bbaa109239ba9012b3c3c",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,34775b696b7c7a04b6b6fcc0e2c5e2e67652cea5,Fix a syntax error in the tcl script part of [199b6567bb41cd].,src/printf.c,CVE-2019-19317,522ebfa7cee96fb325a22ea3a2464a63485886a8,src/resolve.c,1,1,src/printf.c,"Fix a syntax error in the tcl script part of [199b6567bb41cd].
+
+FossilOrigin-Name: a7ed85f27066b74263dbd3dfcefe5d378e524cc56cd3abac4032bc23f83b5d21",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,3ca448dee5085e8754f5934a6f472779910b7969,Fix harmless signed/unsigned compiler warnings.,src/vdbeaux.c,CVE-2025-29088,56d2fd008b108109f489339f5fd55212bb50afd4,src/main.c,1,1,src/vdbeaux.c,"Fix harmless signed/unsigned compiler warnings.
+
+FossilOrigin-Name: aa211fa1d49b6734913e957f9e4b9825709a1493d275f7dfaf9123dc8c7232dc",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,3f2d7d4aaa9c2e1e2fd6b4ab8412361a9867a3ce,Fix some cases where integrity-check would fail to identify real values in indexed expressions that are with 2 ULPs of each other.,src/vdbeaux.c,CVE-2019-20218,a6c1a71cde082e09750465d5675699062922e387,src/select.c,1,1,src/vdbeaux.c,"Fix some cases where integrity-check would fail to identify real values in indexed expressions that are with 2 ULPs of each other.
+
+FossilOrigin-Name: 40c5966f7b784f181365c81fc559aee9463c374ee56677cf6e0aecaed39d2b28",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,4ac766cc05f6fabdf1ab27027eb435c6fa781d22,"Have sqlite3_set_errmsg() return SQLITE_MISUSE if a NULL db handle is passed to it, as documented.",src/main.c,CVE-2019-19242,57f7ece78410a8aae86aa4625fb7556897db384c,src/expr.c,1,2,src/main.c;src/test1.c,"Have sqlite3_set_errmsg() return SQLITE_MISUSE if a NULL db handle is passed to it, as documented.
+
+FossilOrigin-Name: 5f5a736f88bc9bc6c9c83d2cbfd74c0b5357d7417d9993d34a78f0b7317ff796",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,4bace197e10f565b89b991c2da825da3d6d30946,Fix the cases in joinI.test on this branch.,src/sqliteInt.h,CVE-2019-19603,527cbd4a104cb93bf3994b3dd3619a6299a78b13,src/sqliteInt.h,1,2,src/select.c;src/sqliteInt.h,"Fix the cases in joinI.test on this branch.
+
+FossilOrigin-Name: 23ac2377315af02b73db6ae37bfeeda1453e41efb702a6b707346956c2d41a9d",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,4ebf49168ab999672e4d1f1119996796727f0896,Fix a harmless compiler warning associated with flexarrays.,src/vdbeaux.c,CVE-2019-19923,396afe6f6aa90a31303c183e11b2b2d4b7956b35,src/select.c,1,2,src/vdbeInt.h;src/vdbeaux.c,"Fix a harmless compiler warning associated with flexarrays.
+
+FossilOrigin-Name: f02cdf1d3ea8da8a09d115721845afeff5d6169dd7532ab486d3ed6db69cde2d",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,5a7338651150a923b9c9e4d5e43325539480d0e1,Fix a harmless compiler warning.,src/fkey.c,CVE-2019-19880,75e95e1fcd52d3ec8282edb75ac8cd0814095d54,src/window.c,1,1,src/fkey.c,"Fix a harmless compiler warning.
+
+FossilOrigin-Name: aa23d6cc69471eacb3fb0d789c34169e047e4a09a50beb430eb8e8e63b5bce78",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,9334b9f1b8dc0f8a1c6f1edfdeb0157f1ba1cc7b,Fix calls to sqlite3_wal_checkpoint_v2(SQLITE_CHECKPOINT_NOOP) so that they do not return SQLITE_MISUSE.,src/main.c,CVE-2019-19244,e59c562b3f6894f84c715772c4b116d7b5c01348,src/select.c,1,2,src/main.c;src/test1.c,"Fix calls to sqlite3_wal_checkpoint_v2(SQLITE_CHECKPOINT_NOOP) so that they do not return SQLITE_MISUSE.
+
+FossilOrigin-Name: 117f4093f08e0abbde2041f70898220e237e250664f6ede6d4eb2a8a44050466",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,974b8d7df00d9c539600c097e6e0819542779cec,Fix a problem with the merge at [cb604efdb40da95a].,src/vdbeaux.c,CVE-2019-19645,38096961c7cd109110ac21d3ed7dad7e0cb0ae06,src/build.c,1,1,src/vdbeaux.c,"Fix a problem with the merge at [cb604efdb40da95a].
+
+FossilOrigin-Name: ee6102d4fe35b7b914aa2dc7c7dd37460910efedc9b2d192c2fb8cb0e6a1fd4e",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,990d861038768258588be00b3584d58108d12185,Add new assert() statements to demonstrate that the complaint given in [forum:/forumpost/56ad8b632c|forum post 56ad8b632c] is not a real bug.,src/fkey.c,CVE-2019-19924,8654186b0236d556aa85528c2573ee0b6ab71be3,src/window.c,1,3,src/build.c;src/fkey.c;src/trigger.c,"Add new assert() statements to demonstrate that the complaint given in
+[forum:/forumpost/56ad8b632c|forum post 56ad8b632c] is not a real bug.
+
+FossilOrigin-Name: d62999907d5f5987fe0030e1a4a7144c898e55595ac116eec966741a5099322b",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,b2006499c799386849494829ca59ff4c4a645592,Fix a problem with the find-delete-key method on this branch.,src/vdbeaux.c,CVE-2019-19924,8654186b0236d556aa85528c2573ee0b6ab71be3,src/expr.c,1,4,src/delete.c;src/vdbe.c;src/vdbeInt.h;src/vdbeaux.c,"Fix a problem with the find-delete-key method on this branch.
+
+FossilOrigin-Name: 6f49b5ecad5d924999d045a1ade93d95e731182be1781aefa5bc763b6202e9c3",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,ba1ee803eede99b3eefae0dd6ec6d2dbce9817c6,Add experimental implementations of ALTER TABLE commands to add and drop CHECK and NOT NULL constraints.,src/sqliteInt.h,CVE-2019-19645,38096961c7cd109110ac21d3ed7dad7e0cb0ae06,src/sqliteInt.h,1,3,src/alter.c;src/prepare.c;src/sqliteInt.h,"Add experimental implementations of ALTER TABLE commands to add and drop CHECK and NOT NULL constraints.
+
+FossilOrigin-Name: d939b25d76fe70a3255cfe38097d4489323028cd05e5512a98dce06b48eee445",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,c2f7be11bb53aeb23746510b4be769cd86139096,Fix harmless typo in a comment.,src/date.c,CVE-2019-19645,38096961c7cd109110ac21d3ed7dad7e0cb0ae06,src/alter.c,1,1,src/date.c,"Fix harmless typo in a comment.
+
+FossilOrigin-Name: 1f6deabfff2fc2fed5fbff48d2637b48245e5a946a442c4bcc9b9ecb7c4848b9",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,d06a0be514410d3c7953c927ce7322923f02f457,Fix a faulty error message in the ext/misc/fileio.c extension.,ext/misc/fileio.c,CVE-2019-19925,54d501092d88c0cf89bec4279951f548fb0b8618,ext/misc/zipfile.c,1,1,ext/misc/fileio.c,"Fix a faulty error message in the ext/misc/fileio.c extension.
+
+FossilOrigin-Name: 1fdef271cd15d0960a7933253a10f288e26771cdcf34b5cd22adbc49d6341bc5",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+sqlite,faf1a259ccd9c32ff988a554f7c764069d61c6cc,New assert()s help clarify constraints on xOpen method.,src/os_unix.c,CVE-2019-19924,8654186b0236d556aa85528c2573ee0b6ab71be3,src/vdbeaux.c,1,1,src/os_unix.c,"New assert()s help clarify constraints on xOpen method.
+
+FossilOrigin-Name: 671ee5c9586e6385bb28c9e1cca3c7c064f71915d89690d6b6ef00d5427498ea",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,04afd39fcc753e2f1369cb471cb6592ea5946546,Fix syntax error in gzlib.c.,gzlib.c,CVE-2016-9841,9aaec95e82117c1cb0f9624264c3618fc380cecb,inffast.c,1,1,gzlib.c,Fix syntax error in gzlib.c.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,51370f365607fe14a6a7a1a27b3bd29d788f5e5b,Fix serious but very rare decompression bug in inftrees.c.,inftrees.c,CVE-2022-37434,eff308af425b67093bab25f80f1ae950166bece1,inflate.c,1,1,inftrees.c,"Fix serious but very rare decompression bug in inftrees.c.
+
+inftrees.c compared the number of used table entries to the maximum
+allowed value using >= instead of >.  This patch fixes those to use
+>.  The bug was discovered by Ignat Kolesnichenko of Yandex LC
+where they have run petabytes of data through zlib.  Triggering the
+bug is apparently very rare, seeing as how it has been out there in
+the wild for almost three years before being discovered.  The bug
+is instantiated only if the exact maximum number of decoding table
+entries, ENOUGH_DISTS or ENOUGH_LENS is used by the block being
+decoded, resulting in the false positive of overflowing the table.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,562b823635fdcd26e44961f6bd213ae0c10be098,Fix indentation in gzread.c.,gzread.c,CVE-2018-25032,5c44459c3b28a9bd3283aaceab7c615f8020c531,trees.c,1,1,gzread.c,Fix indentation in gzread.c.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,5c42a230b7b468dff011f444161c0145b5efae59,Correct argument types for 64-bit combine functions.,zutil.h,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,zutil.h,1,2,zlib.h;zutil.h,Correct argument types for 64-bit combine functions.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,60c31985ecdc2b40873564867e1ad2aef0b88697,Fix the copy of pending_buf in deflateCopy() for the LIT_MEM case.,deflate.h,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,deflate.h,1,2,deflate.c;deflate.h,Fix the copy of pending_buf in deflateCopy() for the LIT_MEM case.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,643e17b7498d12ab8d15565662880579692f769d,Correct repeated words in source file comments and a readme.,contrib/infback9/inftree9.h,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,contrib/infback9/inftree9.c,1,6,contrib/infback9/inftree9.h;contrib/minizip/ioapi.h;contrib/minizip/zip.c;contrib/minizip/zip.h;inftrees.h;zlib.h,Correct repeated words in source file comments and a readme.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,75143f819f14428f114ef69980af69071d65cbf9,Fix minor typo in zlib.h comments [Rześniowiecki].,zlib.h,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,zconf.h,1,1,zlib.h,Fix minor typo in zlib.h comments [Rześniowiecki].,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,79baebe50e4d6b73ae1f8b603f0ef41300110aa3,Avoid adding empty gzip member after gzflush with Z_FINISH.,gzguts.h,CVE-2018-25032,5c44459c3b28a9bd3283aaceab7c615f8020c531,deflate.h,1,3,gzguts.h;gzlib.c;gzwrite.c,Avoid adding empty gzip member after gzflush with Z_FINISH.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,7af6320ad78b390de42f414fabdc64dc6d67a5ea,Fix a bug in ZLIB_DEBUG compiles in check_match().,deflate.c,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,deflate.c,1,1,deflate.c,"Fix a bug in ZLIB_DEBUG compiles in check_match().
+
+This avoids trying to compare a match starting one byte before the
+current window. Thanks to @zmodem (Hans) for discovering this.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,7fabcb53576aca08b8e25174eb7b0df7c585e4e0,Fix bug in block type selection when Z_FIXED used.,trees.c,CVE-2016-9842,e54e1299404101a5a9d0cf5e45512b543967f958,inflate.c,1,1,trees.c,"Fix bug in block type selection when Z_FIXED used.
+
+A fixed block could be chosen when a stored block was smaller. Now
+the smaller of the two is always chosen.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,a0bf0f31d30088333aacf0b886d606c81a54bf21,Avoid obfuscating use of default case in inftrees.c.,inftrees.c,CVE-2016-9840,6a043145ca6e9c55184013841a67b2fef87e44c0,inftrees.c,1,1,inftrees.c,Avoid obfuscating use of default case in inftrees.c.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,a566e156b3fa07b566ddbf6801b517a9dba04fa3,Avoid compiler complaints if _TIME_BITS defined when building zlib.,gzguts.h,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,gzguts.h,1,1,gzguts.h,"Avoid compiler complaints if _TIME_BITS defined when building zlib.
+
+zlib does not use time_t, so _TIME_BITS is irrelevant. However it
+may be defined anyway as part of a sledgehammer indiscriminately
+applied to all builds.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,c376a417a724c21173f40765bd643388523b16f7,Fix deflateEnd() to not report an error at start of raw deflate.,deflate.c,CVE-2018-25032,5c44459c3b28a9bd3283aaceab7c615f8020c531,deflate.c,1,1,deflate.c,Fix deflateEnd() to not report an error at start of raw deflate.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,c901a34c92c4aa74028f541a9773df726ce2b769,Avoid uninitialized access by gzclose_w().,deflate.c,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,inftrees.c,1,2,deflate.c;gzwrite.c,Avoid uninitialized access by gzclose_w().,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,d4eaa1d939f59822ba3ab0b56a547a8fcde33f7e,Avoid unterminated file name in contrib/minizip/miniunz.c.,contrib/minizip/miniunz.c,CVE-2014-9485,14a5f8f266c16c87ab6c086fc52b770b27701e01,contrib/minizip/miniunz.c,1,1,contrib/minizip/miniunz.c,Avoid unterminated file name in contrib/minizip/miniunz.c.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,eb90f6a56892d7f88df99e52300498d6780cacca,Fix bug in 'F' mode for gzopen().,gzlib.c,CVE-2016-9843,d1d577490c15a0c6862473d7576352a9f18ef811,crc32.c,1,1,gzlib.c,Fix bug in 'F' mode for gzopen().,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,fd366384cf324d750596feb03be44ddf4d1e6acd,Prevent the use of insecure functions without an explicit request.,gzwrite.c,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,trees.c,1,3,gzwrite.c;zlib.h;zutil.c,"Prevent the use of insecure functions without an explicit request.
+
+ZLIB_INSECURE must be defined in order to compile code that uses
+the insecure functions vsprintf() or sprintf(). This would occur
+only if the standard vsnprintf() or snprintf() functions are not
+available. Providing the --insecure option to ./configure will
+define ZLIB_INSECURE. A flag is added to zlibCompileFlags() to
+indicate that gzprintf() is not implemented due to the need for
+the use of an insecure function, but ZLIB_INSECURE was not
+defined.",0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.
+zlib,fee7c52428e9255b78e9cb0f7b7af91a54fe9cf6,Avoid Visual C warning in gzread.c.,gzread.c,CVE-2023-45853,51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf,gzlib.c,1,1,gzread.c,Avoid Visual C warning in gzread.c.,0,0,0,accept,Commit message and changed-file context remain consistent with an ordinary bug-fix control.

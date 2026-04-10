@@ -1,0 +1,154 @@
+{
+  "n_train_files": 10538,
+  "n_train_positive_files": 189,
+  "n_train_repos": 9,
+  "n_holdout_files": 1388,
+  "n_holdout_positive_files": 8,
+  "n_holdout_repos": 2,
+  "models": {
+    "baseline_size": {
+      "roc_auc": 0.9581521739130434,
+      "average_precision": 0.09963190153996515,
+      "brier_score": 0.005517939015530771,
+      "log_loss": 0.02787496321619817,
+      "ece": 0.007570339733103502,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_history": {
+      "roc_auc": 0.921376811594203,
+      "average_precision": 0.06479759364407135,
+      "brier_score": 0.00560371024088414,
+      "log_loss": 0.028888484945516966,
+      "ece": 0.005599860080184298,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_history_plus_structure": {
+      "roc_auc": 0.9304347826086956,
+      "average_precision": 0.06368794846405638,
+      "brier_score": 0.005624877230309807,
+      "log_loss": 0.028573737271708307,
+      "ece": 0.004171914237937421,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_plus_composite": {
+      "roc_auc": 0.9170289855072463,
+      "average_precision": 0.06448707009335937,
+      "brier_score": 0.005611233177283858,
+      "log_loss": 0.029411833401117426,
+      "ece": 0.006151896246319937,
+      "pairwise_accuracy": NaN
+    }
+  },
+  "audit": {
+    "n_rows": 300,
+    "n_repos": 14,
+    "n_snapshots": 30,
+    "n_ids": 170,
+    "review_breakdown": {
+      "accept": 300
+    },
+    "source_family_breakdown": {
+      "explicit_plus_range": 143,
+      "explicit_only": 66,
+      "reference_plus_range": 41,
+      "explicit_plus_reference_plus_range": 32,
+      "reference_only": 17,
+      "explicit_plus_reference": 1
+    }
+  },
+  "screening": {
+    "candidate_repos": [
+      "django-django",
+      "python-cpython",
+      "psf-requests",
+      "prometheus-prometheus",
+      "go-gitea-gitea",
+      "scrapy-scrapy",
+      "pallets-flask",
+      "fastapi-fastapi",
+      "gin-gonic-gin",
+      "caddyserver-caddy"
+    ],
+    "eligible_holdout_repos": [],
+    "fallback_repos": [
+      "django-django",
+      "fastapi-fastapi",
+      "psf-requests",
+      "scrapy-scrapy"
+    ],
+    "selected_holdout_repos": [
+      "django-django",
+      "fastapi-fastapi",
+      "psf-requests",
+      "scrapy-scrapy"
+    ],
+    "primary_holdout_rule_met": false
+  },
+  "train_panel": {
+    "n_files": 10538,
+    "n_positive_files": 189,
+    "n_negative_files": 10349,
+    "positive_rate": 0.017935092047826912,
+    "n_positive_events": 151,
+    "n_repos": 9,
+    "n_snapshots": 22,
+    "source_family_breakdown": {
+      "explicit_plus_range": 96,
+      "explicit_only": 52,
+      "explicit_plus_reference_plus_range": 24,
+      "reference_plus_range": 23,
+      "reference_only": 16,
+      "explicit_plus_reference": 1
+    }
+  },
+  "holdout_panel": {
+    "n_files": 1388,
+    "n_positive_files": 8,
+    "n_negative_files": 1380,
+    "positive_rate": 0.005763688760806916,
+    "n_positive_events": 8,
+    "n_repos": 2,
+    "n_snapshots": 3,
+    "source_family_breakdown": {
+      "explicit_plus_range": 4,
+      "explicit_only": 2,
+      "explicit_plus_reference_plus_range": 2
+    }
+  },
+  "external_replication": {
+    "primary_baseline_model": "baseline_history_plus_structure",
+    "primary_plus_model": "baseline_plus_composite",
+    "roc_auc_lift": -0.01340579710144929,
+    "average_precision_lift": 0.0007991216293029846,
+    "brier_lift": -1.3644053025949239e-05
+  },
+  "parameters": {
+    "train_config": "experiments/config.forward_panel_curated.yaml",
+    "holdout_config": "experiments/config.external_holdout.yaml",
+    "audit_path": "data/processed/security_event_file_audit_curated.csv",
+    "max_tags": 5,
+    "min_tag_gap_days": 365,
+    "horizon_days": 730,
+    "lookback_years": 10,
+    "min_loc": 5,
+    "train_repos": [
+      "curl",
+      "php-src",
+      "openssl",
+      "redis",
+      "sqlite",
+      "git",
+      "openssh",
+      "zlib",
+      "jq"
+    ],
+    "min_holdout_snapshots": 3,
+    "min_holdout_events": 5
+  },
+  "gating": {
+    "has_no_range_only_labels": true,
+    "train_holdout_disjoint": true,
+    "holdout_min_positive_observations_met": false,
+    "holdout_min_repo_count_met": false
+  }
+}

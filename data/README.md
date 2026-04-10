@@ -43,6 +43,7 @@ Current contents:
 - `data/results/e16_external_holdout__curated15_to_external_flask_requests/`: frozen train/test evaluation from the curated prospective corpus to the earlier Flask/Requests holdout
 - `data/results/e16_external_holdout__supported_to_external_python5/`: frozen train/test evaluation from the supported-source prospective corpus to the screened external Python holdout
 - `data/results/e17_bugfix_control_audit__e15_light6/`: screening audit for the ordinary bug-fix controls used in the strict negative-control run
+- `data/results/e18_quantification_limits__curated15_h730_l10_t5__supported/`: calibration, forecast-error, and model-disagreement diagnostics for the supported-source prospective panel
 
 The file-level outputs correspond to the following event definitions:
 
@@ -70,5 +71,7 @@ The `e15_negative_control_strict__expanded_advisory__light6` outputs tighten the
 The `e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5` and `e16_external_holdout__curated15_to_external_flask_requests` outputs provide the earlier small external check based on Flask and Requests. The `e12_prospective_file_panel__external_python5_h730_l10_t5__supported` and `e16_external_holdout__supported_to_external_python5` outputs provide the current supported-source external check on the screened Python holdout.
 
 The `e17_bugfix_control_audit__e15_light6` outputs screen the ordinary bug-fix controls used in the strict negative-control analysis for residual security-related message signals.
+
+The `e18_quantification_limits__curated15_h730_l10_t5__supported` outputs reuse the supported-source `e12` held-out prediction set and compare calibration, forecast error, and cross-model score dispersion across opacity quartiles. These diagnostics are intended to test whether higher-opacity files are harder to quantify reliably, rather than simply whether they have higher later event rates.
 
 Readers who wish to regenerate the results should consult `REPRODUCIBILITY.md`.

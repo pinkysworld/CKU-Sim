@@ -65,6 +65,30 @@ from cku_sim.analysis.label_audit import (
     sample_stratified_audit_rows,
     summarise_reviewed_audit,
 )
+from cku_sim.analysis.quantification_limits import (
+    assign_opacity_strata,
+    brier_reliability,
+    build_all_file_disagreement_frame,
+    build_model_disagreement_frame,
+    merge_all_file_prediction_diagnostics,
+    expected_calibration_error,
+    merge_prediction_diagnostics,
+    summarise_all_file_calibration_by_stratum,
+    summarise_calibration_by_stratum,
+)
+from cku_sim.analysis.audited_panel import (
+    build_holdout_screen,
+    explode_event_catalog_to_audit_rows,
+    load_audited_security_table,
+    split_corpora_for_external_replication,
+    summarise_external_replication,
+)
+from cku_sim.analysis.audited_negative_control import (
+    build_conditional_logit_dataset,
+    fit_conditional_logit_models,
+    match_audited_security_to_bugfix,
+)
+from cku_sim.core.config import CorpusEntry
 from cku_sim.simulation.scenario_generator import (
     generate_regular_source,
     generate_irregular_source,
@@ -188,6 +212,484 @@ class TestStructuralOpacity:
         d = o.to_dict()
         assert d["name"] == "x"
         assert "ci_gzip" in d
+
+
+class TestQuantificationLimits:
+    def test_expected_calibration_error_distinguishes_better_scores(self):
+        labels = pd.Series([0, 0, 1, 1], dtype=float)
+        better_scores = pd.Series([0.0, 0.0, 1.0, 1.0], dtype=float)
+        worse_scores = pd.Series([0.4, 0.4, 0.6, 0.6], dtype=float)
+
+        better_ece = expected_calibration_error(labels, better_scores, n_bins=2)
+        worse_ece = expected_calibration_error(labels, worse_scores, n_bins=2)
+
+        assert better_ece < worse_ece
+
+    def test_merge_prediction_diagnostics_and_disagreement_frame(self):
+        dataset = pd.DataFrame(
+            [
+                {
+                    "pair_id": "p1",
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "event_id": "CVE-2026-0001",
+                    "event_observation_id": "evt-1",
+                    "label": 1,
+                    "kind": "case",
+                    "file_path": "src/a.c",
+                    "ground_truth_source": "explicit_id",
+                    "ground_truth_source_family": "explicit_only",
+                    "composite_score": 0.8,
+                    "loc": 120,
+                    "log_loc": np.log1p(120),
+                    "directory_depth": 2,
+                    "suffix": ".c",
+                },
+                {
+                    "pair_id": "p2",
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "event_id": "CVE-2026-0002",
+                    "event_observation_id": "evt-2",
+                    "label": 0,
+                    "kind": "control",
+                    "file_path": "src/b.c",
+                    "ground_truth_source": "explicit_id",
+                    "ground_truth_source_family": "explicit_only",
+                    "composite_score": 0.2,
+                    "loc": 80,
+                    "log_loc": np.log1p(80),
+                    "directory_depth": 2,
+                    "suffix": ".c",
+                },
+                {
+                    "pair_id": "p3",
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "event_id": "CVE-2026-0003",
+                    "event_observation_id": "evt-3",
+                    "label": 1,
+                    "kind": "case",
+                    "file_path": "src/c.py",
+                    "ground_truth_source": "reference_id",
+                    "ground_truth_source_family": "reference_only",
+                    "composite_score": 0.7,
+                    "loc": 200,
+                    "log_loc": np.log1p(200),
+                    "directory_depth": 3,
+                    "suffix": ".py",
+                },
+                {
+                    "pair_id": "p4",
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "event_id": "CVE-2026-0004",
+                    "event_observation_id": "evt-4",
+                    "label": 0,
+                    "kind": "control",
+                    "file_path": "src/d.py",
+                    "ground_truth_source": "reference_id",
+                    "ground_truth_source_family": "reference_only",
+                    "composite_score": 0.1,
+                    "loc": 60,
+                    "log_loc": np.log1p(60),
+                    "directory_depth": 1,
+                    "suffix": ".py",
+                },
+            ]
+        )
+        predictions = pd.DataFrame(
+            [
+                {
+                    "pair_id": row["pair_id"],
+                    "repo": row["repo"],
+                    "snapshot_tag": row["snapshot_tag"],
+                    "event_id": row["event_id"],
+                    "label": row["label"],
+                    "kind": row["kind"],
+                    "file_path": row["file_path"],
+                    "model": model,
+                    "score": score,
+                }
+                for row, model, score in [
+                    (dataset.iloc[0], "baseline_history", 0.55),
+                    (dataset.iloc[0], "baseline_plus_composite", 0.85),
+                    (dataset.iloc[1], "baseline_history", 0.35),
+                    (dataset.iloc[1], "baseline_plus_composite", 0.15),
+                    (dataset.iloc[2], "baseline_history", 0.60),
+                    (dataset.iloc[2], "baseline_plus_composite", 0.80),
+                    (dataset.iloc[3], "baseline_history", 0.40),
+                    (dataset.iloc[3], "baseline_plus_composite", 0.20),
+                ]
+            ]
+        )
+
+        merged = merge_prediction_diagnostics(dataset, predictions)
+        assert set(merged["opacity_stratum"]) == {"Q1", "Q2", "Q3", "Q4"}
+
+        disagreement = build_model_disagreement_frame(merged)
+        assert len(disagreement) == 4
+        first_row = disagreement.loc[disagreement["pair_id"] == "p1"].iloc[0]
+        assert pytest.approx(first_row["score_range"], rel=1e-6) == 0.30
+
+        calibration = summarise_calibration_by_stratum(merged, n_bins=2)
+        overall_row = calibration.loc[
+            (calibration["model"] == "baseline_plus_composite")
+            & (calibration["opacity_stratum"] == "overall")
+        ].iloc[0]
+        assert overall_row["absolute_error_mean"] < 0.3
+
+    def test_all_file_calibration_and_disagreement_helpers(self):
+        dataset = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "snapshot_key": "repo-a:v1.0",
+                    "event_observation_id": "obs-1",
+                    "label": 1,
+                    "file_path": "src/a.c",
+                    "composite_score": 0.9,
+                    "loc": 120,
+                    "log_loc": np.log1p(120),
+                    "directory_depth": 1,
+                    "suffix": ".c",
+                    "advisory_ids": "CVE-2026-0001",
+                    "source_families": "explicit_only",
+                    "mapping_bases": "explicit_id",
+                },
+                {
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "snapshot_key": "repo-a:v1.0",
+                    "event_observation_id": "obs-2",
+                    "label": 0,
+                    "file_path": "src/b.c",
+                    "composite_score": 0.1,
+                    "loc": 80,
+                    "log_loc": np.log1p(80),
+                    "directory_depth": 1,
+                    "suffix": ".c",
+                    "advisory_ids": "",
+                    "source_families": "",
+                    "mapping_bases": "",
+                },
+                {
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "snapshot_key": "repo-b:v2.0",
+                    "event_observation_id": "obs-3",
+                    "label": 1,
+                    "file_path": "pkg/c.py",
+                    "composite_score": 0.8,
+                    "loc": 200,
+                    "log_loc": np.log1p(200),
+                    "directory_depth": 2,
+                    "suffix": ".py",
+                    "advisory_ids": "CVE-2026-0002",
+                    "source_families": "reference_only",
+                    "mapping_bases": "nvd_ref",
+                },
+                {
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "snapshot_key": "repo-b:v2.0",
+                    "event_observation_id": "obs-4",
+                    "label": 0,
+                    "file_path": "pkg/d.py",
+                    "composite_score": 0.2,
+                    "loc": 60,
+                    "log_loc": np.log1p(60),
+                    "directory_depth": 2,
+                    "suffix": ".py",
+                    "advisory_ids": "",
+                    "source_families": "",
+                    "mapping_bases": "",
+                },
+            ]
+        )
+        predictions = pd.DataFrame(
+            [
+                {
+                    "repo": row["repo"],
+                    "snapshot_tag": row["snapshot_tag"],
+                    "snapshot_key": row["snapshot_key"],
+                    "event_observation_id": row["event_observation_id"],
+                    "label": row["label"],
+                    "file_path": row["file_path"],
+                    "model": model,
+                    "score": score,
+                }
+                for row, model, score in [
+                    (dataset.iloc[0], "baseline_history_plus_structure", 0.65),
+                    (dataset.iloc[0], "baseline_plus_composite", 0.85),
+                    (dataset.iloc[1], "baseline_history_plus_structure", 0.35),
+                    (dataset.iloc[1], "baseline_plus_composite", 0.15),
+                    (dataset.iloc[2], "baseline_history_plus_structure", 0.60),
+                    (dataset.iloc[2], "baseline_plus_composite", 0.80),
+                    (dataset.iloc[3], "baseline_history_plus_structure", 0.40),
+                    (dataset.iloc[3], "baseline_plus_composite", 0.20),
+                ]
+            ]
+        )
+
+        merged = merge_all_file_prediction_diagnostics(dataset, predictions, n_strata=4)
+        disagreement = build_all_file_disagreement_frame(merged)
+        calibration = summarise_all_file_calibration_by_stratum(
+            merged,
+            group_labels=["Q1", "Q2", "Q3", "Q4"],
+            n_bins=2,
+        )
+
+        assert set(merged["opacity_stratum"]) == {"Q1", "Q2", "Q3", "Q4"}
+        assert len(disagreement) == 4
+        assert "brier_reliability" in calibration.columns
+        assert brier_reliability([0, 1], [0.2, 0.8], n_bins=2) >= 0.0
+
+
+class TestAuditedPanelHelpers:
+    def test_explode_and_load_security_audit_filters_range_only(self):
+        catalog = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "event_id": "CVE-2026-0001",
+                    "source": "explicit_id+nvd_ref",
+                    "source_family": "explicit_plus_reference",
+                    "fixed_commit": "abc123",
+                    "snapshot_commit": "snap1",
+                    "snapshot_tag": "v1.0",
+                    "published": "2026-01-01T00:00:00+00:00",
+                    "severity_label": "HIGH",
+                    "changed_source_files": "src/a.c;src/b.c",
+                },
+                {
+                    "repo": "repo-b",
+                    "event_id": "OSV-1",
+                    "source": "osv_range",
+                    "source_family": "range_only",
+                    "fixed_commit": "def456",
+                    "snapshot_commit": "snap2",
+                    "snapshot_tag": "v2.0",
+                    "published": "2026-02-01T00:00:00+00:00",
+                    "severity_label": "MEDIUM",
+                    "changed_source_files": "pkg/c.py",
+                },
+            ]
+        )
+        audit = explode_event_catalog_to_audit_rows(catalog, reviewer="test")
+        assert set(audit["review_decision"]) == {"accept", "ambiguous"}
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            audit_path = Path(tmpdir) / "audit.csv"
+            audit.to_csv(audit_path, index=False)
+            loaded = load_audited_security_table(audit_path)
+
+        assert set(loaded["repo"]) == {"repo-a"}
+        assert not loaded["source_family"].isin({"range_only"}).any()
+
+    def test_holdout_screen_and_split_keep_train_holdout_disjoint(self):
+        audit = pd.DataFrame(
+            [
+                {"repo": "django-django", "snapshot_tag": "v1", "advisory_id": "a1", "file_path": "x"},
+                {"repo": "django-django", "snapshot_tag": "v2", "advisory_id": "a2", "file_path": "y"},
+                {"repo": "django-django", "snapshot_tag": "v3", "advisory_id": "a3", "file_path": "z"},
+                {"repo": "psf-requests", "snapshot_tag": "v1", "advisory_id": "b1", "file_path": "x"},
+                {"repo": "psf-requests", "snapshot_tag": "v2", "advisory_id": "b2", "file_path": "y"},
+                {"repo": "psf-requests", "snapshot_tag": "v3", "advisory_id": "b3", "file_path": "z"},
+            ]
+        )
+        screen = build_holdout_screen(audit, candidate_repos=["django-django", "psf-requests"], min_snapshots=3, min_events=3)
+        assert screen["eligible_holdout"].all()
+
+        train_corpus = [
+            CorpusEntry(name="curl", git_url="https://example.com/curl.git"),
+            CorpusEntry(name="django-django", git_url="https://example.com/django.git"),
+        ]
+        holdout_corpus = [
+            CorpusEntry(name="django-django", git_url="https://example.com/django.git"),
+            CorpusEntry(name="psf-requests", git_url="https://example.com/requests.git"),
+        ]
+        train_filtered, holdout_filtered = split_corpora_for_external_replication(
+            train_corpus,
+            holdout_corpus,
+            candidate_repos=["django-django", "psf-requests"],
+        )
+
+        assert {entry.name for entry in train_filtered} == {"curl"}
+        assert {entry.name for entry in holdout_filtered} == {"django-django", "psf-requests"}
+        assert {entry.name for entry in train_filtered}.isdisjoint(
+            {entry.name for entry in holdout_filtered}
+        )
+
+    def test_summarise_external_replication_computes_primary_lifts(self):
+        summary = {
+            "models": {
+                "baseline_history_plus_structure": {
+                    "roc_auc": 0.55,
+                    "average_precision": 0.40,
+                    "brier_score": 0.22,
+                },
+                "baseline_plus_composite": {
+                    "roc_auc": 0.61,
+                    "average_precision": 0.45,
+                    "brier_score": 0.20,
+                },
+            }
+        }
+
+        lifted = summarise_external_replication(summary)
+
+        assert pytest.approx(lifted["roc_auc_lift"], rel=1e-6) == 0.06
+        assert pytest.approx(lifted["average_precision_lift"], rel=1e-6) == 0.05
+        assert pytest.approx(lifted["brier_lift"], rel=1e-6) == -0.02
+
+
+class TestAuditedNegativeControlHelpers:
+    def test_match_and_conditional_logit(self):
+        security_pool = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "security_event_id": "evt-1",
+                    "security_commit": "sec1",
+                    "security_file": "src/a.c",
+                    "security_suffix": ".c",
+                    "security_subsystem_key": "src",
+                    "security_directory_depth": 1.0,
+                    "security_loc": 100.0,
+                    "security_size_bytes": 1000.0,
+                    "security_prior_touches_total": 10.0,
+                    "security_prior_touches_365d": 3.0,
+                    "security_total_churn": 50.0,
+                    "security_churn_365d": 15.0,
+                    "security_file_age_days": 400.0,
+                    "security_composite": 0.70,
+                    "security_ci_gzip": 0.50,
+                    "security_entropy": 0.80,
+                    "security_cc_density": 0.10,
+                    "security_halstead": 0.30,
+                },
+                {
+                    "repo": "repo-a",
+                    "security_event_id": "evt-2",
+                    "security_commit": "sec2",
+                    "security_file": "src/b.c",
+                    "security_suffix": ".c",
+                    "security_subsystem_key": "src",
+                    "security_directory_depth": 1.0,
+                    "security_loc": 110.0,
+                    "security_size_bytes": 1100.0,
+                    "security_prior_touches_total": 11.0,
+                    "security_prior_touches_365d": 4.0,
+                    "security_total_churn": 55.0,
+                    "security_churn_365d": 16.0,
+                    "security_file_age_days": 410.0,
+                    "security_composite": 0.72,
+                    "security_ci_gzip": 0.52,
+                    "security_entropy": 0.82,
+                    "security_cc_density": 0.11,
+                    "security_halstead": 0.31,
+                },
+                {
+                    "repo": "repo-a",
+                    "security_event_id": "evt-3",
+                    "security_commit": "sec3",
+                    "security_file": "src/c.c",
+                    "security_suffix": ".c",
+                    "security_subsystem_key": "src",
+                    "security_directory_depth": 1.0,
+                    "security_loc": 120.0,
+                    "security_size_bytes": 1200.0,
+                    "security_prior_touches_total": 12.0,
+                    "security_prior_touches_365d": 5.0,
+                    "security_total_churn": 60.0,
+                    "security_churn_365d": 17.0,
+                    "security_file_age_days": 420.0,
+                    "security_composite": 0.74,
+                    "security_ci_gzip": 0.54,
+                    "security_entropy": 0.84,
+                    "security_cc_density": 0.12,
+                    "security_halstead": 0.32,
+                },
+            ]
+        )
+        bugfix_pool = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "bugfix_commit": "bug1",
+                    "bugfix_subject": "ordinary fix",
+                    "bugfix_file": "src/x.c",
+                    "bugfix_suffix": ".c",
+                    "bugfix_subsystem_key": "src",
+                    "bugfix_directory_depth": 1.0,
+                    "bugfix_loc": 100.0,
+                    "bugfix_size_bytes": 1000.0,
+                    "bugfix_prior_touches_total": 9.0,
+                    "bugfix_prior_touches_365d": 3.0,
+                    "bugfix_total_churn": 49.0,
+                    "bugfix_churn_365d": 15.0,
+                    "bugfix_file_age_days": 390.0,
+                    "bugfix_composite": 0.40,
+                    "bugfix_ci_gzip": 0.30,
+                    "bugfix_entropy": 0.60,
+                    "bugfix_cc_density": 0.05,
+                    "bugfix_halstead": 0.20,
+                },
+                {
+                    "repo": "repo-a",
+                    "bugfix_commit": "bug2",
+                    "bugfix_subject": "ordinary fix",
+                    "bugfix_file": "src/y.c",
+                    "bugfix_suffix": ".c",
+                    "bugfix_subsystem_key": "src",
+                    "bugfix_directory_depth": 1.0,
+                    "bugfix_loc": 110.0,
+                    "bugfix_size_bytes": 1100.0,
+                    "bugfix_prior_touches_total": 10.0,
+                    "bugfix_prior_touches_365d": 4.0,
+                    "bugfix_total_churn": 54.0,
+                    "bugfix_churn_365d": 16.0,
+                    "bugfix_file_age_days": 405.0,
+                    "bugfix_composite": 0.42,
+                    "bugfix_ci_gzip": 0.31,
+                    "bugfix_entropy": 0.61,
+                    "bugfix_cc_density": 0.06,
+                    "bugfix_halstead": 0.21,
+                },
+                {
+                    "repo": "repo-a",
+                    "bugfix_commit": "bug3",
+                    "bugfix_subject": "ordinary fix",
+                    "bugfix_file": "src/z.c",
+                    "bugfix_suffix": ".c",
+                    "bugfix_subsystem_key": "src",
+                    "bugfix_directory_depth": 1.0,
+                    "bugfix_loc": 120.0,
+                    "bugfix_size_bytes": 1200.0,
+                    "bugfix_prior_touches_total": 11.0,
+                    "bugfix_prior_touches_365d": 5.0,
+                    "bugfix_total_churn": 59.0,
+                    "bugfix_churn_365d": 17.0,
+                    "bugfix_file_age_days": 415.0,
+                    "bugfix_composite": 0.44,
+                    "bugfix_ci_gzip": 0.32,
+                    "bugfix_entropy": 0.62,
+                    "bugfix_cc_density": 0.07,
+                    "bugfix_halstead": 0.22,
+                },
+            ]
+        )
+
+        pairs = match_audited_security_to_bugfix(security_pool, bugfix_pool)
+        dataset = build_conditional_logit_dataset(pairs)
+        fitted = fit_conditional_logit_models(dataset)
+
+        assert len(pairs) == 3
+        assert len(dataset) == 6
+        assert dataset["pair_id"].nunique() == 3
+        assert fitted == {} or "baseline_plus_composite" in fitted
 
 
 class TestFileLevelCaseControlHelpers:

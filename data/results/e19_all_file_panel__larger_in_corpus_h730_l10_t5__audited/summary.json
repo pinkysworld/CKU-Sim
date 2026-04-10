@@ -1,0 +1,112 @@
+{
+  "audit": {
+    "n_rows": 300,
+    "n_repos": 14,
+    "n_snapshots": 30,
+    "n_ids": 170,
+    "review_breakdown": {
+      "accept": 300
+    },
+    "source_family_breakdown": {
+      "explicit_plus_range": 143,
+      "explicit_only": 66,
+      "reference_plus_range": 41,
+      "explicit_plus_reference_plus_range": 32,
+      "reference_only": 17,
+      "explicit_plus_reference": 1
+    }
+  },
+  "panel": {
+    "n_files": 10538,
+    "n_positive_files": 189,
+    "n_negative_files": 10349,
+    "positive_rate": 0.017935092047826912,
+    "n_positive_events": 151,
+    "n_repos": 9,
+    "n_snapshots": 22,
+    "source_family_breakdown": {
+      "explicit_plus_range": 96,
+      "explicit_only": 52,
+      "explicit_plus_reference_plus_range": 24,
+      "reference_plus_range": 23,
+      "reference_only": 16,
+      "explicit_plus_reference": 1
+    }
+  },
+  "prediction": {
+    "n_files": 10538,
+    "n_positive_files": 189,
+    "n_repos": 9,
+    "n_snapshots": 22,
+    "models": {
+      "baseline_size": {
+        "roc_auc": 0.7373436893680395,
+        "average_precision": 0.04192629719471955,
+        "brier_score": 0.01807689754086235,
+        "log_loss": 0.08639513613421189,
+        "macro_roc_auc": 0.8294092117943623,
+        "macro_average_precision": 0.10704591705092768,
+        "macro_brier_score": 0.02176729252642738
+      },
+      "baseline_history": {
+        "roc_auc": 0.7810753895399755,
+        "average_precision": 0.05247884384121199,
+        "brier_score": 0.018375961868065376,
+        "log_loss": 0.08440881648708545,
+        "macro_roc_auc": 0.8470813006147719,
+        "macro_average_precision": 0.15730839204841357,
+        "macro_brier_score": 0.021320531945602537
+      },
+      "baseline_history_plus_structure": {
+        "roc_auc": 0.7822364556348517,
+        "average_precision": 0.0512843665638963,
+        "brier_score": 0.018517053800997236,
+        "log_loss": 0.08475045897082216,
+        "macro_roc_auc": 0.8455609059331426,
+        "macro_average_precision": 0.1766765471957098,
+        "macro_brier_score": 0.021418197919833317
+      },
+      "baseline_plus_composite": {
+        "roc_auc": 0.7785784072381812,
+        "average_precision": 0.052412359830221626,
+        "brier_score": 0.01838164011804008,
+        "log_loss": 0.08460640775436241,
+        "macro_roc_auc": 0.8463025406854945,
+        "macro_average_precision": 0.1548409166292488,
+        "macro_brier_score": 0.021365571984300596
+      }
+    }
+  },
+  "repo_fixed_effects": {
+    "baseline_history_plus_structure_repo_fixed_effects": {
+      "log_likelihood": -696.5806411399225,
+      "aic": 1425.161282279845
+    },
+    "baseline_plus_composite_repo_fixed_effects": {
+      "log_likelihood": -693.4791323064533,
+      "aic": 1420.9582646129065,
+      "composite_coef": 10.419860021896982,
+      "composite_pvalue": 0.006574288515123439,
+      "composite_ci_lo": 2.9051389785679964,
+      "composite_ci_hi": 17.934581065225967,
+      "lr_statistic_vs_baseline": 6.203017666938422,
+      "lr_pvalue_vs_baseline": 0.012753269613499454
+    }
+  },
+  "parameters": {
+    "audit_path": "data/processed/security_event_file_audit_curated.csv",
+    "max_tags": 5,
+    "min_tag_gap_days": 365,
+    "horizon_days": 730,
+    "lookback_years": 10,
+    "min_loc": 5,
+    "primary_baseline_model": "baseline_history_plus_structure",
+    "primary_plus_model": "baseline_plus_composite",
+    "results_subdir": "e19_all_file_panel__larger_in_corpus_h730_l10_t5__audited",
+    "include_external_candidates": false
+  },
+  "gating": {
+    "has_no_range_only_labels": true,
+    "train_repos_disjoint_from_primary_external_candidates": true
+  }
+}

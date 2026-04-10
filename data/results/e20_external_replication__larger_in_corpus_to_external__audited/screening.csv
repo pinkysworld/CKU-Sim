@@ -1,0 +1,11 @@
+repo,n_rows,n_snapshots,n_events,n_files,eligible_holdout,in_holdout_config,has_local_repo,eligible_primary_holdout
+django-django,8,2,7,7,False,True,True,False
+fastapi-fastapi,2,2,1,1,False,True,True,False
+psf-requests,1,1,1,1,False,True,True,False
+scrapy-scrapy,1,1,1,1,False,True,True,False
+python-cpython,0,0,0,0,False,True,True,False
+prometheus-prometheus,0,0,0,0,False,True,True,False
+go-gitea-gitea,0,0,0,0,False,True,True,False
+pallets-flask,0,0,0,0,False,True,True,False
+gin-gonic-gin,0,0,0,0,False,True,True,False
+caddyserver-caddy,0,0,0,0,False,True,True,False

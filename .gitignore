@@ -17,6 +17,8 @@ data/processed/*
 # Keep directory structure and allow publication outputs
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+!data/processed/security_event_file_audit_curated.csv
+!data/processed/ordinary_bugfix_control_audit_curated.csv
 !data/results/
 !data/results/**
 

@@ -386,6 +386,7 @@ def _list_source_files_at_commit(
             "path": path_str,
             "suffix": Path(path_str).suffix.lower(),
             "size": size,
+            "blob_sha": meta_parts[2] if len(meta_parts) >= 3 else "",
         }
 
     return files

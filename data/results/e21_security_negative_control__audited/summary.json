@@ -1,0 +1,84 @@
+{
+  "security_pool": {
+    "n_rows": 144,
+    "n_repos": 6,
+    "n_ids": 100,
+    "n_files": 78
+  },
+  "bugfix_audit": {
+    "n_rows": 149,
+    "n_repos": 6,
+    "n_snapshots": 0,
+    "n_ids": 149,
+    "review_breakdown": {
+      "accept": 149
+    },
+    "source_family_breakdown": {
+      "ordinary_bugfix": 149
+    }
+  },
+  "bugfix_pool": {
+    "n_rows": 149,
+    "n_repos": 6,
+    "n_ids": 149,
+    "n_files": 85
+  },
+  "matched_pairs": {
+    "n_pairs": 135,
+    "n_security_events": 96,
+    "n_repos": 6,
+    "mean_delta_composite": 0.0008865410032516662,
+    "median_delta_composite": -0.0001685555170641284,
+    "positive_share": 0.4888888888888889,
+    "mean_match_distance": 0.6481802330021362,
+    "wilcoxon_pvalue_greater": 0.43890793999406197,
+    "wilcoxon_statistic": 4660.0,
+    "bootstrap_security_cluster": {
+      "cluster_col": "event_observation_id",
+      "n_clusters": 96,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        -0.003132337889243361,
+        0.005191949111081992
+      ],
+      "median_delta_composite_ci": [
+        -0.0008604154508606854,
+        0.0007302506203603343
+      ],
+      "positive_share_ci": [
+        0.408,
+        0.5655459770114941
+      ]
+    }
+  },
+  "conditional_logit": {
+    "baseline_history_plus_structure": {
+      "log_likelihood": NaN,
+      "aic": NaN,
+      "fit_method": "regularized"
+    },
+    "baseline_plus_composite": {
+      "log_likelihood": NaN,
+      "aic": NaN,
+      "fit_method": "regularized",
+      "composite_coef": 39.02901605664291,
+      "composite_pvalue": NaN,
+      "composite_ci_lo": NaN,
+      "composite_ci_hi": NaN,
+      "lr_statistic_vs_baseline": NaN,
+      "lr_pvalue_vs_baseline": NaN
+    }
+  },
+  "gating": {
+    "accepted_bugfix_controls_ge_100": true,
+    "accepted_bugfix_controls_have_no_security_ids": true,
+    "accepted_bugfix_controls_have_no_security_keyword_signal": true,
+    "accepted_bugfix_controls_have_no_security_adjacent_signal": true
+  },
+  "parameters": {
+    "e15_subdir": "e15_negative_control_strict__expanded_advisory__light6",
+    "e17_subdir": "e17_bugfix_control_audit__e15_light6",
+    "bugfix_audit_path": "data/processed/ordinary_bugfix_control_audit_curated.csv"
+  }
+}
