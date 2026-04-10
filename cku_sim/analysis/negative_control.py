@@ -59,6 +59,11 @@ META_REFERENCE_EXCLUDE_RE = re.compile(
     r"\b(?:ai|gpt|llm|hallucinat\w*|machine-generated|model-generated)\b",
     re.IGNORECASE,
 )
+BUGFIX_AUDIT_SUSPICION_RE = re.compile(
+    r"\b(?:auth|permission|credential|token|cookie|session|csrf|cors|secret|"
+    r"encryp|decrypt|ssl|tls|x509|certificate|header|access control)\b",
+    re.IGNORECASE,
+)
 
 
 def _subsystem_key(path_str: str, *, depth: int = 2) -> str:
@@ -700,3 +705,105 @@ def evaluate_negative_control_prediction(
     predictions, fold_metrics, summary = evaluate_leave_one_repo_out(dataset)
     summary["task"] = "security_vs_ordinary_bugfix"
     return dataset, predictions, fold_metrics, summary
+
+
+def screen_bugfix_control_commits(
+    pairs_df: pd.DataFrame,
+    repo_paths: dict[str, Path],
+    corpus_by_name: dict[str, CorpusEntry],
+) -> pd.DataFrame:
+    """Review ordinary bug-fix controls for residual security-related signal."""
+    if pairs_df.empty:
+        return pd.DataFrame()
+
+    deduped = (
+        pairs_df.sort_values(["repo", "bugfix_commit", "bugfix_file"])
+        .drop_duplicates(subset=["repo", "bugfix_commit"])
+        .copy()
+    )
+    rows: list[dict[str, object]] = []
+    changed_cache: dict[tuple[str, str], list[str]] = {}
+
+    for _, row in deduped.iterrows():
+        repo = str(row["repo"])
+        repo_path = repo_paths.get(repo)
+        entry = corpus_by_name.get(repo)
+        if repo_path is None or entry is None:
+            continue
+
+        bugfix_commit = str(row["bugfix_commit"])
+        bugfix_file = str(row["bugfix_file"])
+        cache_key = (repo, bugfix_commit)
+        if cache_key not in changed_cache:
+            changed_cache[cache_key] = _list_changed_source_files(
+                repo_path,
+                bugfix_commit,
+                entry.source_extensions,
+            )
+        changed_files = changed_cache[cache_key]
+
+        body_proc = _run_git(repo_path, ["show", "-s", "--format=%B", bugfix_commit])
+        commit_message = body_proc.stdout.strip() if body_proc.returncode == 0 else ""
+        full_message = commit_message or str(row.get("bugfix_subject", ""))
+        security_ids = extract_security_ids(full_message)
+        has_security_signal = bool(SECURITY_EXCLUDE_RE.search(full_message))
+        has_suspicion_signal = bool(BUGFIX_AUDIT_SUSPICION_RE.search(full_message))
+        bugfix_file_in_changed_files = bugfix_file in changed_files
+
+        if security_ids or has_security_signal:
+            review_decision = "reject"
+            review_notes = "Commit message retains an explicit security identifier or a direct security keyword."
+        elif not bugfix_file_in_changed_files:
+            review_decision = "reject"
+            review_notes = "Matched bug-fix file is not present in the changed-source file list."
+        elif has_suspicion_signal:
+            review_decision = "ambiguous"
+            review_notes = "Commit message is not explicitly security-labelled, but it contains security-adjacent terms."
+        else:
+            review_decision = "accept"
+            review_notes = "Commit message and changed-file context remain consistent with an ordinary bug-fix control."
+
+        rows.append(
+            {
+                "repo": repo,
+                "bugfix_commit": bugfix_commit,
+                "bugfix_subject": str(row.get("bugfix_subject", "")),
+                "bugfix_file": bugfix_file,
+                "matched_security_event_id": str(row.get("security_event_id", "")),
+                "matched_security_commit": str(row.get("security_commit", "")),
+                "matched_security_file": str(row.get("security_file", "")),
+                "bugfix_file_in_changed_files": int(bugfix_file_in_changed_files),
+                "changed_source_files_count": int(len(changed_files)),
+                "changed_source_files_sample": ";".join(changed_files[:10]),
+                "commit_message_full": commit_message,
+                "has_security_ids": int(bool(security_ids)),
+                "has_security_keyword_signal": int(has_security_signal),
+                "has_security_adjacent_signal": int(has_suspicion_signal),
+                "review_decision": review_decision,
+                "review_notes": review_notes,
+            }
+        )
+
+    return pd.DataFrame(rows)
+
+
+def summarise_bugfix_control_screen(screened_df: pd.DataFrame) -> dict[str, object]:
+    """Summarise the ordinary bug-fix control screening audit."""
+    if screened_df.empty:
+        return {"n_reviewed": 0}
+
+    decision_counts = (
+        screened_df["review_decision"].value_counts().reindex(["accept", "ambiguous", "reject"], fill_value=0)
+    )
+    return {
+        "n_reviewed": int(len(screened_df)),
+        "review_counts": {str(key): int(value) for key, value in decision_counts.items()},
+        "accept_rate": float((screened_df["review_decision"] == "accept").mean()),
+        "non_reject_rate": float(screened_df["review_decision"].isin({"accept", "ambiguous"}).mean()),
+        "bugfix_file_in_changed_files_rate": float(screened_df["bugfix_file_in_changed_files"].mean()),
+        "security_keyword_signal_rate": float(screened_df["has_security_keyword_signal"].mean()),
+        "security_adjacent_signal_rate": float(screened_df["has_security_adjacent_signal"].mean()),
+        "by_repo": (
+            screened_df.groupby(["repo", "review_decision"]).size().unstack(fill_value=0).reset_index().to_dict("records")
+        ),
+    }

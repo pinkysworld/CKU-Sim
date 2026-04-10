@@ -1,0 +1,46 @@
+{
+  "n_reviewed": 154,
+  "review_counts": {
+    "accept": 149,
+    "ambiguous": 5,
+    "reject": 0
+  },
+  "accept_rate": 0.9675324675324676,
+  "non_reject_rate": 1.0,
+  "bugfix_file_in_changed_files_rate": 1.0,
+  "security_keyword_signal_rate": 0.0,
+  "security_adjacent_signal_rate": 0.032467532467532464,
+  "by_repo": [
+    {
+      "repo": "jq",
+      "accept": 15,
+      "ambiguous": 0
+    },
+    {
+      "repo": "libxml2",
+      "accept": 59,
+      "ambiguous": 0
+    },
+    {
+      "repo": "nginx",
+      "accept": 8,
+      "ambiguous": 1
+    },
+    {
+      "repo": "openssh",
+      "accept": 29,
+      "ambiguous": 4
+    },
+    {
+      "repo": "sqlite",
+      "accept": 20,
+      "ambiguous": 0
+    },
+    {
+      "repo": "zlib",
+      "accept": 18,
+      "ambiguous": 0
+    }
+  ],
+  "e15_subdir": "e15_negative_control_strict__expanded_advisory__light6"
+}

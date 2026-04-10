@@ -33,6 +33,7 @@ from cku_sim.analysis.negative_control import (
     augment_security_file_dataset,
     build_negative_control_prediction_dataset,
     build_security_file_dataset,
+    summarise_bugfix_control_screen,
     summarise_negative_control_pairs,
 )
 from cku_sim.collectors.osv_collector import (
@@ -49,6 +50,7 @@ from cku_sim.collectors.github_corpus import (
 from cku_sim.analysis.forward_panel import summarise_forward_panel
 from cku_sim.analysis.forward_panel import sample_release_snapshots
 from cku_sim.analysis.prospective_file_panel import (
+    _filter_events_for_ground_truth_policy,
     _cvss_v3_score_from_vector,
     _extract_osv_record_severity,
     build_prospective_prediction_dataset,
@@ -1055,6 +1057,26 @@ class TestProspectivePanelHelpers:
         assert len(sampled) == 6
         assert set(sampled["ground_truth_source"]) == {"explicit_id", "osv_range"}
 
+    def test_filter_events_for_supported_policy_excludes_range_only(self):
+        events = pd.DataFrame(
+            [
+                {"event_id": "e1", "source": "osv_range"},
+                {"event_id": "e2", "source": "explicit_id+osv_range"},
+                {"event_id": "e3", "source": "nvd_ref+osv_range+osv_ref"},
+            ]
+        )
+
+        filtered = _filter_events_for_ground_truth_policy(
+            events,
+            ground_truth_policy="supported_advisory_plus_explicit",
+        )
+
+        assert list(filtered["event_id"]) == ["e2", "e3"]
+        assert set(filtered["source_family"]) == {
+            "explicit_plus_range",
+            "reference_plus_range",
+        }
+
 
 class TestNegativeControlHelpers:
     def test_build_security_file_dataset_projects_case_side(self):
@@ -1122,6 +1144,41 @@ class TestNegativeControlHelpers:
         assert summary["n_security_events"] == 2
         assert summary["positive_share"] == 1.0
         assert summary["security_ground_truth_policy"] == "strict_nvd_event"
+
+    def test_summarise_bugfix_control_screen_counts_decisions(self):
+        screened = pd.DataFrame(
+            [
+                {
+                    "repo": "r1",
+                    "review_decision": "accept",
+                    "bugfix_file_in_changed_files": 1,
+                    "has_security_keyword_signal": 0,
+                    "has_security_adjacent_signal": 0,
+                },
+                {
+                    "repo": "r1",
+                    "review_decision": "ambiguous",
+                    "bugfix_file_in_changed_files": 1,
+                    "has_security_keyword_signal": 0,
+                    "has_security_adjacent_signal": 1,
+                },
+                {
+                    "repo": "r2",
+                    "review_decision": "reject",
+                    "bugfix_file_in_changed_files": 0,
+                    "has_security_keyword_signal": 1,
+                    "has_security_adjacent_signal": 1,
+                },
+            ]
+        )
+
+        summary = summarise_bugfix_control_screen(screened)
+
+        assert summary["n_reviewed"] == 3
+        assert summary["review_counts"]["accept"] == 1
+        assert summary["review_counts"]["ambiguous"] == 1
+        assert summary["review_counts"]["reject"] == 1
+        assert summary["bugfix_file_in_changed_files_rate"] == pytest.approx(2 / 3)
 
     def test_build_negative_control_prediction_dataset_expands_pairs(self):
         pairs = pd.DataFrame(

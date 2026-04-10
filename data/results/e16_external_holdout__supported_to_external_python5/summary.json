@@ -1,0 +1,42 @@
+{
+  "n_train_files": 402,
+  "n_train_pairs": 201,
+  "n_train_events": 130,
+  "n_train_repos": 11,
+  "n_holdout_files": 12,
+  "n_holdout_pairs": 6,
+  "n_holdout_events": 6,
+  "n_holdout_repos": 2,
+  "models": {
+    "baseline_size": {
+      "roc_auc": 0.5277777777777778,
+      "average_precision": 0.577020202020202,
+      "brier_score": 0.24952881714656025,
+      "log_loss": 0.6923731905406959,
+      "pairwise_accuracy": 0.5
+    },
+    "baseline_history": {
+      "roc_auc": 0.5555555555555556,
+      "average_precision": 0.6370370370370371,
+      "brier_score": 0.24980608216508782,
+      "log_loss": 0.6927761014129797,
+      "pairwise_accuracy": 0.5
+    },
+    "baseline_history_plus_structure": {
+      "roc_auc": 0.7222222222222223,
+      "average_precision": 0.7329365079365079,
+      "brier_score": 0.2394549971836161,
+      "log_loss": 0.6719701825161893,
+      "pairwise_accuracy": 0.6666666666666666
+    },
+    "baseline_plus_composite": {
+      "roc_auc": 0.3888888888888889,
+      "average_precision": 0.5664983164983165,
+      "brier_score": 0.2593682042398227,
+      "log_loss": 0.7118586995006368,
+      "pairwise_accuracy": 0.3333333333333333
+    }
+  },
+  "train_e12_subdir": "e12_prospective_file_panel__curated15_h730_l10_t5__supported",
+  "holdout_e12_subdir": "e12_prospective_file_panel__external_python5_h730_l10_t5__supported"
+}

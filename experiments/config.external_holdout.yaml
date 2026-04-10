@@ -105,3 +105,21 @@ corpus:
     stars: 53871
     source_extensions:
       - .py
+
+  - name: gin-gonic-gin
+    git_url: https://github.com/gin-gonic/gin.git
+    category: expanded
+    full_name: gin-gonic/gin
+    primary_language: Go
+    stars: 88301
+    source_extensions:
+      - .go
+
+  - name: go-gitea-gitea
+    git_url: https://github.com/go-gitea/gitea.git
+    category: expanded
+    full_name: go-gitea/gitea
+    primary_language: Go
+    stars: 54799
+    source_extensions:
+      - .go

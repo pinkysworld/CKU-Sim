@@ -204,6 +204,11 @@ def main() -> None:
                 if not event_catalog_df.empty and "source" in event_catalog_df
                 else {}
             ),
+            "source_family_breakdown": (
+                event_catalog_df["source_family"].value_counts().to_dict()
+                if not event_catalog_df.empty and "source_family" in event_catalog_df
+                else {}
+            ),
             "severity_label_breakdown": (
                 event_catalog_df["severity_label"].fillna("UNKNOWN").value_counts().to_dict()
                 if not event_catalog_df.empty and "severity_label" in event_catalog_df
@@ -232,6 +237,7 @@ def main() -> None:
             "min_loc": args.min_loc,
             "ground_truth_policy": args.ground_truth_policy,
             "ground_truth_label": policy_meta["label"],
+            "ground_truth_source_filter": policy_meta.get("source_filter_label", ""),
             "severity_band": args.severity_band,
             "results_subdir": args.results_subdir,
         },

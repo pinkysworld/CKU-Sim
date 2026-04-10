@@ -38,6 +38,7 @@ from cku_sim.analysis.file_level_case_control import (
     describe_ground_truth_policy,
     normalise_github_slug,
 )
+from cku_sim.analysis.label_audit import classify_ground_truth_source
 from cku_sim.analysis.forward_panel import _future_events_for_snapshot, _to_utc_timestamp
 from cku_sim.analysis.predictive_validation import pairwise_accuracy
 from cku_sim.collectors.osv_collector import (
@@ -70,6 +71,16 @@ PROSPECTIVE_GROUND_TRUTH_METADATA = {
             "and locally explicit CVE/GHSA-tagged fixes; external publication timestamps are "
             "used when available and otherwise the fixing-commit date is used."
         ),
+        "source_filter_label": "All source combinations",
+    },
+    "supported_advisory_plus_explicit": {
+        "label": "Supported advisory plus explicit-ID future events",
+        "description": (
+            "Future security events combine NVD-linked fixing commits, OSV-linked advisories, "
+            "and locally explicit CVE/GHSA-tagged fixes, but exclude range-only mappings that "
+            "lack explicit identifier or reference support."
+        ),
+        "source_filter_label": "Explicit or reference-supported mappings only",
     }
 }
 
@@ -141,6 +152,37 @@ def prospective_policy_metadata(policy: str) -> dict[str, str]:
     if policy not in PROSPECTIVE_GROUND_TRUTH_METADATA:
         raise ValueError(f"Unknown prospective ground-truth policy: {policy}")
     return dict(PROSPECTIVE_GROUND_TRUTH_METADATA[policy])
+
+
+def _supports_primary_event_label(source: object) -> bool:
+    family = classify_ground_truth_source(source)
+    return family in {
+        "explicit_only",
+        "reference_only",
+        "explicit_plus_range",
+        "reference_plus_range",
+        "explicit_plus_reference",
+        "explicit_plus_reference_plus_range",
+    }
+
+
+def _filter_events_for_ground_truth_policy(
+    events: pd.DataFrame,
+    *,
+    ground_truth_policy: str,
+) -> pd.DataFrame:
+    if events.empty:
+        return events
+
+    filtered = events.copy()
+    filtered["source_family"] = filtered["source"].map(classify_ground_truth_source)
+    if ground_truth_policy == "expanded_advisory_plus_explicit":
+        return filtered
+    if ground_truth_policy == "supported_advisory_plus_explicit":
+        return filtered.loc[
+            filtered["source"].map(_supports_primary_event_label)
+        ].copy()
+    raise ValueError(f"Unknown ground-truth policy: {ground_truth_policy}")
 
 
 def _safe_timestamp(value: object | None) -> pd.Timestamp | None:
@@ -508,6 +550,9 @@ def _build_expanded_future_events(
                 "fixed_epoch": int(fixed_epoch),
                 "aliases": ";".join(sorted(str(item) for item in state["aliases"] if item)),
                 "source": "+".join(sorted(str(item) for item in state["sources"] if item)),
+                "source_family": classify_ground_truth_source(
+                    "+".join(sorted(str(item) for item in state["sources"] if item))
+                ),
                 "event_date_source": event_date_source,
                 "severity_score": severity_score,
                 "severity_label": severity_label,
@@ -778,6 +823,17 @@ def build_prospective_file_panel(
         if events.empty:
             logger.info("Skipping %s: no usable future security events", entry.name)
             continue
+        events = _filter_events_for_ground_truth_policy(
+            events,
+            ground_truth_policy=ground_truth_policy,
+        )
+        if events.empty:
+            logger.info(
+                "Skipping %s: no usable future security events remain after source-policy filter %s",
+                entry.name,
+                ground_truth_policy,
+            )
+            continue
         total_events = int(len(events))
         known_severity_events = int(
             (
@@ -803,11 +859,12 @@ def build_prospective_file_panel(
             )
             continue
         logger.info(
-            "Prospective panel: %s with %d snapshots and %d candidate events (%s; known severity %d/%d)",
+            "Prospective panel: %s with %d snapshots and %d candidate events (%s; source policy %s; known severity %d/%d)",
             entry.name,
             len(snapshots),
             len(events),
             severity_band,
+            ground_truth_policy,
             known_severity_events,
             total_events,
         )
@@ -945,6 +1002,7 @@ def build_prospective_file_panel(
                     "event_observation_id": event_observation_id,
                     "ground_truth_policy": ground_truth_policy,
                     "ground_truth_source": str(event["source"]),
+                    "ground_truth_source_family": str(event.get("source_family", "")),
                     "ground_truth_aliases": str(event["aliases"]),
                     "event_published": str(event["published"]),
                     "event_date_source": str(event["event_date_source"]),
@@ -1006,6 +1064,7 @@ def build_prospective_file_panel(
                         "severity_label": str(event["severity_label"]),
                         "severity_source": str(event["severity_source"]),
                         "ground_truth_source": str(event["source"]),
+                        "ground_truth_source_family": str(event.get("source_family", "")),
                         "ground_truth_aliases": str(event["aliases"]),
                         "fixed_commit": str(event["fixed_commit"]),
                         "commit_subject": commit_subject_proc.stdout.strip()
@@ -1048,6 +1107,7 @@ def build_prospective_prediction_dataset(pairs_df: pd.DataFrame) -> pd.DataFrame
             "event_observation_id": row["event_observation_id"],
             "ground_truth_policy": row["ground_truth_policy"],
             "ground_truth_source": row["ground_truth_source"],
+            "ground_truth_source_family": row.get("ground_truth_source_family", ""),
         }
         for kind, label in (("case", 1), ("control", 0)):
             rows.append(
