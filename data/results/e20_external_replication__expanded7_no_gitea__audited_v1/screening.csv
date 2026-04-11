@@ -1,0 +1,8 @@
+repo,n_rows,n_snapshots,n_events,n_files,eligible_holdout,in_holdout_config,has_local_repo,eligible_primary_holdout
+django-django,30,7,18,19,True,True,True,True
+traefik-traefik,40,6,6,16,True,True,True,True
+prometheus-prometheus,9,3,4,4,False,True,True,False
+fastapi-fastapi,6,6,1,1,False,True,True,False
+psf-requests,7,4,1,2,False,True,True,False
+pallets-flask,4,4,1,1,False,True,True,False
+scrapy-scrapy,2,2,1,1,False,True,True,False

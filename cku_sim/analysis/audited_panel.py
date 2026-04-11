@@ -30,6 +30,12 @@ from cku_sim.core.config import Config, CorpusEntry
 
 logger = logging.getLogger(__name__)
 
+PROMISOR_RETRY_HINTS = (
+    "promisor remote",
+    "could not fetch",
+    "missing blob object",
+)
+
 AUDITED_SECURITY_COLUMNS = [
     "repo",
     "snapshot_tag",
@@ -84,14 +90,31 @@ def _run_git_bytes(
     *,
     stdin: bytes | None = None,
 ) -> subprocess.CompletedProcess[bytes]:
+    def _invoke(env: dict[str, str]) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.run(
+            ["git", "-C", str(repo_path), *args],
+            input=stdin,
+            capture_output=True,
+            env=env,
+        )
+
     env = os.environ.copy()
     env.setdefault("GIT_NO_LAZY_FETCH", "1")
-    return subprocess.run(
-        ["git", "-C", str(repo_path), *args],
-        input=stdin,
-        capture_output=True,
-        env=env,
-    )
+    proc = _invoke(env)
+    stderr_text = proc.stderr.decode("utf-8", errors="replace").lower() if proc.stderr else ""
+    if proc.returncode == 0 or not any(hint in stderr_text for hint in PROMISOR_RETRY_HINTS):
+        return proc
+
+    retry_env = os.environ.copy()
+    retry_env.pop("GIT_NO_LAZY_FETCH", None)
+    retry = _invoke(retry_env)
+    if retry.returncode == 0:
+        logger.info(
+            "Retried git byte command with promisor lazy fetch for %s",
+            repo_path.name,
+        )
+        return retry
+    return retry if retry.stdout else proc
 
 
 def _normalise_file_path(path: object) -> str:
@@ -403,16 +426,34 @@ def _normalise_history_path(path: str) -> str:
     return path.split("=>")[-1].strip()
 
 
+def _history_pathspecs(source_extensions: list[str]) -> list[str]:
+    """Restrict history scans to in-scope source extensions at the git layer."""
+    specs: list[str] = []
+    for ext in source_extensions:
+        ext = str(ext).strip().lower()
+        if not ext:
+            continue
+        if not ext.startswith("."):
+            ext = f".{ext}"
+        specs.append(f":(glob)**/*{ext}")
+    return sorted(set(specs))
+
+
 def _snapshot_history_index(
     repo_path: Path,
     snapshot_commit: str,
     snapshot_epoch: int,
     source_extensions: list[str],
     history_cache: dict[str, dict[str, dict[str, object]]],
+    snapshot_paths: list[str] | None = None,
 ) -> dict[str, dict[str, object]]:
     if snapshot_commit in history_cache:
         return history_cache[snapshot_commit]
 
+    history_pathspecs = (
+        sorted({str(path).strip() for path in (snapshot_paths or []) if str(path).strip()})
+        or _history_pathspecs(source_extensions)
+    )
     proc = _run_git(
         repo_path,
         [
@@ -422,6 +463,7 @@ def _snapshot_history_index(
             "--format=%x1e%ct%x1f%an",
             snapshot_commit,
             "--",
+            *history_pathspecs,
         ],
     )
     if proc.returncode != 0 and not proc.stdout.strip():
@@ -525,6 +567,73 @@ def _lookup_snapshot_history_features(
     }
 
 
+def _load_commit_timestamp(repo_path: Path, commit: str) -> pd.Timestamp | None:
+    proc = _run_git(repo_path, ["show", "-s", "--format=%cI", commit])
+    if proc.returncode != 0:
+        return None
+    text = proc.stdout.strip()
+    if not text:
+        return None
+    try:
+        return _to_utc_timestamp(text)
+    except Exception:
+        return None
+
+
+def _audited_snapshots_for_repo(
+    repo_path: Path,
+    repo_audit: pd.DataFrame,
+    *,
+    min_snapshot_date: pd.Timestamp,
+    max_snapshot_date: pd.Timestamp,
+    max_tags: int,
+    min_tag_gap_days: int,
+) -> list[dict[str, object]]:
+    """Return audited snapshot entries, preferring exact audited tags over generic sampling."""
+    if repo_audit.empty:
+        return []
+
+    snapshots: list[dict[str, object]] = []
+    grouped = (
+        repo_audit[["snapshot_tag", "snapshot_commit"]]
+        .drop_duplicates()
+        .sort_values(["snapshot_tag", "snapshot_commit"])
+    )
+    for _, row in grouped.iterrows():
+        snapshot_tag = str(row["snapshot_tag"])
+        snapshot_commit = str(row["snapshot_commit"])
+        if not snapshot_tag or not snapshot_commit:
+            continue
+        snapshot_date = _load_commit_timestamp(repo_path, snapshot_commit)
+        if snapshot_date is None:
+            continue
+        if snapshot_date < min_snapshot_date or snapshot_date > max_snapshot_date:
+            continue
+        snapshots.append(
+            {
+                "tag": snapshot_tag,
+                "commit": snapshot_commit,
+                "date": snapshot_date.isoformat(),
+            }
+        )
+
+    if not snapshots:
+        return []
+
+    snapshots.sort(key=lambda item: _to_utc_timestamp(item["date"]))
+    filtered: list[dict[str, object]] = []
+    min_gap = pd.Timedelta(days=min_tag_gap_days)
+    for snapshot in snapshots:
+        snapshot_date = _to_utc_timestamp(snapshot["date"])
+        if filtered and snapshot_date - _to_utc_timestamp(filtered[-1]["date"]) < min_gap:
+            continue
+        filtered.append(snapshot)
+
+    if max_tags and len(filtered) > max_tags:
+        filtered = filtered[-max_tags:]
+    return filtered
+
+
 def _batch_fetch_blob_texts(
     repo_path: Path,
     blob_ids: list[str],
@@ -594,8 +703,6 @@ def build_audited_all_file_panel(
     min_loc: int = 5,
 ) -> pd.DataFrame:
     """Build an audited all-file prospective panel for all eligible files at sampled snapshots."""
-    from cku_sim.analysis.forward_panel import sample_release_snapshots
-
     if security_audit.empty:
         return pd.DataFrame()
 
@@ -616,12 +723,13 @@ def build_audited_all_file_panel(
         if repo_audit.empty:
             continue
 
-        snapshots = sample_release_snapshots(
+        snapshots = _audited_snapshots_for_repo(
             repo_path,
+            repo_audit,
+            min_snapshot_date=min_snapshot_date,
+            max_snapshot_date=max_snapshot_date,
             max_tags=max_tags,
-            min_gap_days=min_tag_gap_days,
-            min_date=min_snapshot_date,
-            max_date=max_snapshot_date,
+            min_tag_gap_days=min_tag_gap_days,
         )
         if not snapshots:
             continue
@@ -705,6 +813,7 @@ def build_audited_all_file_panel(
                 snapshot_epoch,
                 entry.source_extensions,
                 history_cache,
+                snapshot_paths=sorted(files_at_snapshot),
             )
             for metadata in files_at_snapshot.values():
                 metadata["directory_depth"] = max(0, len(Path(str(metadata["path"])).parts) - 1)

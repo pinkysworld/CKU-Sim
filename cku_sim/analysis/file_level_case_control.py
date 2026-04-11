@@ -29,6 +29,12 @@ from cku_sim.metrics.compressibility import compressibility_index
 
 logger = logging.getLogger(__name__)
 
+PROMISOR_RETRY_HINTS = (
+    "promisor remote",
+    "could not fetch",
+    "missing blob object",
+)
+
 EXCLUDE_PARTS = {
     ".git",
     "node_modules",
@@ -317,16 +323,33 @@ def compute_file_opacity_from_text(
 
 
 def _run_git(repo_path: Path, args: list[str]) -> subprocess.CompletedProcess[str]:
+    def _invoke(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            ["git", "-C", str(repo_path), *args],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=env,
+        )
+
     env = os.environ.copy()
     env.setdefault("GIT_NO_LAZY_FETCH", "1")
-    return subprocess.run(
-        ["git", "-C", str(repo_path), *args],
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-        env=env,
-    )
+    proc = _invoke(env)
+    stderr_text = str(proc.stderr or "").lower()
+    if proc.returncode == 0 or not any(hint in stderr_text for hint in PROMISOR_RETRY_HINTS):
+        return proc
+
+    retry_env = os.environ.copy()
+    retry_env.pop("GIT_NO_LAZY_FETCH", None)
+    retry = _invoke(retry_env)
+    if retry.returncode == 0:
+        logger.info(
+            "Retried git command with promisor lazy fetch for %s",
+            repo_path.name,
+        )
+        return retry
+    return retry if retry.stdout else proc
 
 
 def _get_first_parent(repo_path: Path, commit: str) -> str | None:

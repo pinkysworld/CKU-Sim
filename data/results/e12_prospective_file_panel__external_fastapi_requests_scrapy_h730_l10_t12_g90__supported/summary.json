@@ -1,0 +1,166 @@
+{
+  "pair_level": {
+    "n_pairs": 7,
+    "n_events": 5,
+    "n_repos": 3,
+    "n_snapshots": 5,
+    "mean_delta_composite": -0.029370558754651863,
+    "median_delta_composite": -0.0386392464306039,
+    "positive_share": 0.14285714285714285,
+    "mean_case_loc": 297.57142857142856,
+    "mean_control_loc": 370.2857142857143,
+    "ground_truth_policy": "supported_advisory_plus_explicit",
+    "severity_band": "all",
+    "severity_label_breakdown": {
+      "MEDIUM": 5,
+      "HIGH": 1,
+      "UNKNOWN": 1
+    },
+    "label": "Supported advisory plus explicit-ID future events",
+    "description": "Future security events combine NVD-linked fixing commits, OSV-linked advisories, and locally explicit CVE/GHSA-tagged fixes, but exclude range-only mappings that lack explicit identifier or reference support.",
+    "source_filter_label": "Explicit or reference-supported mappings only",
+    "wilcoxon_pvalue_greater": 0.9453125,
+    "wilcoxon_statistic": 5.0,
+    "bootstrap_primary_cluster": {
+      "cluster_col": "event_observation_id",
+      "n_clusters": 5,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        -0.051589009481608335,
+        0.007153419817650192
+      ],
+      "median_delta_composite_ci": [
+        -0.04047930851515663,
+        0.018422968189261396
+      ],
+      "positive_share_ci": [
+        0.0,
+        0.5
+      ]
+    },
+    "bootstrap_repo_cluster": {
+      "cluster_col": "repo",
+      "n_clusters": 3,
+      "n_boot": 2000,
+      "confidence_level": 0.95,
+      "mean_delta_composite_ci": [
+        -0.042139204389303644,
+        0.043741357094559064
+      ],
+      "median_delta_composite_ci": [
+        -0.04047930851515663,
+        0.043741357094559064
+      ],
+      "positive_share_ci": [
+        0.0,
+        1.0
+      ]
+    }
+  },
+  "prediction": {
+    "n_files": 14,
+    "n_pairs": 7,
+    "n_events": 5,
+    "n_repos": 3,
+    "models": {
+      "baseline_size": {
+        "roc_auc": 0.40816326530612246,
+        "average_precision": 0.4871271585557299,
+        "brier_score": 0.2733735164673247,
+        "log_loss": 0.7451732773911915,
+        "pairwise_accuracy": 0.2857142857142857,
+        "macro_roc_auc": 0.44,
+        "macro_average_precision": 0.657037037037037,
+        "macro_brier_score": 0.2611392056998392,
+        "macro_pairwise_accuracy": 0.39999999999999997
+      },
+      "baseline_history": {
+        "roc_auc": 0.5306122448979592,
+        "average_precision": 0.5328231292517007,
+        "brier_score": 0.32601148829644017,
+        "log_loss": 1.5971325138133625,
+        "pairwise_accuracy": 0.5714285714285714,
+        "macro_roc_auc": 0.5066666666666667,
+        "macro_average_precision": 0.6753174603174603,
+        "macro_brier_score": 0.3190941440144246,
+        "macro_pairwise_accuracy": 0.5333333333333333
+      },
+      "baseline_history_plus_structure": {
+        "roc_auc": 0.5306122448979592,
+        "average_precision": 0.5283969998255711,
+        "brier_score": 0.3403237868343086,
+        "log_loss": 1.8138335115380142,
+        "pairwise_accuracy": 0.5714285714285714,
+        "macro_roc_auc": 0.5066666666666667,
+        "macro_average_precision": 0.6753174603174603,
+        "macro_brier_score": 0.3432935836311415,
+        "macro_pairwise_accuracy": 0.5333333333333333
+      },
+      "baseline_plus_composite": {
+        "roc_auc": 0.5306122448979591,
+        "average_precision": 0.528061224489796,
+        "brier_score": 0.39876831296533016,
+        "log_loss": 1.4933802028414593,
+        "pairwise_accuracy": 0.5714285714285714,
+        "macro_roc_auc": 0.48,
+        "macro_average_precision": 0.661984126984127,
+        "macro_brier_score": 0.38304389658522364,
+        "macro_pairwise_accuracy": 0.5333333333333333
+      }
+    }
+  },
+  "repo_fixed_effects": {
+    "baseline_repo_fixed_effects": {
+      "log_likelihood": -4.633001478198755,
+      "aic": 23.26600295639751
+    },
+    "baseline_plus_composite_repo_fixed_effects": {
+      "log_likelihood": -4.289920219729881,
+      "aic": 24.579840439459762,
+      "composite_coef": -145.42491575959696,
+      "composite_pvalue": 0.47788256782435456,
+      "composite_ci_lo": -547.0349772031904,
+      "composite_ci_hi": 256.18514568399644,
+      "lr_statistic_vs_baseline": 0.686162516937749,
+      "lr_pvalue_vs_baseline": 0.40747272610341767
+    }
+  },
+  "event_catalog": {
+    "n_rows": 8,
+    "n_event_observations": 3,
+    "n_snapshot_keys": 8,
+    "source_breakdown": {
+      "explicit_id+osv_range": 4,
+      "explicit_id+osv_range+osv_ref": 3,
+      "explicit_id": 1
+    },
+    "source_family_breakdown": {
+      "explicit_plus_range": 4,
+      "explicit_plus_reference_plus_range": 3,
+      "explicit_only": 1
+    },
+    "severity_label_breakdown": {
+      "HIGH": 4,
+      "MEDIUM": 3,
+      "UNKNOWN": 1
+    },
+    "known_severity_rate": 0.875
+  },
+  "audit": {
+    "n_rows_full": 7,
+    "n_rows_sampled": 5
+  },
+  "parameters": {
+    "max_tags": 12,
+    "min_tag_gap_days": 90,
+    "horizon_days": 730,
+    "lookback_years": 10,
+    "min_loc": 5,
+    "ground_truth_policy": "supported_advisory_plus_explicit",
+    "ground_truth_label": "Supported advisory plus explicit-ID future events",
+    "ground_truth_source_filter": "Explicit or reference-supported mappings only",
+    "severity_band": "all",
+    "results_subdir": "e12_prospective_file_panel__external_fastapi_requests_scrapy_h730_l10_t12_g90__supported"
+  }
+}

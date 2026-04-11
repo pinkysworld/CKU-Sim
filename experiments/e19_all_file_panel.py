@@ -38,6 +38,9 @@ DEFAULT_AUDIT_SOURCES = [
     "e12_prospective_file_panel__external_python5_h730_l10_t5__supported",
     "e12_prospective_file_panel__external_mix9_h730_l10_t3__supported",
     "e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5",
+    "e12_prospective_file_panel__external_django_traefik_h730_l10_t12_g90__supported",
+    "e12_prospective_file_panel__external_fastapi_requests_scrapy_h730_l10_t12_g90__supported",
+    "e12_prospective_file_panel__external_remaining5_nocpython_h730_l10_t5__supported",
 ]
 
 

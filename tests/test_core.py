@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import subprocess
 import tempfile
@@ -18,6 +19,7 @@ from cku_sim.metrics.compressibility import compressibility_index
 from cku_sim.metrics.entropy import shannon_entropy_from_frequencies
 from cku_sim.metrics.cyclomatic import cyclomatic_complexity_file
 from cku_sim.analysis.file_level_case_control import (
+    _run_git,
     compute_file_opacity_from_text,
     extract_commit_refs_from_nvd_items,
     extract_security_ids,
@@ -50,6 +52,7 @@ from cku_sim.collectors.github_corpus import (
 from cku_sim.analysis.forward_panel import summarise_forward_panel
 from cku_sim.analysis.forward_panel import sample_release_snapshots
 from cku_sim.analysis.prospective_file_panel import (
+    _build_snapshot_case_map,
     _filter_events_for_ground_truth_policy,
     _cvss_v3_score_from_vector,
     _extract_osv_record_severity,
@@ -77,11 +80,22 @@ from cku_sim.analysis.quantification_limits import (
     summarise_calibration_by_stratum,
 )
 from cku_sim.analysis.audited_panel import (
+    _history_pathspecs,
+    _snapshot_history_index,
+    _run_git_bytes,
     build_holdout_screen,
     explode_event_catalog_to_audit_rows,
     load_audited_security_table,
     split_corpora_for_external_replication,
     summarise_external_replication,
+)
+from cku_sim.analysis.intervention_mechanism import (
+    build_security_label_lookup,
+    load_intervention_audit_table,
+    lookup_future_security_events,
+    select_best_control_candidate,
+    summarise_intervention_audit_table,
+    summarise_pairs_to_did,
 )
 from cku_sim.analysis.audited_negative_control import (
     build_conditional_logit_dataset,
@@ -448,6 +462,11 @@ class TestQuantificationLimits:
 
 
 class TestAuditedPanelHelpers:
+    def test_history_pathspecs_cover_source_extensions(self):
+        specs = _history_pathspecs([".py", "go", ".py", ""])
+
+        assert specs == [":(glob)**/*.go", ":(glob)**/*.py"]
+
     def test_explode_and_load_security_audit_filters_range_only(self):
         catalog = pd.DataFrame(
             [
@@ -488,6 +507,31 @@ class TestAuditedPanelHelpers:
         assert set(loaded["repo"]) == {"repo-a"}
         assert not loaded["source_family"].isin({"range_only"}).any()
 
+    def test_snapshot_history_index_prefers_snapshot_paths_when_available(self, monkeypatch):
+        captured = {}
+
+        def fake_run_git(repo_path, args, **kwargs):
+            captured["args"] = args
+            return subprocess.CompletedProcess(
+                ["git", "-C", str(repo_path), *args],
+                0,
+                stdout="",
+                stderr="",
+            )
+
+        monkeypatch.setattr("cku_sim.analysis.audited_panel._run_git", fake_run_git)
+        history = _snapshot_history_index(
+            Path("/tmp/repo"),
+            "deadbeef",
+            0,
+            [".py"],
+            {},
+            snapshot_paths=["src/a.py", "src/b.py"],
+        )
+
+        assert history == {}
+        assert captured["args"][-2:] == ["src/a.py", "src/b.py"]
+
     def test_holdout_screen_and_split_keep_train_holdout_disjoint(self):
         audit = pd.DataFrame(
             [
@@ -518,9 +562,270 @@ class TestAuditedPanelHelpers:
 
         assert {entry.name for entry in train_filtered} == {"curl"}
         assert {entry.name for entry in holdout_filtered} == {"django-django", "psf-requests"}
-        assert {entry.name for entry in train_filtered}.isdisjoint(
-            {entry.name for entry in holdout_filtered}
+
+
+class TestPromisorRetryHelpers:
+    def test_run_git_retries_promisor_failure(self, monkeypatch):
+        calls = []
+
+        def fake_run(cmd, capture_output, text, encoding, errors, env):
+            calls.append(env.copy())
+            if len(calls) == 1:
+                return subprocess.CompletedProcess(
+                    cmd,
+                    128,
+                    stdout="",
+                    stderr="fatal: could not fetch abc from promisor remote",
+                )
+            return subprocess.CompletedProcess(cmd, 0, stdout="ok\n", stderr="")
+
+        monkeypatch.setattr(subprocess, "run", fake_run)
+        proc = _run_git(Path("/tmp/repo"), ["show", "HEAD"])
+
+        assert proc.returncode == 0
+        assert proc.stdout == "ok\n"
+        assert calls[0].get("GIT_NO_LAZY_FETCH") == "1"
+        assert "GIT_NO_LAZY_FETCH" not in calls[1]
+
+
+class TestInterventionMechanismHelpers:
+    def test_intervention_audit_loader_filters_accept_only(self):
+        audit = pd.DataFrame(
+            [
+                {
+                    "repo": "django-django",
+                    "anchor_tag": "5.0",
+                    "anchor_commit": "a1",
+                    "intervention_commit": "c1",
+                    "intervention_parent": "a1",
+                    "file_path": "django/db/models/base.py",
+                    "commit_date": "2023-01-01T00:00:00+00:00",
+                    "intervention_type": "refactor",
+                    "keyword_basis": "refactor;cleanup",
+                    "review_decision": "accept",
+                    "reviewer": "test",
+                    "notes": "accepted",
+                },
+                {
+                    "repo": "django-django",
+                    "anchor_tag": "5.1",
+                    "anchor_commit": "a2",
+                    "intervention_commit": "c2",
+                    "intervention_parent": "a2",
+                    "file_path": "django/forms/forms.py",
+                    "commit_date": "2023-06-01T00:00:00+00:00",
+                    "intervention_type": "cleanup",
+                    "keyword_basis": "cleanup",
+                    "review_decision": "reject",
+                    "reviewer": "test",
+                    "notes": "reject",
+                },
+            ]
         )
+        with tempfile.TemporaryDirectory() as tmpdir:
+            path = Path(tmpdir) / "interventions.csv"
+            audit.to_csv(path, index=False)
+            loaded = load_intervention_audit_table(path)
+
+        summary = summarise_intervention_audit_table(loaded)
+        assert len(loaded) == 1
+        assert loaded.iloc[0]["intervention_commit"] == "c1"
+        assert summary["n_rows"] == 1
+        assert summary["intervention_type_breakdown"] == {"refactor": 1}
+
+    def test_future_security_lookup_uses_horizon(self):
+        security_audit = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "file_path": "src/a.py",
+                    "published_at": "2024-01-15T00:00:00+00:00",
+                    "advisory_id": "GHSA-1",
+                    "fixed_commit": "abc",
+                },
+                {
+                    "repo": "repo-a",
+                    "file_path": "src/a.py",
+                    "published_at": "2027-01-15T00:00:00+00:00",
+                    "advisory_id": "GHSA-2",
+                    "fixed_commit": "def",
+                },
+            ]
+        )
+        lookup = build_security_label_lookup(security_audit, {})
+        label, ids = lookup_future_security_events(
+            lookup,
+            repo="repo-a",
+            file_path="src/a.py",
+            anchor_date="2023-07-01T00:00:00+00:00",
+            horizon_days=730,
+        )
+
+        assert label == 1
+        assert ids == "GHSA-1"
+
+    def test_select_best_control_candidate_prefers_nearest_structural_match(self):
+        intervention = pd.Series(
+            {
+                "repo": "repo-a",
+                "suffix": ".py",
+                "directory_depth_bucket": 2,
+                "pre_log_loc": math.log1p(100),
+                "pre_log_prior_touches_total": math.log1p(10),
+                "commit_epoch": 1000,
+                "file_path": "pkg/core.py",
+            }
+        )
+        maintenance = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "suffix": ".py",
+                    "maintenance_depth_bucket": 2,
+                    "pre_log_loc": math.log1p(95),
+                    "pre_log_prior_touches_total": math.log1p(11),
+                    "maintenance_epoch": 1000 + 10 * 86400,
+                    "maintenance_commit": "c1",
+                    "maintenance_id": "m1",
+                    "file_path": "pkg/other.py",
+                },
+                {
+                    "repo": "repo-a",
+                    "suffix": ".py",
+                    "maintenance_depth_bucket": 2,
+                    "pre_log_loc": math.log1p(200),
+                    "pre_log_prior_touches_total": math.log1p(80),
+                    "maintenance_epoch": 1000 + 5 * 86400,
+                    "maintenance_commit": "c2",
+                    "maintenance_id": "m2",
+                    "file_path": "pkg/far.py",
+                },
+            ]
+        )
+
+        match = select_best_control_candidate(intervention, maintenance)
+        assert match is not None
+        assert match["maintenance_id"] == "m1"
+        assert match["match_window_days"] == 90
+
+    def test_summarise_pairs_to_did_computes_expected_endpoint_deltas(self):
+        scored = pd.DataFrame(
+            [
+                {
+                    "intervention_id": "INT-0001",
+                    "repo": "repo-a",
+                    "role": "intervention",
+                    "period": "pre",
+                    "composite_score": 0.80,
+                    "score_range": 0.20,
+                    "absolute_error": 0.30,
+                },
+                {
+                    "intervention_id": "INT-0001",
+                    "repo": "repo-a",
+                    "role": "intervention",
+                    "period": "post",
+                    "composite_score": 0.60,
+                    "score_range": 0.10,
+                    "absolute_error": 0.20,
+                },
+                {
+                    "intervention_id": "INT-0001",
+                    "repo": "repo-a",
+                    "role": "control",
+                    "period": "pre",
+                    "composite_score": 0.50,
+                    "score_range": 0.12,
+                    "absolute_error": 0.10,
+                },
+                {
+                    "intervention_id": "INT-0001",
+                    "repo": "repo-a",
+                    "role": "control",
+                    "period": "post",
+                    "composite_score": 0.55,
+                    "score_range": 0.15,
+                    "absolute_error": 0.12,
+                },
+            ]
+        )
+
+        did = summarise_pairs_to_did(scored)
+        row = did.iloc[0]
+        assert row["did_composite_score"] == pytest.approx(-0.25)
+        assert row["did_score_range"] == pytest.approx(-0.13)
+        assert row["did_absolute_error"] == pytest.approx(-0.12)
+
+
+class TestProspectiveMappingHelpers:
+    def test_snapshot_case_map_unions_candidate_commit_files(self, monkeypatch):
+        def fake_list_changed_source_files(repo_path, commit, extensions):
+            mapping = {
+                "c1": ["pkg/a.py"],
+                "c2": ["pkg/b.py"],
+            }
+            return mapping.get(commit, [])
+
+        monkeypatch.setattr(
+            "cku_sim.analysis.prospective_file_panel._list_changed_source_files",
+            fake_list_changed_source_files,
+        )
+        future_events = pd.DataFrame(
+            [
+                {
+                    "event_id": "CVE-1",
+                    "fixed_commit": "c1",
+                    "candidate_commits": "c1;c2",
+                    "published_epoch": 1,
+                    "source": "explicit_id",
+                }
+            ]
+        )
+        files_at_snapshot = {
+            "pkg/a.py": {"path": "pkg/a.py"},
+            "pkg/b.py": {"path": "pkg/b.py"},
+            "pkg/c.py": {"path": "pkg/c.py"},
+        }
+        entry = CorpusEntry(
+            name="repo",
+            git_url="https://example.com/repo.git",
+            source_extensions=[".py"],
+        )
+
+        case_map, event_rows = _build_snapshot_case_map(
+            Path("/tmp/repo"),
+            "snap1",
+            files_at_snapshot,
+            future_events,
+            entry,
+            changed_cache={},
+        )
+
+        assert set(case_map) == {"pkg/a.py", "pkg/b.py"}
+        assert int(event_rows.loc[0, "changed_source_commit_count"]) == 2
+        assert int(event_rows.loc[0, "changed_source_files_count"]) == 2
+
+    def test_run_git_bytes_retries_promisor_failure(self, monkeypatch):
+        calls = []
+
+        def fake_run(cmd, input, capture_output, env):
+            calls.append(env.copy())
+            if len(calls) == 1:
+                return subprocess.CompletedProcess(
+                    cmd,
+                    128,
+                    stdout=b"",
+                    stderr=b"fatal: missing blob object from promisor remote",
+                )
+            return subprocess.CompletedProcess(cmd, 0, stdout=b"blob\n", stderr=b"")
+
+        monkeypatch.setattr(subprocess, "run", fake_run)
+        proc = _run_git_bytes(Path("/tmp/repo"), ["cat-file", "--batch"], stdin=b"deadbeef\n")
+
+        assert proc.returncode == 0
+        assert proc.stdout == b"blob\n"
+        assert calls[0].get("GIT_NO_LAZY_FETCH") == "1"
+        assert "GIT_NO_LAZY_FETCH" not in calls[1]
 
     def test_summarise_external_replication_computes_primary_lifts(self):
         summary = {

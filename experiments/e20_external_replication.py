@@ -39,6 +39,9 @@ DEFAULT_AUDIT_SOURCES = [
     "e12_prospective_file_panel__external_python5_h730_l10_t5__supported",
     "e12_prospective_file_panel__external_mix9_h730_l10_t3__supported",
     "e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5",
+    "e12_prospective_file_panel__external_django_traefik_h730_l10_t12_g90__supported",
+    "e12_prospective_file_panel__external_fastapi_requests_scrapy_h730_l10_t12_g90__supported",
+    "e12_prospective_file_panel__external_remaining5_nocpython_h730_l10_t5__supported",
 ]
 
 
@@ -89,6 +92,18 @@ def main() -> None:
     )
     parser.add_argument("--train-config", type=str, default="experiments/config.forward_panel_curated.yaml")
     parser.add_argument("--holdout-config", type=str, default="experiments/config.external_holdout.yaml")
+    parser.add_argument(
+        "--train-dataset-path",
+        type=str,
+        default=None,
+        help="Optional existing train dataset (.parquet or .csv) to reuse instead of rebuilding the train panel",
+    )
+    parser.add_argument(
+        "--holdout-repos",
+        type=str,
+        default=None,
+        help="Optional comma-separated explicit holdout repos to use instead of the default candidate pool",
+    )
     parser.add_argument(
         "--audit-path",
         type=str,
@@ -142,9 +157,14 @@ def main() -> None:
         logger.info("Seeded security audit table with %d rows at %s", len(seeded), audit_path)
 
     security_audit = load_audited_security_table(audit_path)
+    explicit_holdout_repos = (
+        [value.strip() for value in args.holdout_repos.split(",") if value.strip()]
+        if args.holdout_repos
+        else None
+    )
     screening = build_holdout_screen(
         security_audit,
-        candidate_repos=PRIMARY_EXTERNAL_CANDIDATES,
+        candidate_repos=explicit_holdout_repos or PRIMARY_EXTERNAL_CANDIDATES,
         min_snapshots=args.min_holdout_snapshots,
         min_events=args.min_holdout_events,
     )
@@ -170,35 +190,56 @@ def main() -> None:
         & (screening["n_snapshots"] > 0),
         "repo",
     ].tolist()
-    selected_holdout_repos = eligible_holdout_repos or fallback_repos
+    if explicit_holdout_repos:
+        selected_holdout_repos = screening.loc[
+            screening["in_holdout_config"]
+            & screening["has_local_repo"]
+            & (screening["n_events"] > 0)
+            & (screening["n_snapshots"] > 0),
+            "repo",
+        ].tolist()
+    else:
+        selected_holdout_repos = eligible_holdout_repos or fallback_repos
 
     train_corpus = train_config.corpus if train_config.corpus else DEFAULT_CORPUS
-    train_corpus, holdout_corpus = split_corpora_for_external_replication(
-        train_corpus,
-        holdout_corpus,
-        candidate_repos=PRIMARY_EXTERNAL_CANDIDATES,
-    )
+    if explicit_holdout_repos:
+        explicit_holdout_set = set(explicit_holdout_repos)
+        train_corpus = [entry for entry in train_corpus if entry.name not in explicit_holdout_set]
+        holdout_corpus = [entry for entry in holdout_corpus if entry.name in explicit_holdout_set]
+    else:
+        train_corpus, holdout_corpus = split_corpora_for_external_replication(
+            train_corpus,
+            holdout_corpus,
+            candidate_repos=PRIMARY_EXTERNAL_CANDIDATES,
+        )
     if args.train_repos:
         selected_train = {
             value.strip() for value in args.train_repos.split(",") if value.strip()
         }
         train_corpus = [entry for entry in train_corpus if entry.name in selected_train]
-    train_repo_paths = load_repo_paths(train_config, train_corpus)
     holdout_corpus = [entry for entry in holdout_corpus if entry.name in set(selected_holdout_repos)]
     holdout_repo_paths = load_repo_paths(holdout_config, holdout_corpus)
 
-    train_dataset = build_audited_all_file_panel(
-        train_repo_paths,
-        train_corpus,
-        train_config,
-        security_audit,
-        repos=[entry.name for entry in train_corpus],
-        max_tags=args.max_tags,
-        min_tag_gap_days=args.min_tag_gap_days,
-        horizon_days=args.horizon_days,
-        lookback_years=args.lookback_years,
-        min_loc=args.min_loc,
-    )
+    if args.train_dataset_path:
+        train_dataset_path = Path(args.train_dataset_path)
+        if train_dataset_path.suffix.lower() == ".csv":
+            train_dataset = pd.read_csv(train_dataset_path)
+        else:
+            train_dataset = pd.read_parquet(train_dataset_path)
+    else:
+        train_repo_paths = load_repo_paths(train_config, train_corpus)
+        train_dataset = build_audited_all_file_panel(
+            train_repo_paths,
+            train_corpus,
+            train_config,
+            security_audit,
+            repos=[entry.name for entry in train_corpus],
+            max_tags=args.max_tags,
+            min_tag_gap_days=args.min_tag_gap_days,
+            horizon_days=args.horizon_days,
+            lookback_years=args.lookback_years,
+            min_loc=args.min_loc,
+        )
     holdout_dataset = build_audited_all_file_panel(
         holdout_repo_paths,
         holdout_corpus,
@@ -222,7 +263,7 @@ def main() -> None:
 
     summary["audit"] = summarise_audit_table(security_audit)
     summary["screening"] = {
-        "candidate_repos": PRIMARY_EXTERNAL_CANDIDATES,
+        "candidate_repos": explicit_holdout_repos or PRIMARY_EXTERNAL_CANDIDATES,
         "eligible_holdout_repos": eligible_holdout_repos,
         "fallback_repos": fallback_repos,
         "selected_holdout_repos": selected_holdout_repos,
@@ -240,7 +281,10 @@ def main() -> None:
         "horizon_days": args.horizon_days,
         "lookback_years": args.lookback_years,
         "min_loc": args.min_loc,
-        "train_repos": [entry.name for entry in train_corpus],
+        "train_repos": sorted({str(value) for value in train_dataset["repo"].dropna().tolist()})
+        if not train_dataset.empty and "repo" in train_dataset
+        else [entry.name for entry in train_corpus],
+        "train_dataset_path": args.train_dataset_path,
         "min_holdout_snapshots": args.min_holdout_snapshots,
         "min_holdout_events": args.min_holdout_events,
     }

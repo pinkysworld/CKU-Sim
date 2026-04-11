@@ -1,0 +1,4 @@
+repo,n_pairs,n_events,n_snapshots,mean_delta_composite,median_delta_composite,positive_share
+scrapy-scrapy,1,1,1,0.043741357094559064,0.043741357094559064,1.0
+fastapi-fastapi,1,1,1,-0.0386392464306039,-0.0386392464306039,0.0
+psf-requests,5,3,3,-0.042139204389303644,-0.04047930851515663,0.0

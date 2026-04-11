@@ -1,0 +1,96 @@
+# Expanded external holdout configuration for audited replication.
+
+data_dir: "data"
+
+nvd_api_key: null
+nvd_rate_limit: 6.0
+osv_rate_limit: 0.1
+osv_query_batch_size: 100
+
+compression_algorithms:
+  - gzip
+  - lzma
+  - zstd
+
+composite_weights:
+  compressibility: 0.35
+  entropy: 0.25
+  cyclomatic_density: 0.25
+  halstead_volume: 0.15
+
+monte_carlo_runs: 10000
+random_seed: 42
+portfolio_size: 100
+
+corpus:
+  - name: django-django
+    git_url: https://github.com/django/django.git
+    category: expanded
+    full_name: django/django
+    primary_language: Python
+    stars: 87222
+    source_extensions:
+      - .py
+
+  - name: fastapi-fastapi
+    git_url: https://github.com/fastapi/fastapi.git
+    category: expanded
+    full_name: fastapi/fastapi
+    primary_language: Python
+    stars: 96996
+    source_extensions:
+      - .py
+
+  - name: psf-requests
+    git_url: https://github.com/psf/requests.git
+    category: expanded
+    full_name: psf/requests
+    primary_language: Python
+    stars: 53871
+    source_extensions:
+      - .py
+
+  - name: scrapy-scrapy
+    git_url: https://github.com/scrapy/scrapy.git
+    category: expanded
+    full_name: scrapy/scrapy
+    primary_language: Python
+    stars: 56672
+    source_extensions:
+      - .py
+
+  - name: traefik-traefik
+    git_url: https://github.com/traefik/traefik.git
+    category: expanded
+    full_name: traefik/traefik
+    primary_language: Go
+    stars: 62557
+    source_extensions:
+      - .go
+
+  - name: prometheus-prometheus
+    git_url: https://github.com/prometheus/prometheus.git
+    category: expanded
+    full_name: prometheus/prometheus
+    primary_language: Go
+    stars: 60535
+    source_extensions:
+      - .go
+
+  - name: go-gitea-gitea
+    git_url: https://github.com/go-gitea/gitea.git
+    category: expanded
+    full_name: go-gitea/gitea
+    primary_language: Go
+    stars: 54799
+    source_extensions:
+      - .go
+
+  - name: pallets-flask
+    git_url: https://github.com/pallets/flask.git
+    category: expanded
+    full_name: pallets/flask
+    primary_language: Python
+    stars: 71390
+    source_extensions:
+      - .py

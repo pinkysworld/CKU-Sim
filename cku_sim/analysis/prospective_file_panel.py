@@ -553,6 +553,10 @@ def _build_expanded_future_events(
                 "source_family": classify_ground_truth_source(
                     "+".join(sorted(str(item) for item in state["sources"] if item))
                 ),
+                "candidate_commits": ";".join(
+                    sorted(str(item) for item in state["candidate_commits"] if item)
+                ),
+                "candidate_commit_count": int(len(state["candidate_commits"])),
                 "event_date_source": event_date_source,
                 "severity_score": severity_score,
                 "severity_label": severity_label,
@@ -576,22 +580,33 @@ def _build_snapshot_case_map(
 
     future_events = future_events.sort_values(["published_epoch", "event_id"])
     for _, event in future_events.iterrows():
-        fixed_commit = str(event["fixed_commit"])
-        if fixed_commit not in changed_cache:
-            changed_cache[fixed_commit] = _list_changed_source_files(
-                repo_path,
-                fixed_commit,
-                entry.source_extensions,
-            )
-        changed_files = [
-            path
-            for path in changed_cache[fixed_commit]
-            if path in files_at_snapshot
+        candidate_commits = [
+            commit.strip()
+            for commit in str(event.get("candidate_commits", "")).split(";")
+            if commit.strip()
         ]
+        if not candidate_commits:
+            candidate_commits = [str(event["fixed_commit"])]
+
+        changed_files_union: set[str] = set()
+        for commit in candidate_commits:
+            if commit not in changed_cache:
+                changed_cache[commit] = _list_changed_source_files(
+                    repo_path,
+                    commit,
+                    entry.source_extensions,
+                )
+            changed_files_union.update(
+                path
+                for path in changed_cache[commit]
+                if path in files_at_snapshot
+            )
+        changed_files = sorted(changed_files_union)
         event_rows.append(
             {
                 **event.to_dict(),
                 "snapshot_commit": snapshot_commit,
+                "changed_source_commit_count": int(len(candidate_commits)),
                 "changed_source_files_count": int(len(changed_files)),
                 "changed_source_files": ";".join(changed_files),
             }

@@ -1,0 +1,9 @@
+roc_auc,average_precision,brier_score,log_loss,pairwise_accuracy,model,held_out_repo,n_files,n_pairs
+0.0,0.5,0.331015673511112,0.8674785305342376,0.0,baseline_size,go-gitea-gitea,2,1
+1.0,1.0,0.06760497029428864,0.25509835878173925,1.0,baseline_history,go-gitea-gitea,2,1
+1.0,1.0,0.006311316929121166,0.08254213019673678,1.0,baseline_history_plus_structure,go-gitea-gitea,2,1
+1.0,1.0,0.027752532144395606,0.165242724839428,1.0,baseline_plus_composite,go-gitea-gitea,2,1
+0.5,0.5,0.5,18.021826694558573,0.5,baseline_size,prometheus-prometheus,12,6
+0.5,0.5,0.5,18.021826694558573,0.5,baseline_history,prometheus-prometheus,12,6
+0.5,0.5,0.5,18.021826694558573,0.5,baseline_history_plus_structure,prometheus-prometheus,12,6
+0.5,0.5,0.5,18.021826694558573,0.5,baseline_plus_composite,prometheus-prometheus,12,6

@@ -1,0 +1,3 @@
+repo,n_pairs,n_events,n_snapshots,mean_delta_composite,median_delta_composite,positive_share
+go-gitea-gitea,1,1,1,0.06082869645709421,0.06082869645709421,1.0
+prometheus-prometheus,6,4,2,0.004203569587488705,-0.0044155527815517015,0.5

@@ -48,6 +48,13 @@ def _plot_delta_histogram(pairs: pd.DataFrame, output_path: Path) -> None:
     plt.close(fig)
 
 
+def _write_optional_parquet(frame: pd.DataFrame, output_path: Path) -> None:
+    """Write parquet only when the frame has a schema worth preserving."""
+    if frame.empty and len(frame.columns) == 0:
+        return
+    frame.to_parquet(output_path)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Experiment 12: prospective file-level panel"
@@ -159,33 +166,43 @@ def main() -> None:
         ground_truth_policy=args.ground_truth_policy,
         severity_band=args.severity_band,
     )
-    if pairs_df.empty:
-        logger.error("No usable prospective matched pairs were generated.")
-        return
-
-    dataset = build_prospective_prediction_dataset(pairs_df)
-    if dataset["repo"].nunique() >= 2:
-        predictions_df, fold_metrics_df, prediction_summary = evaluate_leave_one_repo_out(dataset)
-    else:
-        predictions_df = pd.DataFrame()
-        fold_metrics_df = pd.DataFrame()
-        prediction_summary = {
-            "note": "Leave-one-repository-out evaluation requires at least two repositories."
-        }
     repo_summary_df = summarise_repo_pairs(pairs_df)
     pair_summary = summarise_prospective_pairs(pairs_df)
-    fixed_effects = (
-        fit_repo_fixed_effect_models(dataset)
-        if dataset["repo"].nunique() >= 2
-        else {
-            "note": "Repository fixed-effects estimation requires at least two repositories."
-        }
-    )
     audit_sample_df = sample_audit_rows(
         audit_df,
         sample_size=args.audit_sample_size,
         random_seed=config.random_seed,
     )
+    if not pairs_df.empty:
+        dataset = build_prospective_prediction_dataset(pairs_df)
+        if dataset["repo"].nunique() >= 2:
+            predictions_df, fold_metrics_df, prediction_summary = evaluate_leave_one_repo_out(dataset)
+        else:
+            predictions_df = pd.DataFrame()
+            fold_metrics_df = pd.DataFrame()
+            prediction_summary = {
+                "note": "Leave-one-repository-out evaluation requires at least two repositories."
+            }
+        fixed_effects = (
+            fit_repo_fixed_effect_models(dataset)
+            if dataset["repo"].nunique() >= 2
+            else {
+                "note": "Repository fixed-effects estimation requires at least two repositories."
+            }
+        )
+    else:
+        dataset = pd.DataFrame()
+        predictions_df = pd.DataFrame()
+        fold_metrics_df = pd.DataFrame()
+        prediction_summary = {
+            "note": (
+                "No usable matched pairs were generated, but the event catalog and audit outputs "
+                "were retained for audited label harvesting."
+            )
+        }
+        fixed_effects = {
+            "note": "Repository fixed-effects estimation requires at least one matched pair."
+        }
 
     summary = {
         "pair_level": pair_summary,
@@ -243,15 +260,15 @@ def main() -> None:
         },
     }
 
-    pairs_df.to_parquet(results_dir / "pair_level.parquet")
+    _write_optional_parquet(pairs_df, results_dir / "pair_level.parquet")
     pairs_df.to_csv(results_dir / "pair_level.csv", index=False)
     event_catalog_df.to_csv(results_dir / "event_catalog.csv", index=False)
     audit_df.to_csv(results_dir / "audit_full.csv", index=False)
     audit_sample_df.to_csv(results_dir / "audit_sample.csv", index=False)
     repo_summary_df.to_csv(results_dir / "repo_summary.csv", index=False)
-    dataset.to_parquet(results_dir / "file_level_dataset.parquet")
+    _write_optional_parquet(dataset, results_dir / "file_level_dataset.parquet")
     dataset.to_csv(results_dir / "file_level_dataset.csv", index=False)
-    predictions_df.to_parquet(results_dir / "heldout_predictions.parquet")
+    _write_optional_parquet(predictions_df, results_dir / "heldout_predictions.parquet")
     predictions_df.to_csv(results_dir / "heldout_predictions.csv", index=False)
     fold_metrics_df.to_csv(results_dir / "fold_metrics.csv", index=False)
     with open(results_dir / "summary.json", "w") as handle:
@@ -278,26 +295,31 @@ def main() -> None:
         pair_summary["n_repos"],
         pair_summary["n_snapshots"],
     )
-    logger.info(
-        "Pair-level composite delta: mean=%.4f median=%.4f positive_share=%.3f",
-        pair_summary["mean_delta_composite"],
-        pair_summary["median_delta_composite"],
-        pair_summary["positive_share"],
-    )
-    pair_bootstrap = pair_summary.get("bootstrap_primary_cluster", {})
-    if pair_bootstrap:
-        median_ci = pair_bootstrap.get("median_delta_composite_ci")
-        if isinstance(median_ci, list) and len(median_ci) == 2:
-            logger.info(
-                "Pair-level clustered 95%% CI for median delta (%s): [%.4f, %.4f]",
-                pair_bootstrap.get("cluster_col"),
-                median_ci[0],
-                median_ci[1],
-            )
-    if "wilcoxon_pvalue_greater" in pair_summary:
+    if pair_summary["n_pairs"] > 0:
         logger.info(
-            "Pair-level Wilcoxon one-sided p=%.4g",
-            pair_summary["wilcoxon_pvalue_greater"],
+            "Pair-level composite delta: mean=%.4f median=%.4f positive_share=%.3f",
+            pair_summary["mean_delta_composite"],
+            pair_summary["median_delta_composite"],
+            pair_summary["positive_share"],
+        )
+        pair_bootstrap = pair_summary.get("bootstrap_primary_cluster", {})
+        if pair_bootstrap:
+            median_ci = pair_bootstrap.get("median_delta_composite_ci")
+            if isinstance(median_ci, list) and len(median_ci) == 2:
+                logger.info(
+                    "Pair-level clustered 95%% CI for median delta (%s): [%.4f, %.4f]",
+                    pair_bootstrap.get("cluster_col"),
+                    median_ci[0],
+                    median_ci[1],
+                )
+        if "wilcoxon_pvalue_greater" in pair_summary:
+            logger.info(
+                "Pair-level Wilcoxon one-sided p=%.4g",
+                pair_summary["wilcoxon_pvalue_greater"],
+            )
+    else:
+        logger.info(
+            "No matched pairs were retained; saved event-catalog outputs for downstream audited-panel seeding."
         )
     if prediction_summary.get("models"):
         for model_name, metrics in prediction_summary["models"].items():

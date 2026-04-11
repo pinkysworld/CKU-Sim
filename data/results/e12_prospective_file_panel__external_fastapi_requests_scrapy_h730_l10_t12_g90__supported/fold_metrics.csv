@@ -1,0 +1,13 @@
+roc_auc,average_precision,brier_score,log_loss,pairwise_accuracy,model,held_out_repo,n_files,n_pairs
+1.0,1.0,0.2499018375791619,0.6929507225987419,1.0,baseline_size,fastapi-fastapi,2,1
+1.0,1.0,0.21568345971027142,0.5564051941243566,1.0,baseline_history,fastapi-fastapi,2,1
+1.0,1.0,0.2853391971906227,0.7111455751374458,1.0,baseline_history_plus_structure,fastapi-fastapi,2,1
+1.0,1.0,0.33613789178118386,0.8713342001323242,1.0,baseline_plus_composite,fastapi-fastapi,2,1
+0.32,0.47111111111111115,0.282549249542939,0.7656363629882692,0.2,baseline_size,psf-requests,10,5
+0.52,0.525952380952381,0.3311994965079518,1.8851124642084827,0.6,baseline_history,psf-requests,10,5
+0.52,0.525952380952381,0.338096439236684,2.160948461312376,0.6,baseline_history_plus_structure,psf-requests,10,5
+0.44,0.4859523809523809,0.41056162525041007,1.688396073840671,0.6,baseline_plus_composite,psf-requests,10,5
+0.0,0.5,0.25096652997741686,0.6950804041982536,0.0,baseline_size,scrapy-scrapy,2,1
+0.0,0.5,0.4103994758250507,1.1979600815267673,0.0,baseline_history,scrapy-scrapy,2,1
+0.0,0.5,0.4064451144661179,1.1809466990667743,0.0,baseline_history_plus_structure,scrapy-scrapy,2,1
+0.0,0.5,0.40243217272407683,1.140346850554536,0.0,baseline_plus_composite,scrapy-scrapy,2,1
