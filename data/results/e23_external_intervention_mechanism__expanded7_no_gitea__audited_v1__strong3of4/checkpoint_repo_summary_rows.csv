@@ -1,0 +1,8 @@
+repo,accepted_intervention_rows,n_interventions_materialised,n_maintenance_rows,n_matched_pairs,n_anchor_rows,n_scored_anchor_rows,n_pair_did_rows,completed_at
+django-django,4,4,6,3,12,12,3,2026-04-12T07:23:08.624948+00:00
+fastapi-fastapi,25,25,11,10,40,40,10,2026-04-12T07:14:20.730417+00:00
+pallets-flask,19,19,30,17,68,68,17,2026-04-12T07:13:07.831244+00:00
+prometheus-prometheus,3,3,15,1,4,4,1,2026-04-12T07:22:34.101503+00:00
+psf-requests,25,25,100,25,100,100,25,2026-04-12T06:59:15.862873+00:00
+scrapy-scrapy,25,25,28,17,68,68,17,2026-04-12T07:16:27.035248+00:00
+traefik-traefik,1,1,12,1,4,4,1,2026-04-12T07:19:04.445012+00:00

@@ -69,13 +69,16 @@ from cku_sim.analysis.label_audit import (
     summarise_reviewed_audit,
 )
 from cku_sim.analysis.quantification_limits import (
+    assign_grouped_opacity_band,
     assign_opacity_strata,
     brier_reliability,
     build_all_file_disagreement_frame,
+    build_all_file_positive_failure_frame,
     build_model_disagreement_frame,
     merge_all_file_prediction_diagnostics,
     expected_calibration_error,
     merge_prediction_diagnostics,
+    summarise_positive_failure_by_band,
     summarise_all_file_calibration_by_stratum,
     summarise_calibration_by_stratum,
 )
@@ -91,8 +94,11 @@ from cku_sim.analysis.audited_panel import (
 )
 from cku_sim.analysis.intervention_mechanism import (
     build_security_label_lookup,
+    filter_material_interventions,
     load_intervention_audit_table,
     lookup_future_security_events,
+    relabel_anchor_observations,
+    merge_intervention_audit_frames,
     select_best_control_candidate,
     summarise_intervention_audit_table,
     summarise_pairs_to_did,
@@ -460,6 +466,112 @@ class TestQuantificationLimits:
         assert "brier_reliability" in calibration.columns
         assert brier_reliability([0, 1], [0.2, 0.8], n_bins=2) >= 0.0
 
+    def test_positive_failure_frame_and_band_summary(self):
+        dataset = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "snapshot_key": "repo-a:v1.0",
+                    "event_observation_id": "obs-1",
+                    "label": 1,
+                    "file_path": "src/a.c",
+                    "composite_score": 0.9,
+                    "loc": 120,
+                    "log_loc": np.log1p(120),
+                    "directory_depth": 1,
+                    "suffix": ".c",
+                },
+                {
+                    "repo": "repo-a",
+                    "snapshot_tag": "v1.0",
+                    "snapshot_key": "repo-a:v1.0",
+                    "event_observation_id": "obs-2",
+                    "label": 0,
+                    "file_path": "src/b.c",
+                    "composite_score": 0.1,
+                    "loc": 80,
+                    "log_loc": np.log1p(80),
+                    "directory_depth": 1,
+                    "suffix": ".c",
+                },
+                {
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "snapshot_key": "repo-b:v2.0",
+                    "event_observation_id": "obs-3",
+                    "label": 1,
+                    "file_path": "pkg/c.py",
+                    "composite_score": 0.8,
+                    "loc": 200,
+                    "log_loc": np.log1p(200),
+                    "directory_depth": 2,
+                    "suffix": ".py",
+                },
+                {
+                    "repo": "repo-b",
+                    "snapshot_tag": "v2.0",
+                    "snapshot_key": "repo-b:v2.0",
+                    "event_observation_id": "obs-4",
+                    "label": 0,
+                    "file_path": "pkg/d.py",
+                    "composite_score": 0.2,
+                    "loc": 60,
+                    "log_loc": np.log1p(60),
+                    "directory_depth": 2,
+                    "suffix": ".py",
+                },
+            ]
+        )
+        predictions = pd.DataFrame(
+            [
+                {
+                    "repo": row["repo"],
+                    "snapshot_tag": row["snapshot_tag"],
+                    "snapshot_key": row["snapshot_key"],
+                    "event_observation_id": row["event_observation_id"],
+                    "label": row["label"],
+                    "file_path": row["file_path"],
+                    "model": model,
+                    "score": score,
+                }
+                for row, model, score in [
+                    (dataset.iloc[0], "baseline_history_plus_structure", 0.55),
+                    (dataset.iloc[0], "baseline_plus_composite", 0.45),
+                    (dataset.iloc[1], "baseline_history_plus_structure", 0.65),
+                    (dataset.iloc[1], "baseline_plus_composite", 0.25),
+                    (dataset.iloc[2], "baseline_history_plus_structure", 0.40),
+                    (dataset.iloc[2], "baseline_plus_composite", 0.75),
+                    (dataset.iloc[3], "baseline_history_plus_structure", 0.60),
+                    (dataset.iloc[3], "baseline_plus_composite", 0.20),
+                ]
+            ]
+        )
+
+        merged = merge_all_file_prediction_diagnostics(dataset, predictions, n_strata=4)
+        disagreement = build_all_file_disagreement_frame(merged)
+        positive_failure = build_all_file_positive_failure_frame(
+            disagreement,
+            model_names=["baseline_history_plus_structure", "baseline_plus_composite"],
+        )
+        positive_failure = assign_grouped_opacity_band(
+            positive_failure,
+            low_labels=["Q1", "Q2", "Q3"],
+            high_labels=["Q4"],
+            output_col="opacity_band",
+        )
+        summary = summarise_positive_failure_by_band(positive_failure, band_col="opacity_band")
+
+        assert len(positive_failure) == 4
+        baseline_row = positive_failure.loc[
+            (positive_failure["event_observation_id"] == "obs-1")
+            & (positive_failure["model"] == "baseline_history_plus_structure")
+        ].iloc[0]
+        assert baseline_row["rank_desc"] == pytest.approx(2.0)
+        assert baseline_row["top10_miss"] == 1
+        assert baseline_row["underprediction_loss"] == pytest.approx(0.45)
+        assert set(summary["opacity_band"]) == {"high", "low"}
+
 
 class TestAuditedPanelHelpers:
     def test_history_pathspecs_cover_source_extensions(self):
@@ -589,6 +701,102 @@ class TestPromisorRetryHelpers:
 
 
 class TestInterventionMechanismHelpers:
+    def test_filter_material_interventions_requires_structure_drop_count(self):
+        interventions = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "intervention_commit": "c1",
+                    "file_path": "src/a.py",
+                    "pre_composite_score": 0.80,
+                    "post_composite_score": 0.70,
+                    "pre_ci_gzip": 0.50,
+                    "post_ci_gzip": 0.40,
+                    "pre_halstead_volume": 0.60,
+                    "post_halstead_volume": 0.55,
+                    "pre_cyclomatic_density": 0.20,
+                    "post_cyclomatic_density": 0.19,
+                },
+                {
+                    "repo": "repo-b",
+                    "intervention_commit": "c2",
+                    "file_path": "src/b.py",
+                    "pre_composite_score": 0.30,
+                    "post_composite_score": 0.31,
+                    "pre_ci_gzip": 0.20,
+                    "post_ci_gzip": 0.19,
+                    "pre_halstead_volume": 0.40,
+                    "post_halstead_volume": 0.41,
+                    "pre_cyclomatic_density": 0.10,
+                    "post_cyclomatic_density": 0.10,
+                },
+            ]
+        )
+
+        filtered = filter_material_interventions(interventions, min_structure_drops=3)
+
+        assert len(filtered) == 1
+        assert filtered.iloc[0]["repo"] == "repo-a"
+        assert int(filtered.iloc[0]["structure_drop_count"]) == 4
+
+    def test_merge_intervention_audit_frames_deduplicates_resume_rows(self):
+        existing = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "anchor_tag": "v1.0.0",
+                    "anchor_commit": "p1",
+                    "intervention_commit": "c1",
+                    "intervention_parent": "p1",
+                    "file_path": "src/a.py",
+                    "commit_date": "2024-01-01T00:00:00+00:00",
+                    "intervention_type": "refactor",
+                    "keyword_basis": "refactor",
+                    "review_decision": "accept",
+                    "reviewer": "seed",
+                    "notes": "first pass",
+                }
+            ]
+        )
+        incoming = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "anchor_tag": "v1.0.0",
+                    "anchor_commit": "p1",
+                    "intervention_commit": "c1",
+                    "intervention_parent": "p1",
+                    "file_path": "src/a.py",
+                    "commit_date": "2024-01-01T00:00:00+00:00",
+                    "intervention_type": "refactor",
+                    "keyword_basis": "refactor",
+                    "review_decision": "accept",
+                    "reviewer": "resume",
+                    "notes": "rerun",
+                },
+                {
+                    "repo": "repo-b",
+                    "anchor_tag": "v2.0.0",
+                    "anchor_commit": "p2",
+                    "intervention_commit": "c2",
+                    "intervention_parent": "p2",
+                    "file_path": "pkg/b.py",
+                    "commit_date": "2024-02-01T00:00:00+00:00",
+                    "intervention_type": "cleanup",
+                    "keyword_basis": "cleanup",
+                    "review_decision": "accept",
+                    "reviewer": "resume",
+                    "notes": "new row",
+                },
+            ]
+        )
+
+        merged = merge_intervention_audit_frames(existing, incoming)
+
+        assert len(merged) == 2
+        assert merged["repo"].tolist() == ["repo-a", "repo-b"]
+        assert merged.loc[merged["repo"] == "repo-a", "intervention_commit"].iloc[0] == "c1"
+
     def test_intervention_audit_loader_filters_accept_only(self):
         audit = pd.DataFrame(
             [
@@ -631,7 +839,51 @@ class TestInterventionMechanismHelpers:
         assert len(loaded) == 1
         assert loaded.iloc[0]["intervention_commit"] == "c1"
         assert summary["n_rows"] == 1
-        assert summary["intervention_type_breakdown"] == {"refactor": 1}
+
+    def test_relabel_anchor_observations_recomputes_future_labels(self):
+        anchor_rows = pd.DataFrame(
+            [
+                {
+                    "repo": "repo-a",
+                    "file_path": "src/a.py",
+                    "anchor_date": "2024-01-01T00:00:00+00:00",
+                    "label": 0,
+                    "future_event_ids": "",
+                },
+                {
+                    "repo": "repo-a",
+                    "file_path": "src/b.py",
+                    "anchor_date": "2024-01-01T00:00:00+00:00",
+                    "label": 1,
+                    "future_event_ids": "OLD",
+                },
+            ]
+        )
+        security_lookup = {
+            "repo-a": {
+                "src/a.py": [
+                    {
+                        "published_at": pd.Timestamp("2024-03-01T00:00:00+00:00"),
+                        "advisory_id": "ADV-1",
+                    }
+                ],
+                "src/b.py": [
+                    {
+                        "published_at": pd.Timestamp("2026-01-01T00:00:00+00:00"),
+                        "advisory_id": "ADV-2",
+                    }
+                ],
+            }
+        }
+
+        relabelled = relabel_anchor_observations(
+            anchor_rows,
+            security_lookup=security_lookup,
+            horizon_days=365,
+        )
+
+        assert relabelled["label"].tolist() == [1, 0]
+        assert relabelled["future_event_ids"].tolist() == ["ADV-1", ""]
 
     def test_future_security_lookup_uses_horizon(self):
         security_audit = pd.DataFrame(

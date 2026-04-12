@@ -1,0 +1,101 @@
+{
+  "completed_repos": [
+    "django-django",
+    "fastapi-fastapi",
+    "pallets-flask",
+    "prometheus-prometheus",
+    "psf-requests",
+    "scrapy-scrapy",
+    "traefik-traefik"
+  ],
+  "last_updated": "2026-04-12T12:20:11.898786+00:00",
+  "repo_status": {
+    "django-django": {
+      "accepted_intervention_rows": 4,
+      "completed_at": "2026-04-12T07:23:08.624948+00:00",
+      "n_anchor_rows": 12,
+      "n_interventions_materialised": 4,
+      "n_maintenance_rows": 6,
+      "n_matched_pairs": 3,
+      "n_pair_did_rows": 3,
+      "n_scored_anchor_rows": 12,
+      "repo": "django-django"
+    },
+    "fastapi-fastapi": {
+      "accepted_intervention_rows": 25,
+      "completed_at": "2026-04-12T07:14:20.730417+00:00",
+      "n_anchor_rows": 40,
+      "n_interventions_materialised": 25,
+      "n_maintenance_rows": 11,
+      "n_matched_pairs": 10,
+      "n_pair_did_rows": 10,
+      "n_scored_anchor_rows": 40,
+      "repo": "fastapi-fastapi"
+    },
+    "pallets-flask": {
+      "accepted_intervention_rows": 19,
+      "completed_at": "2026-04-12T07:13:07.831244+00:00",
+      "n_anchor_rows": 68,
+      "n_interventions_materialised": 19,
+      "n_maintenance_rows": 30,
+      "n_matched_pairs": 17,
+      "n_pair_did_rows": 17,
+      "n_scored_anchor_rows": 68,
+      "repo": "pallets-flask"
+    },
+    "prometheus-prometheus": {
+      "accepted_intervention_rows": 3,
+      "completed_at": "2026-04-12T07:22:34.101503+00:00",
+      "n_anchor_rows": 4,
+      "n_interventions_materialised": 3,
+      "n_maintenance_rows": 15,
+      "n_matched_pairs": 1,
+      "n_pair_did_rows": 1,
+      "n_scored_anchor_rows": 4,
+      "repo": "prometheus-prometheus"
+    },
+    "psf-requests": {
+      "accepted_intervention_rows": 25,
+      "completed_at": "2026-04-12T06:59:15.862873+00:00",
+      "n_anchor_rows": 100,
+      "n_interventions_materialised": 25,
+      "n_maintenance_rows": 100,
+      "n_matched_pairs": 25,
+      "n_pair_did_rows": 25,
+      "n_scored_anchor_rows": 100,
+      "repo": "psf-requests"
+    },
+    "scrapy-scrapy": {
+      "accepted_intervention_rows": 25,
+      "completed_at": "2026-04-12T07:16:27.035248+00:00",
+      "n_anchor_rows": 68,
+      "n_interventions_materialised": 25,
+      "n_maintenance_rows": 28,
+      "n_matched_pairs": 17,
+      "n_pair_did_rows": 17,
+      "n_scored_anchor_rows": 68,
+      "repo": "scrapy-scrapy"
+    },
+    "traefik-traefik": {
+      "accepted_intervention_rows": 1,
+      "completed_at": "2026-04-12T07:19:04.445012+00:00",
+      "n_anchor_rows": 4,
+      "n_interventions_materialised": 1,
+      "n_maintenance_rows": 12,
+      "n_matched_pairs": 1,
+      "n_pair_did_rows": 1,
+      "n_scored_anchor_rows": 4,
+      "repo": "traefik-traefik"
+    }
+  },
+  "results_subdir": "e23_external_intervention_mechanism__expanded7_no_gitea__audited_v1",
+  "selected_repos": [
+    "django-django",
+    "traefik-traefik",
+    "prometheus-prometheus",
+    "fastapi-fastapi",
+    "psf-requests",
+    "pallets-flask",
+    "scrapy-scrapy"
+  ]
+}

@@ -1,0 +1,170 @@
+{
+  "intervention_audit": {
+    "n_rows": 102,
+    "n_repos": 7,
+    "n_anchor_tags": 66,
+    "n_intervention_commits": 102,
+    "review_breakdown": {
+      "accept": 102
+    },
+    "intervention_type_breakdown": {
+      "refactor": 39,
+      "cleanup": 26,
+      "simplify": 19,
+      "extract": 10,
+      "split": 6,
+      "rework": 1,
+      "modular": 1
+    }
+  },
+  "n_interventions_materialised": 102,
+  "n_intervention_repos": 7,
+  "n_matched_pairs": 74,
+  "n_pair_repos": 7,
+  "maintenance_pool_rows": 202,
+  "n_positive_pair_rows": 6,
+  "pooled_endpoints": {
+    "delta_composite_did": {
+      "observed_mean": 0.0006139874656065924,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_composite_score",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 0.0006139874656065924,
+        "ci_lo": -0.0011557233634487433,
+        "ci_hi": 0.002670251089548629
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_composite_score",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 0.0006139874656065924,
+        "ci_lo": -0.0006771173936256678,
+        "ci_hi": 0.002325052311131697
+      }
+    },
+    "delta_score_range_did": {
+      "observed_mean": 1.0041844066110901e-05,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_score_range",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 1.0041844066110901e-05,
+        "ci_lo": -0.0008345344153582656,
+        "ci_hi": 0.000915632640957062
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_score_range",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 1.0041844066110901e-05,
+        "ci_lo": -0.0011366827410535774,
+        "ci_hi": 0.001503024308244893
+      }
+    },
+    "delta_absolute_error_did": {
+      "observed_mean": -0.00038660722239028253,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_absolute_error",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00038660722239028253,
+        "ci_lo": -0.0010826331990325582,
+        "ci_hi": 0.0003286434128980925
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_absolute_error",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00038660722239028253,
+        "ci_lo": -0.0014292237455712199,
+        "ci_hi": 0.0010215344075470035
+      }
+    },
+    "delta_underprediction_loss_did": {
+      "observed_mean": -0.00035233440183956384,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_underprediction_loss",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00035233440183956384,
+        "ci_lo": -0.0006974394209605549,
+        "ci_hi": -8.551745872433672e-05
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_underprediction_loss",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00035233440183956384,
+        "ci_lo": -0.000717898660659282,
+        "ci_hi": -3.7597292434423464e-05
+      }
+    },
+    "delta_positive_log_loss_did": {
+      "observed_mean": -0.011414085493383621,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_positive_log_loss",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.011414085493383621,
+        "ci_lo": -0.0238514343963717,
+        "ci_hi": -0.0017300025913089005
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_positive_log_loss",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.011414085493383621,
+        "ci_lo": -0.018100637798970094,
+        "ci_hi": -0.0010601215217596117
+      }
+    }
+  },
+  "gating": {
+    "accepted_intervention_rows_ge_100": true,
+    "accepted_intervention_repos_ge_5": true,
+    "django_present": true,
+    "traefik_present": true,
+    "prometheus_present": true,
+    "bootstrap_composite_present": true,
+    "bootstrap_score_range_present": true,
+    "bootstrap_absolute_error_present": true,
+    "bootstrap_underprediction_present": true,
+    "bootstrap_positive_log_loss_present": true,
+    "underprediction_direct_gate": true,
+    "full_cku_confirmation_gate": false,
+    "sharper_underprediction_gate": true,
+    "sharper_positive_log_gate": true,
+    "sharper_observable_mechanism_gate": true
+  },
+  "parameters": {
+    "config": "experiments/config.external_holdout_expanded.yaml",
+    "source_e23_subdir": "e23_external_intervention_mechanism__expanded7_no_gitea__audited_v1",
+    "train_dataset_path": "data/results/e20_external_replication__expanded7_no_gitea__audited_v1/train_file_level_dataset.parquet",
+    "security_audit_path": "data/processed/security_event_file_audit_curated.csv",
+    "horizon_days": 1825,
+    "min_structure_drops": 0,
+    "n_bootstrap": 2000,
+    "random_state": 42
+  }
+}

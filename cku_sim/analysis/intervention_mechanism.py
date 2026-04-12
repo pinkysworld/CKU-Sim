@@ -399,6 +399,16 @@ def build_commit_file_pool(
     epoch_cache: dict[str, int] = {}
     tag_cache: dict[str, str] = {}
     rows: list[dict[str, object]] = []
+    _prefetch_commit_objects(
+        repo_path,
+        [
+            str(value)
+            for value in pd.unique(
+                pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
+            )
+            if str(value)
+        ],
+    )
 
     for _, row in commit_metadata.iterrows():
         commit = str(row["commit"])
@@ -476,6 +486,90 @@ def build_commit_file_pool(
     ).sort_values(["commit_epoch", "intervention_commit", "file_path"]).reset_index(drop=True)
 
 
+def build_seed_commit_file_pool(
+    repo_path: Path,
+    entry: CorpusEntry,
+    commit_metadata: pd.DataFrame,
+    *,
+    min_loc: int,
+    max_files_per_commit: int = 1,
+) -> pd.DataFrame:
+    if commit_metadata.empty:
+        return pd.DataFrame()
+
+    metrics_cache: dict[tuple[str, str], object | None] = {}
+    tree_cache: dict[str, dict[str, dict[str, object]]] = {}
+    tag_cache: dict[str, str] = {}
+    rows: list[dict[str, object]] = []
+    _prefetch_commit_objects(
+        repo_path,
+        [
+            str(value)
+            for value in pd.unique(
+                pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
+            )
+            if str(value)
+        ],
+    )
+
+    for _, row in commit_metadata.iterrows():
+        commit = str(row["commit"])
+        parent = str(row["parent"])
+        changed_files = _list_changed_source_files(repo_path, commit, entry.source_extensions)
+        if not changed_files:
+            continue
+        if parent not in tree_cache:
+            tree_cache[parent] = _list_source_files_at_commit(
+                repo_path,
+                parent,
+                entry.source_extensions,
+            )
+        if commit not in tree_cache:
+            tree_cache[commit] = _list_source_files_at_commit(
+                repo_path,
+                commit,
+                entry.source_extensions,
+            )
+        candidate_files = [
+            file_path
+            for file_path in sorted(changed_files)
+            if file_path in tree_cache[parent] and file_path in tree_cache[commit]
+        ]
+        if max_files_per_commit:
+            candidate_files = candidate_files[: max_files_per_commit]
+        for file_path in candidate_files:
+            pre_metrics = _get_metrics_for_snapshot_file(
+                repo_path, parent, file_path, metrics_cache
+            )
+            post_metrics = _get_metrics_for_snapshot_file(
+                repo_path, commit, file_path, metrics_cache
+            )
+            if pre_metrics is None or post_metrics is None:
+                continue
+            if pre_metrics.total_loc < min_loc or post_metrics.total_loc < min_loc:
+                continue
+            rows.append(
+                {
+                    "repo": entry.name,
+                    "anchor_tag": _describe_anchor_tag(repo_path, parent, tag_cache),
+                    "anchor_commit": parent,
+                    "intervention_commit": commit,
+                    "intervention_parent": parent,
+                    "commit_epoch": int(row["epoch"]),
+                    "commit_date": _timestamp_from_epoch(int(row["epoch"])).isoformat(),
+                    "subject": str(row.get("subject", "")),
+                    "file_path": file_path,
+                    "intervention_type": str(row.get("intervention_type", "")),
+                    "keyword_basis": str(row.get("keyword_basis", "")),
+                }
+            )
+    if not rows:
+        return pd.DataFrame()
+    return pd.DataFrame(rows).drop_duplicates(
+        subset=["repo", "intervention_commit", "file_path"]
+    ).sort_values(["commit_epoch", "intervention_commit", "file_path"]).reset_index(drop=True)
+
+
 def seed_refactoring_intervention_audit_table(
     repo_paths: dict[str, Path],
     corpus: list[CorpusEntry],
@@ -517,7 +611,7 @@ def seed_refactoring_intervention_audit_table(
             metadata,
             max_rows=max(repo_cap * 6, repo_cap),
         )
-        pool = build_commit_file_pool(
+        pool = build_seed_commit_file_pool(
             repo_path,
             entry,
             metadata,
@@ -574,6 +668,30 @@ def load_intervention_audit_table(
     return audit.sort_values(["repo", "commit_date", "intervention_commit", "file_path"]).reset_index(drop=True)
 
 
+def merge_intervention_audit_frames(
+    existing: pd.DataFrame | None,
+    incoming: pd.DataFrame | None,
+) -> pd.DataFrame:
+    frames: list[pd.DataFrame] = []
+    for frame in (incoming, existing):
+        if frame is None:
+            continue
+        if frame.empty:
+            continue
+        normalized = frame.copy()
+        for column in INTERVENTION_AUDIT_COLUMNS:
+            if column not in normalized.columns:
+                normalized[column] = ""
+        frames.append(normalized[INTERVENTION_AUDIT_COLUMNS].copy())
+    if not frames:
+        return pd.DataFrame(columns=INTERVENTION_AUDIT_COLUMNS)
+    merged = pd.concat(frames, ignore_index=True)
+    merged = merged.drop_duplicates(subset=["repo", "intervention_commit", "file_path"])
+    return merged.sort_values(
+        ["repo", "commit_date", "intervention_commit", "file_path"]
+    ).reset_index(drop=True)
+
+
 def summarise_intervention_audit_table(audit: pd.DataFrame) -> dict[str, object]:
     if audit.empty:
         return {
@@ -614,6 +732,22 @@ def build_audited_intervention_pool(
     repo_epoch_cache: dict[str, dict[str, int]] = {}
     repo_tag_cache: dict[str, dict[str, str]] = {}
 
+    for repo, repo_audit in audit.groupby("repo", sort=False):
+        repo_path = repo_paths.get(str(repo))
+        if repo_path is None:
+            continue
+        parent_commits = repo_audit["intervention_parent"].fillna(repo_audit["anchor_commit"])
+        _prefetch_commit_objects(
+            repo_path,
+            [
+                str(value)
+                for value in pd.unique(
+                    pd.concat([repo_audit["intervention_commit"], parent_commits], ignore_index=True)
+                )
+                if str(value)
+            ],
+        )
+
     for _, audit_row in audit.iterrows():
         repo = str(audit_row["repo"])
         entry = entry_map.get(repo)
@@ -653,9 +787,51 @@ def build_audited_intervention_pool(
         return pd.DataFrame()
     frame = pd.DataFrame(rows)
     frame["intervention_id"] = [
-        f"INT-{idx:04d}" for idx in range(1, len(frame) + 1)
+        f"{row['repo']}::{row['intervention_commit']}::{row['file_path']}"
+        for _, row in frame.iterrows()
     ]
     return frame.sort_values(["repo", "commit_epoch", "intervention_commit", "file_path"]).reset_index(drop=True)
+
+
+def annotate_intervention_simplification_strength(interventions: pd.DataFrame) -> pd.DataFrame:
+    """Annotate intervention rows with simple pre/post structural-reduction counts."""
+    if interventions.empty:
+        return interventions.copy()
+    frame = interventions.copy()
+    reduction_metrics = [
+        ("composite_score", "delta_composite_score"),
+        ("ci_gzip", "delta_ci_gzip"),
+        ("halstead_volume", "delta_halstead_volume"),
+        ("cyclomatic_density", "delta_cyclomatic_density"),
+    ]
+    reduction_flags: list[str] = []
+    for metric, delta_col in reduction_metrics:
+        pre_col = f"pre_{metric}"
+        post_col = f"post_{metric}"
+        flag_col = f"reduced_{metric}"
+        frame[delta_col] = pd.to_numeric(frame[post_col], errors="coerce") - pd.to_numeric(
+            frame[pre_col], errors="coerce"
+        )
+        frame[flag_col] = (pd.to_numeric(frame[delta_col], errors="coerce") < 0).astype(int)
+        reduction_flags.append(flag_col)
+    frame["structure_drop_count"] = frame[reduction_flags].sum(axis=1).astype(int)
+    return frame
+
+
+def filter_material_interventions(
+    interventions: pd.DataFrame,
+    *,
+    min_structure_drops: int = 0,
+) -> pd.DataFrame:
+    """Restrict to interventions that reduce enough structural dimensions."""
+    annotated = annotate_intervention_simplification_strength(interventions)
+    if min_structure_drops <= 0 or annotated.empty:
+        return annotated
+    return (
+        annotated.loc[annotated["structure_drop_count"] >= int(min_structure_drops)]
+        .copy()
+        .reset_index(drop=True)
+    )
 
 
 def build_maintenance_pool(
@@ -1016,6 +1192,33 @@ def build_anchor_observations(
     return pd.DataFrame(rows)
 
 
+def relabel_anchor_observations(
+    anchor_rows: pd.DataFrame,
+    *,
+    security_lookup: dict[str, dict[str, list[dict[str, object]]]],
+    horizon_days: int,
+) -> pd.DataFrame:
+    """Recompute future-event labels for saved anchor rows under a new horizon."""
+    if anchor_rows.empty:
+        return anchor_rows.copy()
+    relabelled = anchor_rows.copy()
+    labels: list[int] = []
+    future_event_ids: list[str] = []
+    for row in relabelled.itertuples(index=False):
+        label, event_ids = lookup_future_security_events(
+            security_lookup,
+            repo=str(row.repo),
+            file_path=str(row.file_path),
+            anchor_date=row.anchor_date,
+            horizon_days=horizon_days,
+        )
+        labels.append(int(label))
+        future_event_ids.append(str(event_ids))
+    relabelled["label"] = labels
+    relabelled["future_event_ids"] = future_event_ids
+    return relabelled
+
+
 def fit_frozen_score_models(
     train_dataset: pd.DataFrame,
     *,
@@ -1053,16 +1256,36 @@ def score_anchor_observations(
     scored["primary_model_score"] = scored[f"score_{primary_model}"]
     scored["score_range"] = scored[score_cols].max(axis=1) - scored[score_cols].min(axis=1)
     scored["absolute_error"] = (scored["label"].astype(float) - scored["primary_model_score"]).abs()
+    scored["underprediction_loss"] = (
+        scored["label"].astype(float) * (1.0 - scored["primary_model_score"].astype(float))
+    )
+    clipped_score = scored["primary_model_score"].astype(float).clip(lower=1e-6, upper=1.0)
+    scored["positive_log_loss"] = 0.0
+    positive_mask = scored["label"].astype(float) == 1.0
+    scored.loc[positive_mask, "positive_log_loss"] = -np.log(clipped_score.loc[positive_mask])
     return scored
 
 
 def summarise_pairs_to_did(scored_anchor_rows: pd.DataFrame) -> pd.DataFrame:
     if scored_anchor_rows.empty:
         return pd.DataFrame()
+    value_cols = [
+        metric
+        for metric in (
+            "composite_score",
+            "score_range",
+            "absolute_error",
+            "underprediction_loss",
+            "positive_log_loss",
+        )
+        if metric in scored_anchor_rows.columns
+    ]
+    if not value_cols:
+        return pd.DataFrame()
     pivot = scored_anchor_rows.pivot_table(
         index=["intervention_id", "repo"],
         columns=["role", "period"],
-        values=["composite_score", "score_range", "absolute_error"],
+        values=value_cols,
         aggfunc="first",
     )
     if pivot.empty:
@@ -1071,7 +1294,7 @@ def summarise_pairs_to_did(scored_anchor_rows: pd.DataFrame) -> pd.DataFrame:
         f"{metric}_{role}_{period}" for metric, role, period in pivot.columns.to_flat_index()
     ]
     pivot = pivot.reset_index()
-    for metric in ("composite_score", "score_range", "absolute_error"):
+    for metric in value_cols:
         pivot[f"delta_{metric}_intervention"] = (
             pivot[f"{metric}_intervention_post"] - pivot[f"{metric}_intervention_pre"]
         )
@@ -1133,27 +1356,39 @@ def summarise_intervention_mechanism(
     n_boot: int = 2000,
     seed: int = 42,
 ) -> tuple[pd.DataFrame, dict[str, object]]:
-    repo_summary = (
-        pair_did.groupby("repo", as_index=False)
-        .agg(
-            n_interventions=("intervention_id", "nunique"),
-            mean_did_composite=("did_composite_score", "mean"),
-            mean_did_score_range=("did_score_range", "mean"),
-            mean_did_absolute_error=("did_absolute_error", "mean"),
+    repo_summary = pd.DataFrame()
+    if not pair_did.empty:
+        repo_agg: dict[str, tuple[str, str]] = {
+            "n_interventions": ("intervention_id", "nunique"),
+        }
+        for column_name, label in (
+            ("did_composite_score", "mean_did_composite"),
+            ("did_score_range", "mean_did_score_range"),
+            ("did_absolute_error", "mean_did_absolute_error"),
+            ("did_underprediction_loss", "mean_did_underprediction_loss"),
+            ("did_positive_log_loss", "mean_did_positive_log_loss"),
+        ):
+            if column_name in pair_did.columns:
+                repo_agg[label] = (column_name, "mean")
+        repo_summary = (
+            pair_did.groupby("repo", as_index=False)
+            .agg(**repo_agg)
+            .sort_values(["n_interventions", "repo"], ascending=[False, True])
         )
-        .sort_values(["n_interventions", "repo"], ascending=[False, True])
-        if not pair_did.empty
-        else pd.DataFrame()
-    )
 
     pooled = {}
     for value_col, summary_key in (
         ("did_composite_score", "delta_composite_did"),
         ("did_score_range", "delta_score_range_did"),
         ("did_absolute_error", "delta_absolute_error_did"),
+        ("did_underprediction_loss", "delta_underprediction_loss_did"),
+        ("did_positive_log_loss", "delta_positive_log_loss_did"),
     ):
+        observed_mean = float("nan")
+        if not pair_did.empty and value_col in pair_did.columns:
+            observed_mean = float(pair_did[value_col].mean())
         pooled[summary_key] = {
-            "observed_mean": float(pair_did[value_col].mean()) if not pair_did.empty else float("nan"),
+            "observed_mean": observed_mean,
             "bootstrap_by_intervention": _bootstrap_endpoint(
                 pair_did,
                 cluster_col="intervention_id",
@@ -1192,6 +1427,11 @@ def summarise_intervention_mechanism(
         "n_matched_pairs": int(len(matched_pairs)),
         "n_pair_repos": int(pair_did["repo"].nunique()) if not pair_did.empty else 0,
         "maintenance_pool_rows": int(len(maintenance_pool)),
+        "n_positive_pair_rows": int(
+            pair_did["did_underprediction_loss"].abs().gt(0).sum()
+        )
+        if not pair_did.empty and "did_underprediction_loss" in pair_did.columns
+        else 0,
         "pooled_endpoints": pooled,
         "gating": {
             "accepted_intervention_rows_ge_100": bool(len(intervention_audit) >= 100),
@@ -1220,6 +1460,18 @@ def summarise_intervention_mechanism(
             "bootstrap_absolute_error_present": bool(
                 pooled["delta_absolute_error_did"]["bootstrap_by_intervention"]
                 and pooled["delta_absolute_error_did"]["bootstrap_by_repo"]
+            ),
+            "bootstrap_underprediction_present": bool(
+                pooled["delta_underprediction_loss_did"]["bootstrap_by_intervention"]
+                and pooled["delta_underprediction_loss_did"]["bootstrap_by_repo"]
+            ),
+            "bootstrap_positive_log_loss_present": bool(
+                pooled["delta_positive_log_loss_did"]["bootstrap_by_intervention"]
+                and pooled["delta_positive_log_loss_did"]["bootstrap_by_repo"]
+            ),
+            "underprediction_direct_gate": bool(
+                _ci_below_zero(pooled["delta_underprediction_loss_did"]["bootstrap_by_intervention"])
+                and _ci_below_zero(pooled["delta_underprediction_loss_did"]["bootstrap_by_repo"])
             ),
             "full_cku_confirmation_gate": bool(full_gate),
         },

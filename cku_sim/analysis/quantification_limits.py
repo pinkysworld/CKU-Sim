@@ -385,6 +385,139 @@ def build_all_file_disagreement_frame(scored_predictions: pd.DataFrame) -> pd.Da
     return wide
 
 
+def assign_grouped_opacity_band(
+    frame: pd.DataFrame,
+    *,
+    low_labels: list[str],
+    high_labels: list[str],
+    source_col: str = "opacity_stratum",
+    output_col: str = "opacity_band",
+) -> pd.DataFrame:
+    """Collapse fine-grained opacity strata into stable low/high comparison bands."""
+    work = frame.copy()
+    low_set = {str(value) for value in low_labels}
+    high_set = {str(value) for value in high_labels}
+    work[output_col] = "mid"
+    work.loc[work[source_col].astype(str).isin(low_set), output_col] = "low"
+    work.loc[work[source_col].astype(str).isin(high_set), output_col] = "high"
+    return work
+
+
+def build_all_file_positive_failure_frame(
+    disagreement_frame: pd.DataFrame,
+    *,
+    model_names: list[str] | None = None,
+    rank_group_cols: tuple[str, ...] = ("repo", "snapshot_key"),
+) -> pd.DataFrame:
+    """Build direct positive-only miss / underprediction diagnostics on the external holdout."""
+    if disagreement_frame.empty:
+        return pd.DataFrame()
+
+    model_names = model_names or [
+        name for name in DIAGNOSTIC_MODEL_ORDER if name in disagreement_frame.columns
+    ]
+    if not model_names:
+        return pd.DataFrame()
+
+    base = disagreement_frame.copy()
+    group_sizes = (
+        base.groupby(list(rank_group_cols), observed=False)["file_path"]
+        .transform("size")
+        .astype(float)
+    )
+    rows: list[pd.DataFrame] = []
+    for model_name in model_names:
+        ranked = base.copy()
+        ranked["score"] = pd.to_numeric(ranked[model_name], errors="coerce")
+        ranked["snapshot_file_count"] = group_sizes
+        ranked["rank_desc"] = ranked.groupby(list(rank_group_cols), observed=False)["score"].rank(
+            method="average",
+            ascending=False,
+        )
+        ranked["rank_pct"] = ranked["rank_desc"] / ranked["snapshot_file_count"].clip(lower=1.0)
+        ranked["top10_miss"] = (
+            (pd.to_numeric(ranked["label"], errors="coerce") == 1.0)
+            & (ranked["rank_pct"] > 0.10)
+        ).astype(int)
+        ranked["top25_miss"] = (
+            (pd.to_numeric(ranked["label"], errors="coerce") == 1.0)
+            & (ranked["rank_pct"] > 0.25)
+        ).astype(int)
+        ranked["underprediction_loss"] = (
+            pd.to_numeric(ranked["label"], errors="coerce").fillna(0.0)
+            * (1.0 - ranked["score"].fillna(0.0))
+        )
+        positives = ranked.loc[pd.to_numeric(ranked["label"], errors="coerce") == 1.0].copy()
+        if positives.empty:
+            continue
+        positives["model"] = str(model_name)
+        rows.append(
+            positives[
+                [
+                    "repo",
+                    "snapshot_tag",
+                    "snapshot_key",
+                    "event_observation_id",
+                    "file_path",
+                    "opacity_stratum",
+                    "composite_score",
+                    "loc",
+                    "log_loc",
+                    "directory_depth",
+                    "suffix",
+                    "model",
+                    "score",
+                    "snapshot_file_count",
+                    "rank_desc",
+                    "rank_pct",
+                    "top10_miss",
+                    "top25_miss",
+                    "underprediction_loss",
+                ]
+            ].copy()
+        )
+    if not rows:
+        return pd.DataFrame()
+    return pd.concat(rows, ignore_index=True)
+
+
+def summarise_positive_failure_by_band(
+    positive_failure_frame: pd.DataFrame,
+    *,
+    band_col: str = "opacity_band",
+) -> pd.DataFrame:
+    """Summarise direct positive-only prediction failures by model and opacity band."""
+    if positive_failure_frame.empty:
+        return pd.DataFrame()
+    rows: list[dict[str, object]] = []
+    for model_name, model_df in positive_failure_frame.groupby("model", sort=False):
+        for band_label, subset in model_df.groupby(band_col, sort=False):
+            if subset.empty:
+                continue
+            rows.append(
+                {
+                    "model": str(model_name),
+                    "opacity_band": str(band_label),
+                    "n_positive_files": int(len(subset)),
+                    "n_repos": int(subset["repo"].nunique()),
+                    "mean_score": float(pd.to_numeric(subset["score"], errors="coerce").mean()),
+                    "mean_rank_desc": float(pd.to_numeric(subset["rank_desc"], errors="coerce").mean()),
+                    "mean_rank_pct": float(pd.to_numeric(subset["rank_pct"], errors="coerce").mean()),
+                    "top10_miss_rate": float(pd.to_numeric(subset["top10_miss"], errors="coerce").mean()),
+                    "top25_miss_rate": float(pd.to_numeric(subset["top25_miss"], errors="coerce").mean()),
+                    "underprediction_loss_mean": float(
+                        pd.to_numeric(subset["underprediction_loss"], errors="coerce").mean()
+                    ),
+                }
+            )
+    frame = pd.DataFrame(rows)
+    if frame.empty:
+        return frame
+    order = {"low": 0, "mid": 1, "high": 2}
+    frame["band_order"] = frame["opacity_band"].map(order).fillna(99)
+    return frame.sort_values(["model", "band_order"]).drop(columns=["band_order"])
+
+
 def summarise_disagreement_by_stratum(disagreement_frame: pd.DataFrame) -> pd.DataFrame:
     """Summarise cross-model disagreement by opacity stratum."""
     if disagreement_frame.empty:

@@ -1,0 +1,192 @@
+{
+  "intervention_audit": {
+    "n_rows": 102,
+    "n_repos": 7,
+    "n_anchor_tags": 66,
+    "n_intervention_commits": 102,
+    "review_breakdown": {
+      "accept": 102
+    },
+    "intervention_type_breakdown": {
+      "refactor": 39,
+      "cleanup": 26,
+      "simplify": 19,
+      "extract": 10,
+      "split": 6,
+      "rework": 1,
+      "modular": 1
+    }
+  },
+  "n_interventions_materialised": 102,
+  "n_intervention_repos": 7,
+  "n_matched_pairs": 74,
+  "n_pair_repos": 7,
+  "maintenance_pool_rows": 202,
+  "n_positive_pair_rows": 1,
+  "pooled_endpoints": {
+    "delta_composite_did": {
+      "observed_mean": 0.0006139874656065924,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_composite_score",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 0.0006139874656065924,
+        "ci_lo": -0.0011557233634487433,
+        "ci_hi": 0.002670251089548629
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_composite_score",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 0.0006139874656065924,
+        "ci_lo": -0.0006771173936256678,
+        "ci_hi": 0.002325052311131697
+      }
+    },
+    "delta_score_range_did": {
+      "observed_mean": 1.0041844066110901e-05,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_score_range",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 1.0041844066110901e-05,
+        "ci_lo": -0.0008345344153582656,
+        "ci_hi": 0.000915632640957062
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_score_range",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 1.0041844066110901e-05,
+        "ci_lo": -0.0011366827410535774,
+        "ci_hi": 0.001503024308244893
+      }
+    },
+    "delta_absolute_error_did": {
+      "observed_mean": 8.422212516945406e-05,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_absolute_error",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 8.422212516945406e-05,
+        "ci_lo": -0.0005870407576220609,
+        "ci_hi": 0.0007670886645873773
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_absolute_error",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": 8.422212516945406e-05,
+        "ci_lo": -0.000613678824489236,
+        "ci_hi": 0.001252737553791478
+      }
+    },
+    "delta_underprediction_loss_did": {
+      "observed_mean": -0.00011691972805969573,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_underprediction_loss",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00011691972805969573,
+        "ci_lo": -0.0003507591841790872,
+        "ci_hi": 0.0
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_underprediction_loss",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00011691972805969573,
+        "ci_lo": -0.00028373270465883364,
+        "ci_hi": 0.0
+      }
+    },
+    "delta_positive_log_loss_did": {
+      "observed_mean": -0.00415541344529445,
+      "bootstrap_by_intervention": {
+        "cluster_col": "intervention_id",
+        "value_col": "did_positive_log_loss",
+        "n_clusters": 74,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00415541344529445,
+        "ci_lo": -0.012466240335883349,
+        "ci_hi": 0.0
+      },
+      "bootstrap_by_repo": {
+        "cluster_col": "repo",
+        "value_col": "did_positive_log_loss",
+        "n_clusters": 7,
+        "n_boot": 2000,
+        "confidence_level": 0.95,
+        "observed_mean": -0.00415541344529445,
+        "ci_lo": -0.010084069774838174,
+        "ci_hi": 0.0
+      }
+    }
+  },
+  "gating": {
+    "accepted_intervention_rows_ge_100": true,
+    "accepted_intervention_repos_ge_5": true,
+    "django_present": true,
+    "traefik_present": true,
+    "prometheus_present": true,
+    "bootstrap_composite_present": true,
+    "bootstrap_score_range_present": true,
+    "bootstrap_absolute_error_present": true,
+    "bootstrap_underprediction_present": true,
+    "bootstrap_positive_log_loss_present": true,
+    "underprediction_direct_gate": false,
+    "full_cku_confirmation_gate": false
+  },
+  "parameters": {
+    "config": "experiments/config.external_holdout_expanded.yaml",
+    "train_dataset_path": "data/results/e20_external_replication__expanded7_no_gitea__audited_v1/train_file_level_dataset.parquet",
+    "security_audit_path": "data/processed/security_event_file_audit_curated.csv",
+    "intervention_audit_path": "data/processed/refactoring_intervention_audit_curated.csv",
+    "checkpoint_dir": "data/processed/e23_external_intervention_mechanism__expanded7_no_gitea__audited_v1__checkpoints",
+    "repos": [
+      "django-django",
+      "traefik-traefik",
+      "prometheus-prometheus",
+      "fastapi-fastapi",
+      "psf-requests",
+      "pallets-flask",
+      "scrapy-scrapy"
+    ],
+    "since": "2014-01-01",
+    "until": "2024-04-12",
+    "horizon_days": 730,
+    "min_loc": 5,
+    "max_rows_per_repo": 20,
+    "repo_row_caps": {
+      "django-django": 3,
+      "traefik-traefik": 3,
+      "prometheus-prometheus": 3,
+      "fastapi-fastapi": 25,
+      "psf-requests": 25,
+      "pallets-flask": 25,
+      "scrapy-scrapy": 25
+    },
+    "min_structure_drops": 0,
+    "max_control_commits_per_repo": null,
+    "checkpoint_generation_note": "Repo checkpoints may have been generated incrementally with repo-specific control caps; use checkpoint_repo_summary_rows.csv as the realised run ledger.",
+    "n_bootstrap": 2000,
+    "random_state": 42
+  }
+}
