@@ -1,0 +1,160 @@
+{
+  "n_train_files": 10538,
+  "n_train_positive_files": 189,
+  "n_train_repos": 9,
+  "n_holdout_files": 9263,
+  "n_holdout_positive_files": 50,
+  "n_holdout_repos": 7,
+  "models": {
+    "baseline_size": {
+      "roc_auc": 0.7904699880603496,
+      "average_precision": 0.05118852584565829,
+      "brier_score": 0.005291383206643743,
+      "log_loss": 0.03049705117548075,
+      "ece": 0.0029352615563829998,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_history": {
+      "roc_auc": 0.8319960924780203,
+      "average_precision": 0.023235806548549582,
+      "brier_score": 0.005558767325887177,
+      "log_loss": 0.0316521540833345,
+      "ece": 0.005233495106071847,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_history_plus_structure": {
+      "roc_auc": 0.8284793226961902,
+      "average_precision": 0.02332907349502471,
+      "brier_score": 0.0056040520180133495,
+      "log_loss": 0.03170401255560025,
+      "ece": 0.00542224707285271,
+      "pairwise_accuracy": NaN
+    },
+    "baseline_plus_composite": {
+      "roc_auc": 0.8360577444914794,
+      "average_precision": 0.026095376928595763,
+      "brier_score": 0.005554253870253142,
+      "log_loss": 0.031955373515422686,
+      "ece": 0.0059477187582817215,
+      "pairwise_accuracy": NaN
+    }
+  },
+  "audit": {
+    "n_rows": 386,
+    "n_repos": 17,
+    "n_snapshots": 57,
+    "n_ids": 194,
+    "review_breakdown": {
+      "accept": 386
+    },
+    "source_family_breakdown": {
+      "explicit_plus_range": 155,
+      "explicit_only": 88,
+      "reference_plus_range": 77,
+      "explicit_plus_reference_plus_range": 48,
+      "reference_only": 17,
+      "explicit_plus_reference": 1
+    }
+  },
+  "screening": {
+    "candidate_repos": [
+      "django-django",
+      "fastapi-fastapi",
+      "prometheus-prometheus",
+      "psf-requests",
+      "scrapy-scrapy",
+      "traefik-traefik",
+      "go-gitea-gitea"
+    ],
+    "eligible_holdout_repos": [
+      "django-django",
+      "traefik-traefik",
+      "go-gitea-gitea"
+    ],
+    "fallback_repos": [
+      "prometheus-prometheus",
+      "fastapi-fastapi",
+      "psf-requests",
+      "scrapy-scrapy"
+    ],
+    "selected_holdout_repos": [
+      "django-django",
+      "traefik-traefik",
+      "go-gitea-gitea",
+      "prometheus-prometheus",
+      "fastapi-fastapi",
+      "psf-requests",
+      "scrapy-scrapy"
+    ],
+    "primary_holdout_rule_met": true
+  },
+  "train_panel": {
+    "n_files": 10538,
+    "n_positive_files": 189,
+    "n_negative_files": 10349,
+    "positive_rate": 0.017935092047826912,
+    "n_positive_events": 151,
+    "n_repos": 9,
+    "n_snapshots": 22,
+    "source_family_breakdown": {
+      "explicit_plus_range": 96,
+      "explicit_only": 52,
+      "explicit_plus_reference_plus_range": 24,
+      "reference_plus_range": 23,
+      "reference_only": 16,
+      "explicit_plus_reference": 1
+    }
+  },
+  "holdout_panel": {
+    "n_files": 9263,
+    "n_positive_files": 50,
+    "n_negative_files": 9213,
+    "positive_rate": 0.005397819281010472,
+    "n_positive_events": 32,
+    "n_repos": 7,
+    "n_snapshots": 16,
+    "source_family_breakdown": {
+      "explicit_only": 17,
+      "reference_plus_range": 14,
+      "explicit_plus_range": 13,
+      "explicit_plus_reference_plus_range": 8
+    }
+  },
+  "external_replication": {
+    "primary_baseline_model": "baseline_history_plus_structure",
+    "primary_plus_model": "baseline_plus_composite",
+    "roc_auc_lift": 0.007578421795289225,
+    "average_precision_lift": 0.002766303433571052,
+    "brier_lift": -4.979814776020705e-05
+  },
+  "parameters": {
+    "train_config": "experiments/config.forward_panel_curated.yaml",
+    "holdout_config": "experiments/config.external_holdout_expanded.yaml",
+    "audit_path": "data/processed/security_event_file_audit_curated.csv",
+    "max_tags": 5,
+    "min_tag_gap_days": 365,
+    "horizon_days": 730,
+    "lookback_years": 10,
+    "min_loc": 5,
+    "train_repos": [
+      "curl",
+      "git",
+      "jq",
+      "openssh",
+      "openssl",
+      "php-src",
+      "redis",
+      "sqlite",
+      "zlib"
+    ],
+    "train_dataset_path": "data/results/e20_external_replication__expanded7_no_gitea__audited_v1/train_file_level_dataset.parquet",
+    "min_holdout_snapshots": 3,
+    "min_holdout_events": 5
+  },
+  "gating": {
+    "has_no_range_only_labels": true,
+    "train_holdout_disjoint": true,
+    "holdout_min_positive_observations_met": true,
+    "holdout_min_repo_count_met": true
+  }
+}

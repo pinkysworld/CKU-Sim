@@ -144,6 +144,7 @@ def _scan_commit_metadata(
     since: str,
     until: str,
     grep_patterns: list[str] | None = None,
+    pathspecs: list[str] | None = None,
 ) -> pd.DataFrame:
     cmd = [
         "log",
@@ -157,6 +158,9 @@ def _scan_commit_metadata(
         cmd.insert(3, "--regexp-ignore-case")
         for pattern in grep_patterns:
             cmd.extend(["--grep", pattern])
+    if pathspecs:
+        cmd.append("--")
+        cmd.extend(pathspecs)
     proc = _run_git(repo_path, cmd)
     if proc.returncode != 0:
         logger.warning("git log scan failed for %s", repo_path.name)
@@ -389,6 +393,7 @@ def build_commit_file_pool(
     *,
     min_loc: int,
     max_files_per_commit: int = 1,
+    prefetch_commits: bool = True,
 ) -> pd.DataFrame:
     if commit_metadata.empty:
         return pd.DataFrame()
@@ -399,16 +404,17 @@ def build_commit_file_pool(
     epoch_cache: dict[str, int] = {}
     tag_cache: dict[str, str] = {}
     rows: list[dict[str, object]] = []
-    _prefetch_commit_objects(
-        repo_path,
-        [
-            str(value)
-            for value in pd.unique(
-                pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
-            )
-            if str(value)
-        ],
-    )
+    if prefetch_commits:
+        _prefetch_commit_objects(
+            repo_path,
+            [
+                str(value)
+                for value in pd.unique(
+                    pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
+                )
+                if str(value)
+            ],
+        )
 
     for _, row in commit_metadata.iterrows():
         commit = str(row["commit"])
@@ -493,6 +499,7 @@ def build_seed_commit_file_pool(
     *,
     min_loc: int,
     max_files_per_commit: int = 1,
+    prefetch_commits: bool = True,
 ) -> pd.DataFrame:
     if commit_metadata.empty:
         return pd.DataFrame()
@@ -501,16 +508,17 @@ def build_seed_commit_file_pool(
     tree_cache: dict[str, dict[str, dict[str, object]]] = {}
     tag_cache: dict[str, str] = {}
     rows: list[dict[str, object]] = []
-    _prefetch_commit_objects(
-        repo_path,
-        [
-            str(value)
-            for value in pd.unique(
-                pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
-            )
-            if str(value)
-        ],
-    )
+    if prefetch_commits:
+        _prefetch_commit_objects(
+            repo_path,
+            [
+                str(value)
+                for value in pd.unique(
+                    pd.concat([commit_metadata["commit"], commit_metadata["parent"]], ignore_index=True)
+                )
+                if str(value)
+            ],
+        )
 
     for _, row in commit_metadata.iterrows():
         commit = str(row["commit"])
@@ -651,6 +659,165 @@ def seed_refactoring_intervention_audit_table(
     return audit.reset_index(drop=True)
 
 
+def seed_security_file_refactoring_intervention_audit_table(
+    repo_paths: dict[str, Path],
+    corpus: list[CorpusEntry],
+    security_audit: pd.DataFrame,
+    *,
+    repos: list[str] | None = None,
+    since: str,
+    until: str,
+    max_rows_per_repo: int = 40,
+    repo_row_caps: dict[str, int] | None = None,
+    max_rows_per_file: int = 4,
+    min_loc: int = 5,
+    reviewer: str = "security_file_enrichment",
+    prefetch_commits: bool = False,
+) -> pd.DataFrame:
+    """Seed additional audited intervention rows by scanning refactors on security-linked files."""
+    allowed_repos = set(repos or [])
+    repo_row_caps = repo_row_caps or {}
+    security_subset = security_audit.copy()
+    if "review_decision" in security_subset.columns:
+        security_subset = security_subset.loc[security_subset["review_decision"] == "accept"].copy()
+    security_subset = security_subset.loc[security_subset["file_path"].notna()].copy()
+    if allowed_repos:
+        security_subset = security_subset.loc[security_subset["repo"].isin(allowed_repos)].copy()
+    if security_subset.empty:
+        return pd.DataFrame(columns=INTERVENTION_AUDIT_COLUMNS)
+
+    entry_map = {entry.name: entry for entry in corpus}
+    rows: list[pd.DataFrame] = []
+    for repo, repo_security in security_subset.groupby("repo", sort=False):
+        entry = entry_map.get(str(repo))
+        repo_path = repo_paths.get(str(repo))
+        if entry is None or repo_path is None or not repo_path.exists():
+            continue
+        repo_cap = int(repo_row_caps.get(str(repo), max_rows_per_repo))
+        if repo_cap <= 0:
+            continue
+
+        candidate_rows: list[dict[str, object]] = []
+        for file_path, file_security in repo_security.groupby("file_path", sort=False):
+            published_ts = pd.to_datetime(file_security["published_at"], utc=True, errors="coerce")
+            valid_published = published_ts.dropna()
+            file_until = until
+            if not valid_published.empty:
+                candidate_until = (valid_published.min() - pd.Timedelta(days=1)).date().isoformat()
+                if candidate_until < since:
+                    continue
+                file_until = min(until, candidate_until)
+            metadata = _scan_commit_metadata(
+                repo_path,
+                since=since,
+                until=file_until,
+                grep_patterns=[
+                    "refactor",
+                    "cleanup",
+                    "simplify",
+                    "extract",
+                    "modular",
+                    "split",
+                    "dedup",
+                    "rework",
+                ],
+                pathspecs=[str(file_path)],
+            )
+            metadata = _filter_commit_metadata(
+                metadata,
+                require_refactor_keyword=True,
+                exclude_refactor_keyword=False,
+            )
+            if metadata.empty:
+                continue
+            metadata = _select_evenly_spaced(
+                metadata,
+                max_rows=max(max_rows_per_file * 3, max_rows_per_file),
+            )
+            for _, meta_row in metadata.iterrows():
+                payload = meta_row.to_dict()
+                payload["file_path"] = str(file_path)
+                candidate_rows.append(payload)
+
+        if not candidate_rows:
+            continue
+        candidate_df = (
+            pd.DataFrame(candidate_rows)
+            .drop_duplicates(subset=["commit", "parent", "file_path"])
+            .sort_values(["epoch", "commit", "file_path"])
+            .reset_index(drop=True)
+        )
+        if prefetch_commits:
+            _prefetch_commit_objects(
+                repo_path,
+                [
+                    str(value)
+                    for value in pd.unique(
+                        pd.concat([candidate_df["commit"], candidate_df["parent"]], ignore_index=True)
+                    )
+                    if str(value)
+                ],
+            )
+        metrics_cache: dict[tuple[str, str], object | None] = {}
+        tree_cache: dict[str, dict[str, dict[str, object]]] = {}
+        history_cache: dict[str, dict[str, dict[str, object]]] = {}
+        epoch_cache: dict[str, int] = {}
+        tag_cache: dict[str, str] = {}
+        materialised_rows: list[dict[str, object]] = []
+        for _, row in candidate_df.iterrows():
+            materialised = _build_single_commit_file_row(
+                repo_path,
+                entry,
+                commit=str(row["commit"]),
+                parent=str(row["parent"]),
+                epoch=int(row["epoch"]),
+                subject=str(row.get("subject", "")),
+                file_path=str(row["file_path"]),
+                intervention_type=str(row.get("intervention_type", "")),
+                keyword_basis=str(row.get("keyword_basis", "")),
+                min_loc=min_loc,
+                metrics_cache=metrics_cache,
+                tree_cache=tree_cache,
+                history_cache=history_cache,
+                epoch_cache=epoch_cache,
+                tag_cache=tag_cache,
+            )
+            if materialised is None:
+                continue
+            materialised_rows.append(
+                {
+                    "repo": materialised["repo"],
+                    "anchor_tag": materialised["anchor_tag"],
+                    "anchor_commit": materialised["anchor_commit"],
+                    "intervention_commit": materialised["intervention_commit"],
+                    "intervention_parent": materialised["intervention_parent"],
+                    "file_path": materialised["file_path"],
+                    "commit_date": materialised["commit_date"],
+                    "intervention_type": materialised["intervention_type"] or "refactor",
+                    "keyword_basis": materialised["keyword_basis"],
+                    "review_decision": "accept",
+                    "reviewer": reviewer,
+                    "notes": (
+                        "Accepted under the deterministic security-file refactoring screen "
+                        "before the first audited security event on this file."
+                    ),
+                }
+            )
+        if not materialised_rows:
+            continue
+        repo_audit = pd.DataFrame(materialised_rows, columns=INTERVENTION_AUDIT_COLUMNS)
+        repo_audit = _select_evenly_spaced(repo_audit, max_rows=repo_cap)
+        rows.append(repo_audit)
+
+    if not rows:
+        return pd.DataFrame(columns=INTERVENTION_AUDIT_COLUMNS)
+    audit = pd.concat(rows, ignore_index=True)
+    audit = audit.drop_duplicates(
+        subset=["repo", "intervention_commit", "file_path"]
+    ).sort_values(["repo", "commit_date", "intervention_commit", "file_path"])
+    return audit.reset_index(drop=True)
+
+
 def load_intervention_audit_table(
     audit_path: Path,
     *,
@@ -720,6 +887,7 @@ def build_audited_intervention_pool(
     audit: pd.DataFrame,
     *,
     min_loc: int = 5,
+    prefetch_commits: bool = True,
 ) -> pd.DataFrame:
     if audit.empty:
         return pd.DataFrame()
@@ -737,16 +905,17 @@ def build_audited_intervention_pool(
         if repo_path is None:
             continue
         parent_commits = repo_audit["intervention_parent"].fillna(repo_audit["anchor_commit"])
-        _prefetch_commit_objects(
-            repo_path,
-            [
-                str(value)
-                for value in pd.unique(
-                    pd.concat([repo_audit["intervention_commit"], parent_commits], ignore_index=True)
-                )
-                if str(value)
-            ],
-        )
+        if prefetch_commits:
+            _prefetch_commit_objects(
+                repo_path,
+                [
+                    str(value)
+                    for value in pd.unique(
+                        pd.concat([repo_audit["intervention_commit"], parent_commits], ignore_index=True)
+                    )
+                    if str(value)
+                ],
+            )
 
     for _, audit_row in audit.iterrows():
         repo = str(audit_row["repo"])
@@ -843,6 +1012,8 @@ def build_maintenance_pool(
     until: str,
     min_loc: int = 5,
     max_commits_per_repo: int = 250,
+    max_files_per_commit: int = 1,
+    prefetch_commits: bool = True,
 ) -> pd.DataFrame:
     allowed_repos = set(repos or [])
     rows: list[pd.DataFrame] = []
@@ -866,7 +1037,8 @@ def build_maintenance_pool(
             entry,
             metadata,
             min_loc=min_loc,
-            max_files_per_commit=1,
+            max_files_per_commit=max_files_per_commit,
+            prefetch_commits=prefetch_commits,
         )
         if pool.empty:
             continue

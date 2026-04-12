@@ -1,0 +1,242 @@
+{
+  "n_positive_files": 43,
+  "n_positive_rows": 86,
+  "n_repos": 6,
+  "models": [
+    "baseline_history_plus_structure",
+    "baseline_plus_composite"
+  ],
+  "low_opacity_labels": [
+    "Q1",
+    "Q2",
+    "Q3",
+    "Q4"
+  ],
+  "high_opacity_labels": [
+    "Q7",
+    "Q8",
+    "Q9",
+    "Q10"
+  ],
+  "band_counts": {
+    "low": 68,
+    "high": 18
+  },
+  "band_summary": [
+    {
+      "model": "baseline_history_plus_structure",
+      "opacity_band": "low",
+      "n_positive_files": 34,
+      "n_repos": 5,
+      "mean_score": 0.043922559091187585,
+      "mean_rank_desc": 63.61764705882353,
+      "mean_rank_pct": 0.11919875468128373,
+      "top10_miss_rate": 0.38235294117647056,
+      "top25_miss_rate": 0.11764705882352941,
+      "underprediction_loss_mean": 0.9560774409088125
+    },
+    {
+      "model": "baseline_history_plus_structure",
+      "opacity_band": "high",
+      "n_positive_files": 9,
+      "n_repos": 4,
+      "mean_score": 0.006525186005317087,
+      "mean_rank_desc": 566.2222222222222,
+      "mean_rank_pct": 0.5094801458027495,
+      "top10_miss_rate": 1.0,
+      "top25_miss_rate": 0.8888888888888888,
+      "underprediction_loss_mean": 0.9934748139946831
+    },
+    {
+      "model": "baseline_plus_composite",
+      "opacity_band": "low",
+      "n_positive_files": 34,
+      "n_repos": 5,
+      "mean_score": 0.043098307972459865,
+      "mean_rank_desc": 71.23529411764706,
+      "mean_rank_pct": 0.13116624219319134,
+      "top10_miss_rate": 0.47058823529411764,
+      "top25_miss_rate": 0.14705882352941177,
+      "underprediction_loss_mean": 0.9569016920275402
+    },
+    {
+      "model": "baseline_plus_composite",
+      "opacity_band": "high",
+      "n_positive_files": 9,
+      "n_repos": 4,
+      "mean_score": 0.010547239996191702,
+      "mean_rank_desc": 496.77777777777777,
+      "mean_rank_pct": 0.4198759400736118,
+      "top10_miss_rate": 1.0,
+      "top25_miss_rate": 0.7777777777777778,
+      "underprediction_loss_mean": 0.9894527600038084
+    }
+  ],
+  "gaps": {
+    "baseline_history_plus_structure:underprediction_loss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.037397373085870544,
+      "ci_95": [
+        0.02434631227873587,
+        0.053589402624507634
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:underprediction_loss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.037397373085870544,
+      "ci_95": [
+        0.022720039008210662,
+        0.09702853662091984
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:rank_pct:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.39028139112146576,
+      "ci_95": [
+        0.2343767382682208,
+        0.5451880556358328
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:rank_pct:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.39028139112146576,
+      "ci_95": [
+        0.17096391482848305,
+        0.5375714473284701
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:top10_miss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.6176470588235294,
+      "ci_95": [
+        0.4411764705882353,
+        0.7647058823529411
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:top10_miss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.6176470588235294,
+      "ci_95": [
+        0.5,
+        0.6923076923076923
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:top25_miss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.7712418300653594,
+      "ci_95": [
+        0.49673202614379086,
+        0.9705882352941176
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_history_plus_structure:top25_miss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.7712418300653594,
+      "ci_95": [
+        0.45977011494252873,
+        0.9411764705882353
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:underprediction_loss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.03255106797626828,
+      "ci_95": [
+        0.01711145948130483,
+        0.0526442330954599
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:underprediction_loss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.03255106797626828,
+      "ci_95": [
+        0.014743118413755082,
+        0.09869638594042487
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:rank_pct:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.28870969788042045,
+      "ci_95": [
+        0.13118289350571072,
+        0.44863628599970184
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:rank_pct:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.28870969788042045,
+      "ci_95": [
+        0.0586739331137571,
+        0.4062433977019005
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:top10_miss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.5294117647058824,
+      "ci_95": [
+        0.3529411764705882,
+        0.7058823529411764
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:top10_miss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.5294117647058824,
+      "ci_95": [
+        0.33333333333333337,
+        0.6
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:top25_miss:event_observation_id": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.630718954248366,
+      "ci_95": [
+        0.2973856209150326,
+        0.9117647058823529
+      ],
+      "n_bootstrap": 2000
+    },
+    "baseline_plus_composite:top25_miss:repo": {
+      "high_label": "high",
+      "low_label": "low",
+      "observed_gap": 0.630718954248366,
+      "ci_95": [
+        0.011820362473347511,
+        0.9393939393939394
+      ],
+      "n_bootstrap": 2000
+    }
+  },
+  "gating": {
+    "primary_underprediction_signal": true,
+    "primary_secondary_failure_signal": true,
+    "direct_quantification_failure_gate": true
+  }
+}
