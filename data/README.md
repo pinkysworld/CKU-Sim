@@ -1,77 +1,28 @@
-This repository includes generated experiment outputs in `data/results/`.
+This directory contains the paper-facing data artifacts for `CKU-Sim`.
 
-The public repository intentionally excludes:
+## Included
 
-- `data/raw/`: large cloned upstream source repositories
-- `data/processed/`: transient caches such as NVD and OSV responses
+- `data/results/`: generated tables, figures, model outputs, and experiment summaries.
+- `data/processed/security_event_file_audit_curated.csv`: curated accepted security event-to-file audit table used by the audited file-level program.
+- `data/processed/ordinary_bugfix_control_audit_curated.csv`: curated audit table for the ordinary bug-fix negative controls.
 
-Current contents:
+## Excluded From Public Release
 
-- `data/results/e01_synthetic/`: synthetic separation outputs
-- `data/results/e02_corpus/`: corpus-level opacity measurements
-- `data/results/e03_cve/`: opacity/CVE merged outputs and figures
-- `data/results/e04_temporal/`: temporal opacity series and aggregate figure
-- `data/results/e05_insurance/`: Monte Carlo insurance outputs
-- `data/results/e06_file_case_control/`: matched file-level case-control outputs and figures
-- `data/results/e06_file_case_control__strict_nvd_event/`: event-collapsed NVD case-control outputs
-- `data/results/e06_file_case_control__balanced_explicit_id_event/`: expanded explicit-ID case-control outputs
-- `data/results/e06_file_case_control__expanded_advisory_event/`: advisory-expanded case-control outputs
-- `data/results/e07_predictive_validation/`: held-out prediction outputs and comparison figures
-- `data/results/e07_predictive_validation__e06_file_case_control__strict_nvd_event/`: predictive validation for the event-collapsed NVD specification
-- `data/results/e07_predictive_validation__e06_file_case_control__balanced_explicit_id_event/`: predictive validation for the expanded explicit-ID specification
-- `data/results/e07_predictive_validation__e06_file_case_control__expanded_advisory_event/`: predictive validation for the advisory-expanded specification
-- `data/results/e08_policy_comparison/`: side-by-side policy robustness summaries and figures
-- `data/results/e09_negative_control_bugfix/`: security-versus-ordinary-bugfix negative-control outputs
-- `data/results/e09_negative_control_bugfix__e06_file_case_control__expanded_advisory_event/`: negative-control outputs using the advisory-expanded security dataset
-- `data/results/e10_forward_release_panel__core8/`: forward-looking release-panel outputs for the current tag-rich core subset
-- `data/results/e10_forward_corpus_screen__curated15_h730_l10/`: screening table and summary for the broader forward-looking candidate set
-- `data/results/e10_forward_release_panel__light8_h730_l10/`: focused eight-repository forward-looking panel outputs with a fully observed two-year horizon
-- `data/results/e11_large_corpus__filtered/`: GitHub-discovered expanded-corpus candidate list, validated subset, and manifest
-- `data/results/e12_prospective_file_panel__light8_h730_l10/`: focused eight-repository prospective file-level panel outputs
-- `data/results/e12_prospective_file_panel__curated15_h730_l10/`: screened 15-repository prospective file-level panel outputs with two sampled tags per repository
-- `data/results/e12_prospective_file_panel__curated15_h730_l10_t5/`: screened 15-repository prospective file-level panel outputs with five sampled tags per repository
-- `data/results/e12_prospective_file_panel__curated15_h365_l10_t5/`: screened 15-repository prospective file-level panel outputs at a one-year horizon
-- `data/results/e12_prospective_file_panel__curated15_h365_l10_t5__high_critical/`: one-year prospective panel restricted to high/critical-severity future events
-- `data/results/e12_prospective_file_panel__curated15_h730_l10_t5__high_critical/`: two-year prospective panel restricted to high/critical-severity future events
-- `data/results/e12_prospective_file_panel__curated15_h730_l10_t5__supported/`: two-year prospective panel restricted to explicit or reference-supported future-event mappings
-- `data/results/e13_prospective_label_audit__curated15_h730_l10_t5/`: reviewed audit sample and audit summaries for the main prospective file-level panel
-- `data/results/e13_prospective_label_audit__curated15_h730_l10_t5__stratified120/`: larger source-stratified audit sample and review summaries for the main prospective file-level panel
-- `data/results/e14_prospective_robustness__curated15/`: side-by-side horizon/severity robustness summaries for the prospective file-level panel
-- `data/results/e15_negative_control_strict__expanded_advisory__light6/`: stricter same-subsystem security-versus-bugfix matched comparison on the lighter six-repository subset
-- `data/results/e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5/`: external-holdout prospective panel for Flask and Requests using the earlier frozen prospective specification
-- `data/results/e12_prospective_file_panel__external_python5_h730_l10_t5__supported/`: screened external Python holdout under the supported-source prospective specification
-- `data/results/e16_external_holdout__curated15_to_external_flask_requests/`: frozen train/test evaluation from the curated prospective corpus to the earlier Flask/Requests holdout
-- `data/results/e16_external_holdout__supported_to_external_python5/`: frozen train/test evaluation from the supported-source prospective corpus to the screened external Python holdout
-- `data/results/e17_bugfix_control_audit__e15_light6/`: screening audit for the ordinary bug-fix controls used in the strict negative-control run
-- `data/results/e18_quantification_limits__curated15_h730_l10_t5__supported/`: calibration, forecast-error, and model-disagreement diagnostics for the supported-source prospective panel
+- `data/raw/`: large local clones of upstream source repositories.
+- transient cache files such as raw NVD responses, OSV query caches, and local intermediate hydration artifacts.
 
-The file-level outputs correspond to the following event definitions:
+## Primary Paper-Facing Result Directories
 
-- `nvd_commit_refs`: one observation per locally accessible NVD-linked fixing commit
-- `strict_nvd_event`: one primary fixing event per NVD-linked vulnerability
-- `balanced_explicit_id_event`: the event-collapsed NVD set augmented with locally explicit `CVE-...` and `GHSA-...` commit identifiers
-- `expanded_advisory_event`: the event-collapsed NVD set augmented with OSV-linked repository advisories and locally explicit `CVE-...` and `GHSA-...` commit identifiers
+The current empirical follow-up is centered on:
 
-The `e09_negative_control_bugfix` outputs compare security-fix files with ordinary bug-fix files drawn from the same repository histories. The policy-specific `e09_negative_control_bugfix__e06_file_case_control__expanded_advisory_event` outputs use the advisory-expanded `e06` security dataset.
+- `data/results/e20_external_replication__expanded7_with_gitea__audited_v1`
+- `data/results/e24_external_quantification_failure__expanded7_with_gitea__audited_v1`
+- `data/results/e26_external_intervention_securityfile_enriched__focused4_h1825_v1`
 
-The `e10_forward_release_panel__core8` outputs use release tags as pre-event snapshots and OSV-linked future advisories as later outcomes over a fixed horizon.
+These directories provide the strongest audited external evidence for the follow-up paper:
 
-The `e10_forward_corpus_screen__curated15_h730_l10` outputs document the screening step used to identify the focused forward-panel subset. The `e10_forward_release_panel__light8_h730_l10` outputs correspond to the completed panel run on the screened eight-repository subset.
+- frozen external predictive validation on a disjoint holdout;
+- direct quantification-failure diagnostics on positive holdout files;
+- focused audited intervention evidence using deterministic security-file refactoring enrichment.
 
-The `e11_large_corpus__filtered` outputs document a reproducible GitHub discovery pass for constructing a broader follow-on repository corpus. These files are intended to support later curation rather than to define a final publication corpus automatically.
-
-The `e12` outputs are the forward-looking file-level analogue of the earlier matched case-control study. They use release snapshots as pre-event baselines, label future file involvement from advisory-linked fixing events, and compare future-case files against matched untouched controls from the same snapshot. The `e12_prospective_file_panel__curated15_h730_l10_t5` run is the densest completed specification and retains up to five sampled release tags per repository within the fully observed ten-year window. The `high_critical` variants restrict future events to observations with severity metadata mapped to high or critical labels. The `supported` variant excludes range-only mappings that are not backed by explicit identifiers or explicit advisory references.
-
-The `e13_prospective_label_audit__curated15_h730_l10_t5` outputs summarize the original reviewed sample from the main `e12` run. The `e13_prospective_label_audit__curated15_h730_l10_t5__stratified120` outputs extend that audit to a 120-observation source-stratified sample, making it possible to distinguish stronger explicit/reference-backed labels from `osv_range`-only mappings while preserving ambiguous cases rather than forcing binary confirmation.
-
-The `e14_prospective_robustness__curated15` outputs provide a compact comparison across one-year versus two-year horizons and all-severity versus high/critical-severity outcome definitions.
-
-The `e15_negative_control_strict__expanded_advisory__light6` outputs tighten the negative-control design by requiring nearly exact subsystem and suffix alignment between security-fix files and ordinary bug-fix controls before comparing opacity.
-
-The `e12_prospective_file_panel__external_holdout_flask_requests_h730_l10_t5` and `e16_external_holdout__curated15_to_external_flask_requests` outputs provide the earlier small external check based on Flask and Requests. The `e12_prospective_file_panel__external_python5_h730_l10_t5__supported` and `e16_external_holdout__supported_to_external_python5` outputs provide the current supported-source external check on the screened Python holdout.
-
-The `e17_bugfix_control_audit__e15_light6` outputs screen the ordinary bug-fix controls used in the strict negative-control analysis for residual security-related message signals.
-
-The `e18_quantification_limits__curated15_h730_l10_t5__supported` outputs reuse the supported-source `e12` held-out prediction set and compare calibration, forecast error, and cross-model score dispersion across opacity quartiles. These diagnostics are intended to test whether higher-opacity files are harder to quantify reliably, rather than simply whether they have higher later event rates.
-
-Readers who wish to regenerate the results should consult `REPRODUCIBILITY.md`.
+Older result directories are retained for methodological traceability, appendix material, and robustness reporting.
