@@ -4,11 +4,11 @@ CKU Simulation Toolkit (`CKU-Sim`) is the companion codebase for:
 
 > Nguyen, M. (2026). Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms. *International Journal of Research in Computing*, 5(I), 41-56. Retrieved from https://www.ijrcom.org/index.php/ijrc/article/view/192
 
-This repository now supports a substantially stronger empirical follow-up paper built around audited file-level evidence rather than repository-level cross-sections alone.
+This repository now supports an audited file-level empirical follow-up centered on external validation rather than repository-level cross-sections alone.
 
 ## Current Empirical Package
 
-The paper-facing empirical package centers on four layers:
+The primary released empirical package centers on four layers:
 
 1. Measurement validity:
    synthetic replication, compressor robustness, and corpus-wide opacity measurement.
@@ -38,7 +38,7 @@ Key checkpoints from those runs:
 - Focused external intervention expansion:
   33 accepted audited intervention rows, 30 matched pairs, and 18 positive pair rows across `django-django`, `traefik-traefik`, `prometheus-prometheus`, and `go-gitea-gitea`.
 - Intervention-side direction:
-  absolute error, underprediction loss, and positive log loss all fell after audited simplification in the focused intervention run; score-range moved in the expected direction overall but remained mixed at one clustering level; the older strict proxy-only gate therefore remains more conservative than the newer direct-failure evidence.
+  absolute error, underprediction loss, and positive log loss all fell after audited simplification in the focused intervention run; score-range moved in the expected direction overall but remained mixed at one clustering level; the direct failure diagnostics are therefore more decisive than the pooled composite-change proxy.
 
 ## Claim Boundary
 
@@ -48,7 +48,7 @@ The repository is strongest on the operational, empirically testable CKU claims:
 - high-opacity positive files are harder to quantify reliably, not merely higher-risk on average;
 - opacity-aware modeling captures externally validated signal that is missed by opacity-blind specifications.
 
-The repository does **not** claim to empirically prove undecidability itself. The theoretical CKU argument remains grounded in the original paper. The follow-up paper should present these results as strong empirical confirmation of CKU's measurable risk-quantification consequences, not as a stand-alone proof of the underlying computability argument.
+The repository does **not** claim to empirically prove undecidability itself. The theoretical CKU argument remains grounded in the original paper. The follow-up paper should present these results as empirical confirmation of CKU's measurable risk-quantification consequences, not as a stand-alone proof of the underlying computability argument.
 
 ## Repository Layout
 
@@ -103,7 +103,7 @@ The audited empirical program relies on the curated CSVs in `data/processed/`:
 - `security_event_file_audit_curated.csv`
 - `ordinary_bugfix_control_audit_curated.csv`
 
-These files are part of the paper-facing reproducibility package and should be treated as curated research data, not as transient caches.
+These files are part of the released reproducibility package and should be treated as curated research data, not as transient caches.
 
 ## Additional Results
 

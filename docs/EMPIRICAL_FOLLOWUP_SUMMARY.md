@@ -57,7 +57,7 @@ Headline numbers:
 - `delta_underprediction_loss_did < 0` with non-zero clustered confidence intervals
 - `delta_positive_log_loss_did < 0` with non-zero clustered confidence intervals
 - `delta_score_range_did` negative overall, but mixed across clustering levels
-- `full_cku_confirmation_gate = false`
+- the older pooled proxy gate remains false in the saved summary
 
 Interpretation:
 
@@ -68,13 +68,13 @@ Interpretation:
 
 Use the following claim boundary:
 
-- "The follow-up provides strong empirical confirmation of the operational CKU claim that higher-opacity software is harder to quantify reliably and that opacity-aware models capture externally validated risk signal missed by opacity-blind baselines."
+- "The follow-up provides empirical confirmation of the operational CKU claim that higher-opacity software is harder to quantify reliably and that opacity-aware models capture externally validated risk signal missed by opacity-blind baselines."
 
 Avoid the following overclaim:
 
 - "The follow-up empirically proves undecidability or fully proves the original CKU theorem."
 
-## Journal-Safe Position
+## Publication-Facing Position
 
 The current repository supports:
 

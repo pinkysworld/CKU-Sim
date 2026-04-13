@@ -1,4 +1,4 @@
-This directory contains the paper-facing data artifacts for `CKU-Sim`.
+This directory contains the released data artifacts for `CKU-Sim`.
 
 ## Included
 
@@ -11,7 +11,7 @@ This directory contains the paper-facing data artifacts for `CKU-Sim`.
 - `data/raw/`: large local clones of upstream source repositories.
 - transient cache files such as raw NVD responses, OSV query caches, and local intermediate hydration artifacts.
 
-## Primary Paper-Facing Result Directories
+## Primary Result Directories
 
 The current empirical follow-up is centered on:
 

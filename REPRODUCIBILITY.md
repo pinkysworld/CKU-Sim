@@ -50,7 +50,7 @@ Excluded from the public repository:
 
 ## Primary Reproduction Path
 
-The strongest paper-facing empirical package is:
+The primary released empirical package is:
 
 1. audited frozen external replication
 2. direct external quantification-failure diagnostics
