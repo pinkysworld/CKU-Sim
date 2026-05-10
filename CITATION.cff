@@ -20,3 +20,13 @@ preferred-citation:
   start: 41
   end: 56
   url: "https://www.ijrcom.org/index.php/ijrc/article/view/192"
+references:
+  - type: article
+    status: in-preparation
+    authors:
+      - family-names: Nguyen
+        given-names: "Michél"
+    title: "Computational Knightian Uncertainty in Practice: An Audited External Validation of File-Level Software Risk Estimation"
+    journal: "International Journal of Research in Computing"
+    year: 2026
+    notes: "Audited empirical follow-up to the foundational CKU paper; manuscript under review."

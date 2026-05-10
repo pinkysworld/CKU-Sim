@@ -4,7 +4,11 @@ CKU Simulation Toolkit (`CKU-Sim`) is the companion codebase for:
 
 > Nguyen, M. (2026). Computational Knightian Uncertainty: Undecidability and the Limits of Cyber Risk Quantification in Software-Intensive Firms. *International Journal of Research in Computing*, 5(I), 41-56. Retrieved from https://www.ijrcom.org/index.php/ijrc/article/view/192
 
-This repository now supports an audited file-level empirical follow-up centered on external validation rather than repository-level cross-sections alone.
+An audited empirical follow-up paper is also in preparation:
+
+> Nguyen, M. (in preparation). Computational Knightian Uncertainty in Practice: An Audited External Validation of File-Level Software Risk Estimation. *Submission to International Journal of Research in Computing.*
+
+This repository now supports that audited file-level empirical follow-up, which is centered on external validation rather than repository-level cross-sections alone.
 
 ## Current Empirical Package
 

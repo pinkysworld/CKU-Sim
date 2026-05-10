@@ -1,5 +1,7 @@
 # Empirical Follow-up Summary
 
+Working title of the follow-up manuscript: *Computational Knightian Uncertainty in Practice: An Audited External Validation of File-Level Software Risk Estimation* (Nguyen, in preparation; submitted to the *International Journal of Research in Computing*).
+
 This note summarizes the paper-facing empirical position of the current repository.
 
 ## Primary Evidence
