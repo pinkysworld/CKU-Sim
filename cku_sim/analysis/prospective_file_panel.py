@@ -14,6 +14,7 @@ import pandas as pd
 import statsmodels.api as sm
 from scipy import stats
 from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.impute import SimpleImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, brier_score_loss, log_loss, roc_auc_score
@@ -1164,7 +1165,12 @@ def build_prospective_prediction_dataset(pairs_df: pd.DataFrame) -> pd.DataFrame
     return dataset
 
 
-def _build_pipeline(numeric_features: list[str], categorical_features: list[str]) -> Pipeline:
+def _build_pipeline(
+    numeric_features: list[str],
+    categorical_features: list[str],
+    *,
+    estimator: str = "logistic",
+) -> Pipeline:
     numeric_transformer = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
@@ -1183,10 +1189,23 @@ def _build_pipeline(numeric_features: list[str], categorical_features: list[str]
             ("cat", categorical_transformer, categorical_features),
         ]
     )
+    if estimator == "logistic":
+        model = LogisticRegression(max_iter=1000)
+    elif estimator == "hist_gradient_boosting":
+        model = HistGradientBoostingClassifier(
+            max_iter=100,
+            learning_rate=0.1,
+            max_leaf_nodes=15,
+            l2_regularization=0.1,
+            random_state=42,
+        )
+    else:
+        raise ValueError(f"Unknown estimator: {estimator}")
+
     return Pipeline(
         steps=[
             ("preprocess", preprocessor),
-            ("model", LogisticRegression(max_iter=1000)),
+            ("model", model),
         ]
     )
 
@@ -1215,7 +1234,11 @@ def evaluate_leave_one_repo_out(
         held_out_repo = str(test["repo"].iloc[0])
         for model_name, spec in model_specs.items():
             feature_cols = spec["numeric"] + spec["categorical"]
-            pipeline = _build_pipeline(spec["numeric"], spec["categorical"])
+            pipeline = _build_pipeline(
+                spec["numeric"],
+                spec["categorical"],
+                estimator=spec.get("estimator", "logistic"),
+            )
             pipeline.fit(train[feature_cols], train["label"])
             y_score = pipeline.predict_proba(test[feature_cols])[:, 1]
 
@@ -1295,7 +1318,11 @@ def evaluate_external_holdout(
 
     for model_name, spec in model_specs.items():
         feature_cols = spec["numeric"] + spec["categorical"]
-        pipeline = _build_pipeline(spec["numeric"], spec["categorical"])
+        pipeline = _build_pipeline(
+            spec["numeric"],
+            spec["categorical"],
+            estimator=spec.get("estimator", "logistic"),
+        )
         pipeline.fit(train_dataset[feature_cols], train_dataset["label"])
         y_score = pipeline.predict_proba(holdout_dataset[feature_cols])[:, 1]
 

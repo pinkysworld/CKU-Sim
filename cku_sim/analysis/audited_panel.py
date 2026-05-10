@@ -938,7 +938,11 @@ def evaluate_all_file_leave_one_repo_out(
         held_out_repo = str(test["repo"].iloc[0])
         for model_name, spec in model_specs.items():
             feature_cols = spec["numeric"] + spec["categorical"]
-            pipeline = _build_pipeline(spec["numeric"], spec["categorical"])
+            pipeline = _build_pipeline(
+                spec["numeric"],
+                spec["categorical"],
+                estimator=spec.get("estimator", "logistic"),
+            )
             pipeline.fit(train[feature_cols], train["label"])
             y_score = pipeline.predict_proba(test[feature_cols])[:, 1]
             fold_pred = test[
@@ -1004,7 +1008,11 @@ def evaluate_all_file_external_holdout(
     repo_rows: list[dict[str, object]] = []
     for model_name, spec in model_specs.items():
         feature_cols = spec["numeric"] + spec["categorical"]
-        pipeline = _build_pipeline(spec["numeric"], spec["categorical"])
+        pipeline = _build_pipeline(
+            spec["numeric"],
+            spec["categorical"],
+            estimator=spec.get("estimator", "logistic"),
+        )
         pipeline.fit(train_dataset[feature_cols], train_dataset["label"])
         y_score = pipeline.predict_proba(holdout_dataset[feature_cols])[:, 1]
 

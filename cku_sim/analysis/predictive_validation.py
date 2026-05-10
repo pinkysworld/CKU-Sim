@@ -235,8 +235,11 @@ def plot_model_comparison(summary: dict[str, object], output_path: Path) -> None
         for name in models
     ]
 
+    palette = ["#7A9E9F", "#4C78A8", "#72B7B2", "#F58518", "#54A24B", "#B279A2"]
+    colors = [palette[i % len(palette)] for i in range(len(models))]
+
     fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
-    axes[0].bar(models, roc_aucs, color=["#7A9E9F", "#4C78A8", "#F58518"])
+    axes[0].bar(models, roc_aucs, color=colors)
     axes[0].axhline(0.5, color="black", linestyle="--", linewidth=1)
     axes[0].set_ylim(0.45, max(0.75, max(roc_aucs) + 0.05))
     axes[0].set_ylabel("Pooled ROC AUC")
@@ -244,13 +247,17 @@ def plot_model_comparison(summary: dict[str, object], output_path: Path) -> None
 
     if any(pd.notna(pair_accs)):
         valid_pair_accs = [value for value in pair_accs if pd.notna(value)]
-        axes[1].bar(models, pair_accs, color=["#7A9E9F", "#4C78A8", "#F58518"])
+        axes[1].bar(models, pair_accs, color=colors)
         axes[1].axhline(0.5, color="black", linestyle="--", linewidth=1)
         axes[1].set_ylim(0.45, max(0.75, max(valid_pair_accs) + 0.05))
         axes[1].set_ylabel("Pairwise ranking accuracy")
         axes[1].set_title("Held-out pair ranking")
     else:
-        axes[1].bar(models, [summary["models"][name]["average_precision"] for name in models], color=["#7A9E9F", "#4C78A8", "#F58518"])
+        axes[1].bar(
+            models,
+            [summary["models"][name]["average_precision"] for name in models],
+            color=colors,
+        )
         axes[1].set_ylabel("Average precision")
         axes[1].set_title("Held-out precision-recall")
 

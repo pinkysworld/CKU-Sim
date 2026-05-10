@@ -64,6 +64,7 @@ python -m experiments.e20_external_replication \
   --holdout-config experiments/config.external_holdout_expanded.yaml \
   --train-dataset-path data/results/e20_external_replication__expanded7_no_gitea__audited_v1/train_file_level_dataset.parquet \
   --holdout-repos django-django,fastapi-fastapi,prometheus-prometheus,psf-requests,scrapy-scrapy,traefik-traefik,go-gitea-gitea \
+  --weight-sensitivity-samples 1000 \
   --results-subdir e20_external_replication__expanded7_with_gitea__audited_v1
 
 python -m experiments.e24_external_quantification_failure \
@@ -83,6 +84,8 @@ python -m experiments.e26_external_intervention_securityfile_enriched \
 ## Interpretation Notes
 
 - `e20_external_replication__expanded7_with_gitea__audited_v1` is the primary external predictive package.
+- The e20 package includes the histogram gradient-boosted-tree baseline and the
+  1,000-draw file-level opacity-weight sensitivity sweep.
 - `e24_external_quantification_failure__expanded7_with_gitea__audited_v1` is the primary direct test of the quantification-limits mechanism on positive holdout files.
 - `e26_external_intervention_securityfile_enriched__focused4_h1825_v1` is the focused intervention expansion built from deterministic refactoring screens on accepted security-linked files.
 

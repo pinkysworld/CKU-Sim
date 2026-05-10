@@ -37,6 +37,14 @@
       "log_loss": 0.031955373515422686,
       "ece": 0.0059477187582817215,
       "pairwise_accuracy": NaN
+    },
+    "gradient_boosted_trees_history_plus_structure": {
+      "roc_auc": 0.8076934766091393,
+      "average_precision": 0.02276355291232547,
+      "brier_score": 0.005696623017039821,
+      "log_loss": 0.03287304775037332,
+      "ece": 0.006971477899837453,
+      "pairwise_accuracy": NaN
     }
   },
   "audit": {
@@ -149,12 +157,35 @@
     ],
     "train_dataset_path": "data/results/e20_external_replication__expanded7_no_gitea__audited_v1/train_file_level_dataset.parquet",
     "min_holdout_snapshots": 3,
-    "min_holdout_events": 5
+    "min_holdout_events": 5,
+    "weight_sensitivity_samples": 1000,
+    "weight_sensitivity_seed": 42
   },
   "gating": {
     "has_no_range_only_labels": true,
     "train_holdout_disjoint": true,
     "holdout_min_positive_observations_met": true,
     "holdout_min_repo_count_met": true
+  },
+  "holdout_weight_sensitivity": {
+    "n_draws": 1000,
+    "roc_auc_lift_vs_baseline": {
+      "mean": 0.004184869206555947,
+      "median": 0.004572886139151189,
+      "p05": -0.0006241180939976163,
+      "p25": 0.002175187235428089,
+      "p75": 0.006517963746879463,
+      "p95": 0.007767828069033005
+    },
+    "average_precision_lift_vs_baseline": {
+      "mean": 0.002900465929324316,
+      "median": 0.00017814982353417212,
+      "p05": -0.0009266711695489246,
+      "p25": -0.00039900241873297524,
+      "p75": 0.0027808632503114484,
+      "p95": 0.019550586011030352
+    },
+    "share_positive_auc_lift": 0.914,
+    "share_positive_average_precision_lift": 0.542
   }
 }
